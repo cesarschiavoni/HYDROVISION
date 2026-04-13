@@ -9,7 +9,10 @@ El pipeline implementa la metodología de captura multi-angular:
   - CWSI final = promedio ponderado por fracción foliar
 
 Calibración perfecta por referencias físicas en bracket (Jones 1999 — Índice Ig):
-  Cada bracket monta dos paneles físicos dentro del campo visual de la cámara:
+  Cada bracket monta dos paneles físicos ~20-50 cm debajo de la cámara, orientados
+  al cielo. El amplio FOV del MLX90640 (110°×75°) los captura en la periferia
+  inferior del frame (filas ~20 de 24) en coordenadas de píxel fijas, dejando el
+  centro del frame libre para los ~28 píxeles foliares del canopeo:
   - Referencia húmeda: papel de filtro Whatman N°1 (10×10cm) empapado en agua
     destilada por capilaridad desde reservorio 500mL + mecha de algodón.
     Su temperatura ES el Tc_wet real bajo las condiciones atmosféricas actuales

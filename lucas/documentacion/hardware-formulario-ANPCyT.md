@@ -111,7 +111,7 @@ La cámara MLX90640 se monta sobre un gimbal pan-tilt motorizado de 2 ejes (2× 
 
 ## 6. Calibración Dual-Referencia (Dry Ref / Wet Ref)
 
-Cada nodo incorpora dos paneles de referencia física dentro del FOV de la cámara:
+Cada nodo incorpora dos paneles de referencia física montados ~20–50 cm debajo de la cámara en un bracket inferior, con superficies orientadas al cielo. Gracias al amplio FOV del MLX90640 (110°×75°), los paneles caen en la periferia inferior del frame térmico (filas ~20 de 24) en coordenadas de píxel fijas, dejando el centro libre para los ~28 píxeles foliares del canopeo:
 
 - **Dry Ref:** panel de aluminio negro mate (ε≈0.98). Sin mantenimiento. T_dry medida directamente — no modelada.
 - **Wet Ref:** panel de fieltro técnico hidrofílico mantenido en saturación por micro-bomba peristáltica 6V (controlada por GPIO del ESP32-S3), desde un reservorio de 10L. Autonomía 90–120 días sin recarga.

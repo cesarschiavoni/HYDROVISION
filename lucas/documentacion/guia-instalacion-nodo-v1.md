@@ -393,10 +393,19 @@ del canopeo y la barrera sotavento), o se reubica el nodo. No es necesario cada 
 
 ### 5.4 Panel Dry Ref y Wet Ref
 
+> **Geometria:** los paneles se montan ~20-50 cm debajo de la carcasa (altura 1.5-1.8 m),
+> con las superficies apuntando al cielo. Aunque la camara apunta al canopeo (abajo/este),
+> el FOV del MLX90640 es muy amplio (110x75 grados), asi que los paneles caen en la
+> **periferia inferior del frame** (filas ~20 de 24, bordes izq/der) — el centro del frame
+> queda libre para los pixeles foliares del canopeo.
+
 1. **Dry Ref** (aluminio negro): montar en el bracket inferior, apuntando al **cielo** (sin sombra del canopeo)
 2. **Wet Ref** (fieltro): montar junto al Dry Ref, conectar la manguera del reservorio de 10L
 3. Llenar el reservorio con agua destilada o clorada
 4. Verificar que la micro-bomba peristaltica funciona: al encender el nodo debe escucharse un click de 3 segundos
+5. **Calibrar pixeles de referencia:** con el nodo encendido y Serial Monitor abierto,
+   ejecutar `mlx_calibrar_iso_nodo(dry_row, dry_col, wet_row, wet_col)` para registrar
+   en que pixeles del frame caen los paneles. Defaults: Dry[20,28] Wet[20,4]
 
 ---
 
