@@ -167,7 +167,7 @@
 
 **Párrafo 3:** La fusión HSI recupera la capacidad predictiva en condiciones de viento → relevancia práctica para regiones con viento Zonda (Mendoza) y viento Norte (Córdoba).
 
-**Párrafo 4:** Limitaciones del trabajo: resolución espacial del MLX90640 (8×8 pixels → ¿suficiente para Malbec en espaldera?), n de plantas por zona, una sola variedad y sitio. Proyección a otras variedades (§5 — tabla de adaptación, doc 05).
+**Párrafo 4:** Limitaciones del trabajo: resolución espacial del MLX90640 (32×24 pixels → ¿suficiente para Malbec en espaldera?), n de plantas por zona, una sola variedad y sitio. Proyección a otras variedades (§5 — tabla de adaptación, doc 05).
 
 **Párrafo 5:** Implicancias prácticas — ahorro de agua vs. monitoreo Scholander manual. Costo-beneficio del sistema HydroVision AG para el productor. *[PRECAUCIÓN: no mencionar cifras de ahorro de m³ sin el análisis del doc 08 — verificar consistencia]*
 
