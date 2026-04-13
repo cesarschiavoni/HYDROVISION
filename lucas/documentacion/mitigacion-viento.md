@@ -381,7 +381,7 @@ El MDS (micro-contraccion diaria del tronco) incrementa su protagonismo de forma
          Cable trenzado 2m -> carcasa (conector "TC")
                    |
                    |    <- ESTACA acero inox 3m (60cm enterrada)
-                   |       a 30cm del tronco, lado NORTE hilera
+                   |       en línea de hilera, ~50cm del tronco
                    |
          EXTENSOMETRO (DENDRO MDS)          30 cm sobre suelo
          Abrazadera aluminio en tronco

@@ -74,7 +74,7 @@ con espacio para el cableado, la bateria y ventilacion pasiva.
             (cable 2m → carcasa)       Misma orientacion que camara
                       │
                       │  ← ESTACA acero inox
-                      │     a 30cm del tronco, lado NORTE
+                      │     en línea de hilera, ~50cm del tronco
                       │
             EXTENSOMETRO MDS        ← 30 cm sobre suelo
             (abrazadera en tronco)     Cara norte, cable 3m → carcasa
@@ -107,8 +107,9 @@ con espacio para el cableado, la bateria y ventilacion pasiva.
          │                   |
     ═════╧═══════════════════╧═════  suelo
 
-     ← 30cm →
+     ← ~50cm →
      estaca      tronco
+     (en línea de hilera, entre plantas)
 ```
 
 ### Respuesta a la duda del panel solar

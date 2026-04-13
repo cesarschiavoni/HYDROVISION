@@ -140,7 +140,7 @@ contamine los tratamientos.
 
 ### Regla de ubicacion del nodo dentro de la fila
 
-Cada nodo se instala en la **planta central de la fila** (~planta 68 de 136), lado norte de la hilera.
+Cada nodo se instala en la **planta central de la fila** (~planta 68 de 136). La estaca se clava **en la misma línea de la hilera**, entre dos plantas consecutivas (~50 cm de cada tronco). De esta forma queda protegida de la maquinaria agrícola que circula por los pasillos entre filas.
 
 **CRITICO:** Evitar las 5 plantas de cada extremo de la fila. En esos extremos:
 - Hay efecto borde por exposicion diferencial al viento y la radiacion
@@ -239,10 +239,10 @@ se ajusta proporcionalmente.
 
 ### Paso 2.1 -- Clavar la estaca
 
-1. Posicionar la estaca de acero inox (3m) junto a la planta seleccionada, del lado **norte** de la hilera
+1. Posicionar la estaca de acero inox (3m) **en la línea de la hilera**, entre la planta seleccionada y su vecina inmediata (~50 cm de cada tronco). Esto protege la estaca de la maquinaria que circula por los pasillos entre filas.
 2. Clavar 60cm en el suelo (quedan 2.4m sobre nivel del suelo)
 3. Verificar verticalidad con nivel de burbuja (o a ojo -- que no incline mas de 5 grados)
-4. La estaca debe estar a **30cm del tronco** (no tocar la planta)
+4. La estaca debe estar a **~50cm del tronco** más cercano (no tocar la planta ni los alambres de la espaldera)
 
 ### Paso 2.2 -- Montar el bracket angular
 
