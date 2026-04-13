@@ -51,8 +51,8 @@
 |   Drivers SHT31, GPS u-blox, IMU, DS3231, pluviometro   | XX | XX | XX |    |    |    |    |    |    |    |    |    |
 |   Driver ADS1231 SPI + DS18B20 (extensometro tronco)    | XX | XX | XX |    |    |    |    |    |    |    |    |    |
 |   Driver piranometro ADC + bomba Wet Ref GPIO           |    | XX | XX |    |    |    |    |    |    |    |    |    |
-|   Drivers C/C++: servos MG90S gimbal pan-tilt           | XX | XX | XX |    |    |    |    |    |    |    |    |    |
-|   Firmware Arduino ESP32: deep sleep 8uA, Node ID MAC, JSON v1  |    | XX | XX |    |    |    |    |    |    |    |    |    |
+|   Drivers MicroPython: servos MG90S gimbal pan-tilt     | XX | XX | XX |    |    |    |    |    |    |    |    |    |
+|   Firmware MicroPython ESP32-S3: deep sleep 8uA, Node ID MAC, JSON v1  |    | XX | XX |    |    |    |    |    |    |    |    |    |
 |   Integracion ChirpStack/LoRaWAN + protocolo MQTT       |    | XX | XX | XX |    |    |    |    |    |    |    |    |
 |   Sistema solar: panel 6W + LiFePO4 + regulador MPPT       |    | XX | XX |    |    |    |    |    |    |    |    |    |
 |   Gimbal pan-tilt 2 ejes: 7 angulos automaticos         |    | XX | XX | XX |    |    |    |    |    |    |    |    |
@@ -79,7 +79,7 @@
 |   Soporte tecnico integracion Fase 3 (25%)              |    |    |    |    |    |    |    |    |    | XX | XX | XX |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
 | **BACKEND & CLOUD (César + Claude Code)                ** |     |     |     |     |     |     |     |     |     |     |     |     |
-|   Setup AWS IoT Core (MQTT 3.1.1)                       | XX | XX |    |    |    |    |    |    |    |    |    |    |
+|   Setup ChirpStack + Mosquitto (MQTT)                   | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |   ChirpStack Network Server + PostgreSQL/PostGIS        | XX | XX | XX |    |    |    |    |    |    |    |    |    |
 |   Base de datos InfluxDB time-series CWSI + GDD         |    | XX | XX | XX |    |    |    |    |    |    |    |    |
 |   API Sentinel-2 Copernicus (NDVI/NDWI/NDRE auto)       |    |    |    | XX | XX | XX |    |    |    |    |    |    |

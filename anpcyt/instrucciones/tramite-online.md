@@ -47,10 +47,10 @@ El proyecto acredita TRL 3 mediante evidencias documentadas en cinco frentes:
 
 **[1] Prueba computacional (10 módulos Python, 135 tests automatizados, 0 fallos):**
 Cultivo de validación: Vid Malbec — Colonia Caroya, Córdoba (~700m s.n.m.).
-- `cwsi_formula.py`: CWSI (Jackson et al. 1981) con coeficientes Bellvert et al. (2016) para Malbec. Tres índices: CWSI, Jones/Ig (Jones 1999) y predicción ψ_stem [MPa] (Pires et al. 2025, R²=0.663). Error por NETD 50mK del MLX90640: ±0.019 CWSI, dentro del límite ±0.07 (Araújo-Paredes et al. 2022).
+- `cwsi_formula.py`: CWSI (Jackson et al. 1981) con coeficientes Bellvert et al. (2016) para Malbec. Tres índices: CWSI, Jones/Ig (Jones 1999) y predicción ψ_stem [MPa] (Pires et al. 2025, R²=0.663). Error por NETD ~100 mK del MLX90640: ±0.038 CWSI por píxel (±0.008 con 28 px foliares promediados), dentro del límite ±0.07 (Araújo-Paredes et al. 2022).
 - `thermal_pipeline.py`: pipeline completo frame Y16 → segmentación foliar P20–P75 → CWSI multi-angular ponderado por fracción foliar. 7 ángulos gimbal × 3 ventanas horarias.
 - `gdd_engine.py`: motor GDD (Winkler 1974, base 10°C) con detección automática de 9 estadios fenológicos para Malbec. Climatología calibrada con datos reales INTA EEA Manfredi (A872907, 2012–2026, n=4.802 días).
-- `synthetic_data_gen.py`: generador de frames Y16 sintéticos (160×120 px) con modelo físico de NETD. Núcleo del simulador para 1.000.000 imágenes de pre-entrenamiento PINN.
+- `synthetic_data_gen.py`: generador de frames Y16 sintéticos (32×24 px, resolución MLX90640) con modelo físico de NETD. Núcleo del simulador para 1.000.000 imágenes de pre-entrenamiento PINN.
 - `sentinel2_fusion.py`: modelo de fusión multi-satélite — correlación CWSI↔NDWI/NDVI/NDRE + VPD con HuberRegressor polinomial grado 2 robusto. R²=0.97 en calibración sintética. Selección automática de fuente satelital por lote y fecha: Sentinel-2 (principal, gratuito) → SAOCOM/CONAE Argentina (fallback SAR sin nubes, gratuito para I+D) → Sentinel-1 ESA (SAR C-band) → Planet (3m/px para cultivos compactos, Tier Elite). Análisis histórico de onboarding: Landsat 8/9 (50 años de archivo, gratuito). Demuestra que 1 nodo cubre hasta 20 ha vía satélite en lotes homogéneos.
 - `dendrometry.py` [NUEVO]: motor MDS (Maximum Daily Shrinkage = D_max − D_min) con corrección térmica del extensómetro (alpha=2.5 µm/°C, Pérez-López 2008), estimación ψ_stem con R²=0.80–0.92 (Fernández & Cuevas 2010), clasificación 5 niveles de estrés, protocolo de rescate automático si ψ_stem < −1.5 MPa.
 - `combined_stress_index.py` [NUEVO]: motor HSI — fusión CWSI térmico (35%) + MDS dendrométrico (65%). Acuerdo de señales (Δψ < 0.35 MPa) → R²~0.90–0.95. Desacuerdo → MDS domina 80%. Señal única → incertidumbre ×1.4. Confianza dinámica por anemómetro (Jones 2004, Fernández et al. 2011).
@@ -79,7 +79,7 @@ El proyecto se encuentra en **TRL 3 completado**, con todos los componentes del 
 **Modelo físico central (CWSI) — implementado y validado:**
 La fórmula del Crop Water Stress Index (Jackson et al. 1981) está implementada en Python con coeficientes empíricos calibrados para Malbec (Bellvert et al. 2016, Precision Agriculture). Se validó que:
 - Los resultados son coherentes con los rangos publicados en literatura para condiciones de alta insolación similares a Cuyo.
-- El sensor MLX90640 (NETD < 50mK) es suficientemente preciso: el error de ±0.019 CWSI está 3,7 veces por debajo del límite de discriminación agronómica (±0.07).
+- El sensor MLX90640 (NETD ~100 mK) es suficientemente preciso: el error de ±0.038 CWSI por píxel (±0.008 con 28 px foliares promediados) está dentro del límite de discriminación agronómica (±0.07, Araújo-Paredes et al. 2022).
 - Se implementaron tres índices complementarios: CWSI (Jackson 1981), Índice Jones/Ig (Jones 1999, validado en vid por Gutiérrez et al. 2018, PLoS ONE) y predicción de potencial hídrico de tallo ψ_stem en MPa (Pires et al. 2025, Computers & Electronics in Agriculture; R²=0.663).
 
 **Motor fenológico GDD — implementado y calibrado:**
@@ -308,9 +308,9 @@ El proyecto tiene una duración de 12 meses (Octubre 2026 – Septiembre 2027). 
 | Mantenimiento rutinario viñedo (técnico campo) | XX | XX | XX | XX | XX | XX | XX | XX | XX | | | |
 | **HARDWARE & FIRMWARE (Lucas Bergon — COO/HW+FW)** | | | | | | | | | | | | |
 | Setup entorno desarrollo + Claude Code | XX | | | | | | | | | | | |
-| Drivers C/C++: MLX90640 I2C (32x24, FOV 110°) | XX | XX | XX | | | | | | | | | |
-| Drivers C/C++: SHT31, GPS u-blox, IMU | XX | XX | XX | | | | | | | | | |
-| Drivers C/C++: servos MG90S gimbal pan-tilt | XX | XX | XX | | | | | | | | | |
+| Drivers MicroPython: MLX90640 I2C (32x24, FOV 110°) | XX | XX | XX | | | | | | | | | |
+| Drivers MicroPython: SHT31, GPS u-blox, IMU | XX | XX | XX | | | | | | | | | |
+| Drivers MicroPython: servos MG90S gimbal pan-tilt | XX | XX | XX | | | | | | | | | |
 | Firmware deep sleep RTC DS3231 + watchdog TPL5010 | | XX | XX | | | | | | | | | |
 | Integración ChirpStack/LoRaWAN + protocolo MQTT | | XX | XX | XX | | | | | | | | |
 | Sistema solar: panel 6W + LiFePO4 + regulador MPPT | | XX | XX | | | | | | | | | |
@@ -336,7 +336,7 @@ El proyecto tiene una duración de 12 meses (Octubre 2026 – Septiembre 2027). 
 | Validación motor GDD vs. fenología observada | | | | | | | | | XX | | | |
 | Soporte técnico integración Fase 3 (25%) | | | | | | | | | | XX | XX | XX |
 | **BACKEND & CLOUD (César + Claude Code)** | | | | | | | | | | | | |
-| Setup AWS IoT Core (MQTT 3.1.1) | XX | XX | | | | | | | | | | |
+| Setup ChirpStack + Mosquitto (MQTT) | XX | XX | | | | | | | | | | |
 | ChirpStack Network Server + PostgreSQL/PostGIS | XX | XX | XX | | | | | | | | | |
 | Base de datos InfluxDB time-series CWSI + GDD | | XX | XX | XX | | | | | | | | |
 | API Sentinel-2 Copernicus (NDVI/NDWI/NDRE auto) | | | | XX | XX | XX | | | | | | |

@@ -39,8 +39,8 @@
 | Orden | Autor | Afiliación | Contribución (CRediT) |
 |---|---|---|---|
 | 1° (primer autor) | **Monteoliva, Mariela I.** | INTA EEA Córdoba / CONICET | Conceptualización, diseño experimental, metodología Scholander, escritura |
-| 2° | **Inv. Art. 32 (a definir)** | HydroVision AG | Software (PINN, pipeline procesamiento), curación de datos |
-| 3° | **Schiavoni, César** | HydroVision AG | Hardware, firmware, recursos, supervisión técnica |
+| 2° | **Inv. Art. 32 (a definir)** | HydroVision AG | Validación estadística, análisis de correlaciones, curación de datos |
+| 3° | **Schiavoni, César** | HydroVision AG | Software (PINN, pipeline), hardware, firmware, recursos, supervisión técnica |
 | 4° (autor de correspondencia) | **Monteoliva, Mariela I.** | INTA-CONICET | Correspondencia con editores |
 
 **Notas de autoría:**
@@ -110,7 +110,9 @@
 
 **2.6 HSI — HydroVision Stress Index**
 - HSI = w_cwsi · CWSI + (1 − w_cwsi) · f(MDS_NORM)
-- w_cwsi = max(0, 1 − v_viento/4)
+- v ≤ 4 m/s: w_cwsi = 0.35 (condiciones normales)
+- 4 < v < 12 m/s: w_cwsi = 0.35 × (12 − v) / 8 (rampa lineal)
+- v ≥ 12 m/s: w_cwsi = 0 (HSI = 100% MDS)
 - Cálculo a las 13:00 hs (máximo estrés diario)
 
 **2.7 Scholander pressure chamber measurements (reference method)**

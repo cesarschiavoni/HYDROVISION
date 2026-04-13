@@ -78,7 +78,7 @@
 - **Extensómetro: strain gauge + ADS1231 SPI** — decidido. Ver fila 4.
 - **MLX90640: usar versión 110°×75° FOV** (no la de 55°×35°).
   Cálculo a H=6m sobre canopia: cobertura = 17m × 9.2m → ~60 plantas Malbec
-  (espaciado típico 1m entre plantas × 2.5m entre hileras). Cumple "50+ plantas/sesión".
+  (espaciado 1m entre plantas × 3.0m entre hileras en viñedo Colonia Caroya). Cumple "50+ plantas/sesión".
   Montar en poste de 7m total (3m mástil + 4m extensión), orientado al norte, inclinado 15°
   hacia el interior de la hilera para minimizar reflexión de suelo.
 - Consumo en deep sleep < 100 µA objetivo → considerar corte de alimentación a periféricos

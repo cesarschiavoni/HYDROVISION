@@ -111,7 +111,7 @@ en los siguientes términos:
 
 **Actividades principales:**
 - Diseño del sistema modular TRL4 (ESP32-S3 DevKit + breakouts I2C/SPI + carcasa Hammond IP67) para el nodo sensor HydroVision
-- Implementación de drivers C/C++ para sensores MLX90640, SHT31, GPS, IMU y servos del gimbal
+- Implementación de drivers MicroPython para sensores MLX90640, SHT31, GPS, IMU y servos del gimbal
 - Integración ChirpStack/LoRaWAN en gateway RAK7268
 - Protocolo MQTT entre nodo y servidor
 - Testing de hardware: autonomía solar, deep sleep RTC, watchdog TPL5010
@@ -155,7 +155,7 @@ Yo, **Lucas Martín Bergon**, DNI N° 32.426.266, CUIL N° 20-32426266-1, con do
 - Arquitectura de integración de sensores LWIR, extensómetro de tronco, IMU y sistema de gimbal motorizado
 - Firmware embebido de bajo consumo para operación autónoma solar (deep sleep, watchdog, RTC)
 - Sistema de comunicación LoRaWAN campo-servidor
-- Diseño del sistema mecánico de montaje en campo (soporte, orientación, protección IP65)
+- Diseño del sistema mecánico de montaje en campo (soporte, orientación, protección IP67)
 
 **3.** Que **presto mi conformidad expresa** para que la solicitud de patente de invención sea presentada ante el INPI Argentina con los siguientes datos:
 

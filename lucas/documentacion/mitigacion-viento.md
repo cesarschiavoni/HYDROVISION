@@ -356,7 +356,7 @@ El MDS (micro-contraccion diaria del tronco) incrementa su protagonismo de forma
                    |  2.4 m sobre suelo
     ===============|===============  <- extremo estaca
                    |
-          [CARCASA IP65 + TUBO COLIMADOR]
+          [CARCASA IP67 + TUBO COLIMADOR]
           |  Panel solar -> NORTE           |  2.0-2.2 m sobre suelo
           |  Camara MLX90640 -> abajo/ESTE  |
           |  (dentro del tubo colimador)    |

@@ -61,7 +61,7 @@ El ESP32-S3 consume ~85% menos energía que el Raspberry Pi 4 en el mismo ciclo 
 
 ---
 
-## 4. Arquitectura de Procesamiento — ESP32 + Backend
+## 4. Arquitectura de Procesamiento — ESP32-S3 + Backend
 
 Con ESP32-S3 como plataforma de cómputo, el procesamiento se distribuye entre el nodo y el backend:
 
@@ -161,7 +161,7 @@ El promediado sobre múltiples píxeles foliares y la calibración física por p
 |---|---|
 | Temperatura ambiente | 0–45°C (picos 55°C en carcasa al sol directo en Cuyo) |
 | Humedad relativa | 10–95% RH |
-| Protección | IP65 (polvo + agua) |
+| Protección | IP67 (polvo + inmersión temporal) — carcasa Hammond 200×150×100mm |
 | Viento | Hasta 80 km/h (estaca acero inox. 316) |
 | UV | Tratamiento UV en carcasa ABS/PC y cableado exterior |
 | Conectores externos | M12 IP67 (estándar industrial) |
@@ -200,8 +200,8 @@ El promediado sobre múltiples píxeles foliares y la calibración física por p
 | Parámetro | Valor |
 |---|---|
 | Variedad | Malbec |
-| Superficie | 1/3 ha (~3.333 m²) |
-| Plantas totales | ~1.300 vides (1m entre plantas × 2.5m entre hileras) |
+| Superficie | ~0,37 ha netas (~3.672 m² cultivados, 10 filas × 136m, espaciado 3,0m) |
+| Plantas totales | 1.360 vides (1m entre plantas × 3,0m entre hileras) |
 | Altitud | ~700 m s.n.m. |
 | Nodos instalados | **5 nodos** (1 por zona hídrica) — las primeras 5 unidades del producto |
 | Densidad comercial equivalente | 1 nodo cubre 1/3 ha (sobre-densificado vs. Tier 1: 1/10 ha) — fortaleza experimental |

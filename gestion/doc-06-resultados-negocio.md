@@ -1029,8 +1029,8 @@ Riesgo residual de overfitting geográfico — mitigado por estrategia de tres c
 Alta
 Estrategia de tres capas: (1) pre-entrenamiento en 50.000 imágenes públicas agrícolas y térmicas; (2) fine-tuning con 1.000.000 imágenes sintéticas del simulador físico calibrado para Malbec; (3) calibración final con 680 frames reales etiquetados con Scholander (de los 800 capturados, 120 se reservan para validación independiente). Dataset total de entrenamiento: 1.050.680 imágenes.
 Con 1.050.680 imágenes de entrenamiento y 120 frames de validación independiente, el objetivo de accuracy > 85% es alcanzable. Si no se llega, el simulador permite generar datos adicionales ilimitados sin costo de campo.
-~~Riesgo resuelto — plataforma migrada a ESP32-S3.~~ El ESP32-S3 consume ~0.5W activo y 8µA en deep sleep (vs 2.7W del RPi4). Autonomía sin sol: >13 días (320 horas). Riesgo eliminado.
-Segmentación foliar en 80×60px — mezcla espectral entre hojas, suelo y madera contamina el cálculo del CWSI.
+~~Riesgo resuelto — plataforma migrada a ESP32-S3.~~ El ESP32-S3 consume ~0.5W activo y 8µA en deep sleep (vs 2.7W del RPi4). Autonomía sin sol: ~5 días (~120 horas) con sistema completo operativo. Riesgo eliminado.
+Segmentación foliar en 32×24px — mezcla espectral entre hojas, suelo y madera contamina el cálculo del CWSI.
 Media
 Máscara de temperatura relativa por percentiles (hojas = P20–P75 del frame) + filtro morfológico de regiones conectadas ≥4×4px. Captura fija en ventana horaria 10–14hs solar.
 Aumentar distancia focal a 1.5m y enfocar en zona del dosel con mayor densidad foliar. Usar mounting bracket fijo para reproducibilidad.
@@ -1058,7 +1058,7 @@ Representatividad geográfica — Colonia Caroya tiene condiciones climáticas d
 Media
 El proyecto concentra la validación primaria en el viñedo experimental de Colonia Caroya (4 filas × 136m con drip diferencial) complementada con 3 campañas de validación cruzada en Mendoza y 2 en San Juan. Estas campañas capturan datos meteorológicos y térmicos en condiciones reales de Cuyo para verificar la transferibilidad del modelo.
 Si los datos de Colonia Caroya resultan no representativos, las 3 campañas a Mendoza (Valle de Uco) proporcionan datos de recalibración. El simulador permite interpolar entre condiciones de ambas regiones.
-Disponibilidad de tiempo del CTO (el investigador Art. 32) — ~3 hs/semana con obligaciones paralelas en MercadoLibre.
+Disponibilidad de tiempo del Inv. Art. 32 — ~5 hs/semana promedio (~177 hs totales), con obligaciones paralelas en su institución de investigación.
 Baja
 La arquitectura PINN, pipeline de entrenamiento, cuantización INT8 y fusión Sentinel-2 ya están implementados con Claude Code. El rol del investigador se concentra en validación, fine-tuning con datos reales (Mes 5–8) y exportación edge (Mes 9) — no es el cuello de botella del cronograma.
 Si hay retraso en el fine-tuning (Gate 2 → Gate 3): el pipeline corre en la RTX 3070 de César sin necesidad de presencia física del investigador. Las decisiones arquitectónicas se documentan en repo Git con revisión asíncrona.

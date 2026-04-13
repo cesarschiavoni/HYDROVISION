@@ -101,11 +101,12 @@ Ejecutar en las primeras 2 semanas de operación del nodo:
 - [ ] Si R² < 0.50: escalar a Monteoliva. El sistema puede seguir operando pero las alertas se marcan con "calibración provisional"
 - [ ] Si R² ≥ 0.50: calibración aceptable para uso comercial. Continuar acumulando datos para mejorar
 
-### Paso C5 — Actualización del modelo PINN (el investigador Art. 32)
+### Paso C5 — Fine-tuning del modelo PINN con datos de la nueva variedad (César + Inv. Art. 32)
 
-- [ ] Una vez que el nodo acumula ≥ 100 pares (Ψ_stem medido, frame LWIR + metadata), exportar el dataset al pipeline de el investigador Art. 32
+- [ ] Una vez que el nodo acumula ≥ 100 pares (Ψ_stem medido, frame LWIR + metadata), exportar el dataset al pipeline de fine-tuning (César)
+- [ ] El Inv. Art. 32 valida estadísticamente las correlaciones CWSI↔Ψstem del nuevo dataset antes del fine-tuning
 - [ ] El dataset se integra al proceso de fine-tuning del modelo PINN para la nueva variedad
-- [ ] Tiempo estimado de fine-tuning: 2–4 días de cómputo en la GPU local (RTX 3090)
+- [ ] Tiempo estimado de fine-tuning: 2–4 días de cómputo en la GPU local (RTX 3070)
 
 ---
 

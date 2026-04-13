@@ -2,7 +2,7 @@
 ## Para revision de Dra. Monteoliva y el investigador Art. 32
 
 > **Target:** Congreso SAFV (Sociedad Argentina Fisiologia Vegetal) o revista indexada (Computers and Electronics in Agriculture / Precision Agriculture)
-> **Autores:** Schiavoni, C.; Monteoliva, M.; Gonzalez, A.; Bergon, L.
+> **Autores:** Monteoliva, M.; Inv. Art. 32 (a definir); Schiavoni, C.; Bergon, L.
 > **Estado:** Estructura IMRaD con placeholders. Se completa con datos reales Mes 10-12.
 
 ---

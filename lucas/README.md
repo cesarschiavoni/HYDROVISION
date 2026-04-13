@@ -98,7 +98,7 @@ lucas/
 
 | Prioridad | Tarea | Carpeta | Nota |
 |---|---|---|---|
-| 🔴 Alta | **Validar firmware en banco**: compilar en Arduino IDE, confirmar Serial de cada sensor | firmware/ | Instalar librerías de `libraries.txt` primero. Ver guía de compilación arriba. |
+| 🔴 Alta | **Validar firmware en banco**: cargar módulos MicroPython en ESP32-S3 DevKit, confirmar REPL de cada sensor | firmware/ | Flashear MicroPython primero. Ver guía de compilación arriba. |
 | 🔴 Alta | Calibrar **ADS1231_COUNTS_PER_UM** con medición de referencia conocida | `driver_mds.h` | Requiere extensómetro de referencia — sin esto MDS es arbitrario |
 | 🔴 Alta | Calibrar **PYRANO_WPM2_PER_MV** con piranómetro de referencia | `driver_piranometro.h` | Piranómetro de referencia (e.g. Davis Vantage Pro2 ya en BOM) |
 | 🟡 Media | Calibrar **PLUV_MM_PER_PULSE** con datasheet del sensor comprado | `config.h` | Dato en el datasheet del fabricante (típico: 0.2 mm/pulso) |

@@ -9,7 +9,7 @@ AquaSense (2025) — FLIR Lepton + ESP32 + LoRaWAN + LightGBM para clasificació
 AquaSense usa sensor de suelo como input principal. HydroVision AG usa exclusivamente imagen térmica foliar para calcular CWSI — no hay superposición en la reivindicación central.
 No obstruye. El método de cálculo CWSI desde imagen térmica LWIR con modelo IA regresor calibrado por variedad es diferenciado.
 WISN (MDPI Sensors, 2023) — red de sensores MLX90614 para CWSI en viñedo. Sin patente.
-MLX90614 es un termómetro IR puntual (1 punto de temperatura). HydroVision AG usa cámara de imagen completa 80×60px con segmentación foliar — diferente clase de sensor y metodología.
+MLX90614 es un termómetro IR puntual (1 punto de temperatura). HydroVision AG usa cámara de imagen completa 32×24px con segmentación foliar — diferente clase de sensor y metodología.
 No obstruye. La segmentación foliar de imagen térmica con IA para CWSI es el elemento diferenciador patentable.
 Sistemas CWSI con cámara FLIR en UAV (múltiples publicaciones 2016–2024). Sin patente de sistema integrado.
 Todos los sistemas publicados son aéreos (dron). HydroVision AG es un nodo fijo en campo, permanente y autónomo — categoría de hardware completamente distinta.

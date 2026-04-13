@@ -227,7 +227,7 @@ se ajusta proporcionalmente.
 | Altura | Componente | Orientacion / Cara | Notas |
 |--------|-----------|-------------------|-------|
 | 2.4 m (punta) | Anemometro RS485 | Marca "N" al norte magnetico | Libre de obstrucciones — mide viento real |
-| 2.0-2.2 m | Carcasa IP65 + camara MLX90640 + tubo colimador | Panel solar → norte. Camara → **este** (sotavento) | Tubo concentrico con lente, interior negro mate |
+| 2.0-2.2 m | Carcasa IP67 + camara MLX90640 + tubo colimador | Panel solar → norte. Camara → **este** (sotavento) | Tubo concentrico con lente, interior negro mate |
 | 1.8-2.0 m | Shelter SHT31 (6 placas blancas) | Lado **norte** del poste | No tapar con ramas — necesita flujo de aire natural |
 | 1.8-2.0 m | Pluviometro | Horizontal, nivelado | Sin obstrucciones arriba |
 | 1.5-1.8 m | Paneles Dry Ref / Wet Ref | Apuntando al **cielo** | Sin sombra del canopeo. Manguera al reservorio 10L |
@@ -255,7 +255,7 @@ se ajusta proporcionalmente.
 
 ## 3. MONTAJE DEL NODO EN EL BRACKET
 
-1. Colocar la carcasa IP65 en el bracket con los 4 tornillos de fijacion
+1. Colocar la carcasa IP67 en el bracket con los 4 tornillos de fijacion
 2. Verificar que la **ventana del MLX90640 apunte hacia abajo** (al canopeo)
 3. **CRITICO — Orientacion a sotavento:** la camara MLX90640 debe apuntar al lado
    **ESTE** de la hilera (sotavento del Zonda). El viento dominante en Cuyo viene

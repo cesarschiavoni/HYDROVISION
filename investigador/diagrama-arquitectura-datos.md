@@ -292,7 +292,7 @@ MQTT_PORT=1883
 
 | Módulo | Métrica | Target |
 |--------|---------|--------|
-| PINN CWSI | MAE vs ψ_stem Scholander | < ±0.10 |
+| PINN CWSI | MAE vs ψ_stem Scholander | ≤ 0.08 |
 | U-Net segmentación | IoU canopeo | > 0.80 |
 | CWSINDWICorrelationModel | R² calibración | > 0.75 |
 | Pipeline satelital | cobertura campo completo | ≥ 1 mapa/semana en temporada |

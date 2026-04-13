@@ -44,7 +44,7 @@
 **Empresa:** MBG Controls, Colonia Caroya
 **Dedicación:** 50% Mes 1–6 (diseño HW + firmware) · 25% Mes 7–12 (integración campo + validación)
 **Honorarios:** USD 1.500/mes × 6 + USD 1.000/mes × 6 = **USD 15.000**
-**Nota:** diseño PCB (USD 3.000) figura como contrapartida en especie — no incluido en honorarios.
+**Nota:** aporte en especie de Lucas (horas USD 4.650 + herramientas USD 400 + equipamiento MBG USD 710 = USD 5.760) figura como contrapartida — no incluido en honorarios.
 
 ### Resuelto con Claude antes del inicio del proyecto (Lucas solo debe revisar y validar)
 
@@ -236,7 +236,7 @@
 | Miembro | Rol | Dedicación | Honorarios ANR | Fuente |
 |---------|-----|-----------|----------------|--------|
 | César Schiavoni | Project Leader / Dev IA | 40 hs/sem · 12 meses | USD 18.000 | ANR (20hs/sem × USD 1.500/mes) + especie (20hs/sem) |
-| Lucas Bergon | COO / Hardware & Firmware | 50% M1-6 · 25% M7-12 | USD 15.000 | ANR + especie (PCB USD 3.000 + instrumental USD 2.000) |
+| Lucas Bergon | COO / Hardware & Firmware | 50% M1-6 · 25% M7-12 | USD 15.000 | ANR + especie (horas USD 4.650 + herramientas USD 400 + equipamiento MBG USD 710 = USD 5.760) |
 | Inv. Art. 32 (a incorporar) | Investigador en Validación de Señales y Datos Agronómicos (perfil Art. 32) | ~5 hs/sem promedio (~177 hs totales) | USD 6.000 | ANR (USD 500/mes) |
 | Dra. Monteoliva | Investigadora INTA-CONICET | ~180h en 12 meses | USD 10.800 | ANR (USD 900/mes) |
 | Javier Schiavoni | Técnico de Campo Principal | ~208h · 9 meses | USD 9.000 | ANR (USD 1.000/mes) |

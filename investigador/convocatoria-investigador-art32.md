@@ -1,7 +1,7 @@
 # Oportunidad de Investigación — HydroVision AG / ANPCyT 2026
 
 **Convocatoria:** STARTUP 2025 TRL 3-4 — ANPCyT/FONARSEC (BID)
-**Plazo de incorporación:** antes del 21 de mayo de 2026
+**Plazo de incorporación:** antes del 16 de mayo de 2026
 **Contacto:** César Schiavoni — schiavonicesar@gmail.com · 3525448154
 
 ---
