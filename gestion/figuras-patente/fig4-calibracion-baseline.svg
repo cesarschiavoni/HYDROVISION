@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 580" width="860" height="580" font-family="Arial, sans-serif">
+  <title>Figura 4 — Sistema de calibración dual y auto-calibración dinámica del baseline CWSI</title>
+  <rect width="860" height="580" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="430" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">FIGURA 4 — Calibración dual y auto-calibración dinámica del baseline CWSI</text>
+  <text x="430" y="44" text-anchor="middle" font-size="10" fill="#555">HydroVision AG — Solicitud de Patente INPI Argentina</text>
+  <line x1="20" y1="52" x2="840" y2="52" stroke="#ccc" stroke-width="0.8"/>
+
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#444"/>
+    </marker>
+    <marker id="arrB" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#2244aa"/>
+    </marker>
+    <marker id="arrG" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#1a7a2a"/>
+    </marker>
+    <marker id="arrO" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#cc8822"/>
+    </marker>
+  </defs>
+
+  <!-- ═══ TÍTULO TRIPLE NIVEL ═══ -->
+  <text x="430" y="72" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">STACK DE CALIBRACIÓN — 3 NIVELES DE DEGRADACIÓN CONTROLADA</text>
+  <line x1="40" y1="78" x2="820" y2="78" stroke="#999" stroke-width="0.6" stroke-dasharray="4,3"/>
+
+  <!-- ══════════════════════════════════════════════════
+       NIVEL 1 — PANELES DRY REF / WET REF
+  ══════════════════════════════════════════════════ -->
+  <rect x="30" y="88" width="790" height="130" fill="#f0f8f0" stroke="#2d6a2d" stroke-width="2" rx="6"/>
+  <rect x="30" y="88" width="120" height="130" fill="#2d6a2d" stroke="#2d6a2d" stroke-width="2" rx="6 0 0 6"/>
+  <text x="90" y="148" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff" transform="rotate(-90,90,148)">NIVEL 1</text>
+  <text x="90" y="175" text-anchor="middle" font-size="8.5" fill="#cef" transform="rotate(-90,90,175)">Primario</text>
+
+  <!-- Panel Dry Ref -->
+  <rect x="160" y="100" width="130" height="80" fill="#2d2d2d" stroke="#111" stroke-width="2" rx="5"/>
+  <text x="225" y="124" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">PANEL</text>
+  <text x="225" y="138" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">DRY REF</text>
+  <text x="225" y="153" text-anchor="middle" font-size="8.5" fill="#ccc">Al. negro mate</text>
+  <text x="225" y="165" text-anchor="middle" font-size="8.5" fill="#ccc">ε ≈ 0.98</text>
+  <text x="225" y="177" text-anchor="middle" font-size="8" fill="#aaa">→ T_dry medida</text>
+  <text x="225" y="196" text-anchor="middle" font-size="8" font-style="italic" fill="#666">Temperatura</text>
+  <text x="225" y="206" text-anchor="middle" font-size="8" font-style="italic" fill="#666">superficial seca</text>
+
+  <!-- Panel Wet Ref -->
+  <rect x="310" y="100" width="140" height="80" fill="#c0e0ff" stroke="#2255aa" stroke-width="2" rx="5"/>
+  <text x="380" y="124" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a3a7a">PANEL</text>
+  <text x="380" y="138" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a3a7a">WET REF</text>
+  <text x="380" y="153" text-anchor="middle" font-size="8.5" fill="#1a3a7a">Fieltro hidrofílico</text>
+  <text x="380" y="165" text-anchor="middle" font-size="8.5" fill="#1a3a7a">Bomba 6V + Reserv. 10L</text>
+  <text x="380" y="177" text-anchor="middle" font-size="8" fill="#1a3a7a">→ T_wet medida</text>
+  <text x="380" y="196" text-anchor="middle" font-size="8" font-style="italic" fill="#555">90–120 días sin recarga</text>
+  <text x="380" y="206" text-anchor="middle" font-size="8" font-style="italic" fill="#555">96 calibraciones/día</text>
+
+  <!-- Fórmula CWSI con refs -->
+  <rect x="470" y="95" width="330" height="120" fill="#fff" stroke="#2d6a2d" stroke-width="1.5" rx="4"/>
+  <text x="635" y="115" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a4a1a">Fórmula CWSI (Jackson, 1981)</text>
+  <text x="635" y="135" text-anchor="middle" font-size="12" fill="#333" font-family="'Courier New', monospace">CWSI = (ΔT − ΔT_LL) / (ΔT_UL − ΔT_LL)</text>
+  <line x1="480" y1="143" x2="790" y2="143" stroke="#2d6a2d" stroke-width="0.6"/>
+  <text x="635" y="158" text-anchor="middle" font-size="8.5" fill="#333">ΔT = T_foliar − T_aire</text>
+  <text x="635" y="171" text-anchor="middle" font-size="8.5" fill="#1a5a1a">ΔT_LL (T_wet): Wet Ref físico (Nivel 1) o EMA (Nivel 2/3)</text>
+  <text x="635" y="184" text-anchor="middle" font-size="8.5" fill="#5a1a1a">ΔT_UL (T_dry): Dry Ref físico (Nivel 1)</text>
+  <text x="635" y="200" text-anchor="middle" font-size="8.5" fill="#555">Precisión Nivel 1: RMSE &lt; 0.5°C · Error CWSI ≈ ±0.038</text>
+
+  <!-- Flecha paneles → fórmula -->
+  <line x1="450" y1="140" x2="470" y2="150" stroke="#2d6a2d" stroke-width="1.5" marker-end="url(#arrG)"/>
+
+  <!-- ══════════════════════════════════════════════════
+       NIVEL 2 — AUTO-CALIBRACIÓN POR EVENTOS
+  ══════════════════════════════════════════════════ -->
+  <rect x="30" y="230" width="790" height="145" fill="#fffbf0" stroke="#cc8822" stroke-width="2" rx="6"/>
+  <rect x="30" y="230" width="120" height="145" fill="#cc8822" stroke="#cc8822" stroke-width="2" rx="6 0 0 6"/>
+  <text x="90" y="303" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff" transform="rotate(-90,90,303)">NIVEL 2</text>
+  <text x="90" y="330" text-anchor="middle" font-size="8.5" fill="#ffe" transform="rotate(-90,90,330)">Fail-safe</text>
+
+  <!-- Evento lluvia -->
+  <rect x="160" y="242" width="160" height="100" fill="#e8f4ff" stroke="#2255aa" stroke-width="1.5" rx="4"/>
+  <text x="240" y="260" text-anchor="middle" font-size="9" font-weight="bold" fill="#1133aa">EVENTO LLUVIA</text>
+  <text x="240" y="274" text-anchor="middle" font-size="8" fill="#1133aa">Pluviómetro ≥ 5mm</text>
+  <text x="240" y="286" text-anchor="middle" font-size="8" fill="#333">AND simultáneo:</text>
+  <text x="240" y="299" text-anchor="middle" font-size="8" fill="#885500">Extensómetro MDS ≈ 0</text>
+  <text x="240" y="311" text-anchor="middle" font-size="7.5" fill="#555">(tronco diámetro máximo</text>
+  <text x="240" y="322" text-anchor="middle" font-size="7.5" fill="#555">= planta 100% hidratada)</text>
+  <text x="240" y="334" text-anchor="middle" font-size="8" font-weight="bold" fill="#1133aa">⇒ T_foliar = T_wet real</text>
+
+  <!-- EMA update -->
+  <rect x="340" y="242" width="300" height="120" fill="#fff8ee" stroke="#cc8822" stroke-width="1.5" rx="4"/>
+  <text x="490" y="262" text-anchor="middle" font-size="9" font-weight="bold" fill="#885500">ACTUALIZACIÓN EMA (Exponential Moving Average)</text>
+  <text x="490" y="280" text-anchor="middle" font-size="9" fill="#333" font-family="'Courier New', monospace">tc_wet_offset ←</text>
+  <text x="490" y="295" text-anchor="middle" font-size="9" fill="#333" font-family="'Courier New', monospace">  0.75 × tc_wet_offset</text>
+  <text x="490" y="310" text-anchor="middle" font-size="9" fill="#333" font-family="'Courier New', monospace">+ 0.25 × (Tc_medido − NWSB(T,VPD))</text>
+  <line x1="350" y1="320" x2="630" y2="320" stroke="#cc8822" stroke-width="0.6"/>
+  <text x="490" y="335" text-anchor="middle" font-size="8" fill="#885500">8–12 eventos naturales por campaña · Sin visita técnica</text>
+  <text x="490" y="347" text-anchor="middle" font-size="8" fill="#885500">learning_rate = 0.25 (lluvia) · 0.125 (Scholander)</text>
+
+  <!-- Flecha evento → EMA -->
+  <line x1="320" y1="295" x2="340" y2="295" stroke="#cc8822" stroke-width="1.5" marker-end="url(#arrO)"/>
+
+  <!-- Detección deriva -->
+  <rect x="655" y="242" width="150" height="120" fill="#fff0e0" stroke="#cc4400" stroke-width="1.2" rx="4"/>
+  <text x="730" y="260" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#882200">DETECCIÓN DERIVA</text>
+  <line x1="665" y1="265" x2="795" y2="265" stroke="#cc4400" stroke-width="0.6"/>
+  <text x="730" y="278" text-anchor="middle" font-size="7.5" fill="#882200">CWSI media &lt; 0.02:</text>
+  <text x="730" y="289" text-anchor="middle" font-size="7.5" fill="#555">T_wet sobreestimado</text>
+  <text x="730" y="302" text-anchor="middle" font-size="7.5" fill="#882200">CWSI media &gt; 0.98:</text>
+  <text x="730" y="313" text-anchor="middle" font-size="7.5" fill="#555">T_wet subestimado</text>
+  <text x="730" y="326" text-anchor="middle" font-size="7.5" fill="#882200">std &lt; 0.01 (N&gt;10):</text>
+  <text x="730" y="337" text-anchor="middle" font-size="7.5" fill="#555">Posible falla sensor</text>
+  <text x="730" y="350" text-anchor="middle" font-size="8" font-weight="bold" fill="#cc2200">→ Alerta dashboard</text>
+
+  <!-- ══════════════════════════════════════════════════
+       NIVEL 3 — NWSB + HISTÓRICO
+  ══════════════════════════════════════════════════ -->
+  <rect x="30" y="387" width="790" height="100" fill="#f8f8f8" stroke="#888" stroke-width="1.5" rx="6"/>
+  <rect x="30" y="387" width="120" height="100" fill="#888" stroke="#888" stroke-width="1.5" rx="6 0 0 6"/>
+  <text x="90" y="437" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff" transform="rotate(-90,90,437)">NIVEL 3</text>
+  <text x="90" y="464" text-anchor="middle" font-size="8.5" fill="#eee" transform="rotate(-90,90,464)">Emergencia</text>
+
+  <rect x="160" y="398" width="200" height="76" fill="#fff" stroke="#999" stroke-width="1.2" rx="3"/>
+  <text x="260" y="416" text-anchor="middle" font-size="9" font-weight="bold" fill="#444">NWSB Jackson (1981)</text>
+  <text x="260" y="430" text-anchor="middle" font-size="8" fill="#555">Coeficientes teóricos</text>
+  <text x="260" y="443" text-anchor="middle" font-size="8" fill="#555">ΔT_LL = a + b × VPD</text>
+  <text x="260" y="456" text-anchor="middle" font-size="7.5" fill="#888">Punto de partida inicial</text>
+  <text x="260" y="467" text-anchor="middle" font-size="7.5" fill="#888">de fábrica (día 0)</text>
+
+  <rect x="380" y="398" width="200" height="76" fill="#fff" stroke="#999" stroke-width="1.2" rx="3"/>
+  <text x="480" y="416" text-anchor="middle" font-size="9" font-weight="bold" fill="#444">Offsets históricos (JSON Flash)</text>
+  <text x="480" y="430" text-anchor="middle" font-size="8" fill="#555">tc_wet_offset · tc_dry_offset</text>
+  <text x="480" y="443" text-anchor="middle" font-size="8" fill="#555">Acumulados en temporadas</text>
+  <text x="480" y="456" text-anchor="middle" font-size="8" fill="#555">anteriores del mismo nodo</text>
+  <text x="480" y="467" text-anchor="middle" font-size="7.5" fill="#888">Persiste ante reinicios</text>
+
+  <rect x="600" y="398" width="200" height="76" fill="#fff" stroke="#999" stroke-width="1.2" rx="3"/>
+  <text x="700" y="416" text-anchor="middle" font-size="9" font-weight="bold" fill="#444">Degradación controlada</text>
+  <text x="700" y="430" text-anchor="middle" font-size="8" fill="#555">Nivel activo reportado</text>
+  <text x="700" y="443" text-anchor="middle" font-size="8" fill="#555">en payload LoRa y</text>
+  <text x="700" y="456" text-anchor="middle" font-size="8" fill="#555">dashboard (1 / 2 / 3)</text>
+  <text x="700" y="467" text-anchor="middle" font-size="7.5" fill="#888">Nunca datos corruptos silenciosos</text>
+
+  <!-- ═══ FLECHA VERTICAL: NIVEL 1 → 2 → 3 ═══ -->
+  <line x1="22" y1="230" x2="22" y2="487" stroke="#666" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="16" y="359" font-size="9" fill="#666" transform="rotate(-90,16,359)">degradación controlada →</text>
+  <!-- Flechas nivel 1→2 y 2→3 -->
+  <line x1="82" y1="218" x2="82" y2="230" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="82" y1="375" x2="82" y2="387" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="88" y="226" font-size="8" fill="#888">Fallback si reservorio agotado</text>
+  <text x="88" y="384" font-size="8" fill="#888">Fallback si sin lluvia ni Wet Ref</text>
+
+  <!-- ═══ INDICADOR DE PRECISIÓN ═══ -->
+  <rect x="30" y="498" width="790" height="68" fill="#f0f4e8" stroke="#557722" stroke-width="1.2" rx="4"/>
+  <text x="430" y="515" text-anchor="middle" font-size="9" font-weight="bold" fill="#334400">PRECISIÓN POR NIVEL:</text>
+  <text x="190" y="533" text-anchor="middle" font-size="9" fill="#1a4a1a">Nivel 1: RMSE &lt; 0.5°C → Error CWSI ≈ ±0.038</text>
+  <text x="190" y="547" text-anchor="middle" font-size="8" fill="#555">(dentro del umbral agronómico ±0.07)</text>
+  <text x="430" y="533" text-anchor="middle" font-size="9" fill="#885500">Nivel 2: RMSE ~0.8°C → Error CWSI ≈ ±0.06</text>
+  <text x="430" y="547" text-anchor="middle" font-size="8" fill="#555">(suficiente para alertas de campo)</text>
+  <text x="670" y="533" text-anchor="middle" font-size="9" fill="#666">Nivel 3: RMSE ~1.5°C → Error CWSI ≈ ±0.12</text>
+  <text x="670" y="547" text-anchor="middle" font-size="8" fill="#555">(suficiente para alertas críticas)</text>
+  <text x="430" y="560" text-anchor="middle" font-size="8" font-style="italic" fill="#336600">Araújo-Paredes et al. 2022: umbral agronómico relevante = ±0.07 CWSI</text>
+</svg>

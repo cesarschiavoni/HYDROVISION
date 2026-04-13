@@ -1,0 +1,287 @@
+{
+  "_nota": "Parámetros físicos CWSI por cultivar. Fuente: Jackson (1981), Bellvert et al. (2016), FAO-56, Schultz (2003), García-Tejero et al. (2018). ΔT_LL = nwsb_a + nwsb_slope × VPD (°C, kPa). ΔT_UL = dt_upper (hoja sin transpiración).",
+  "_aliases": {
+    "cabernet": "cabernet_sauvignon",
+    "citrus - naranja": "naranja",
+    "citrus - limon": "limon"
+  },
+
+  "malbec": {
+    "nombre": "Malbec",
+    "especie": "Vitis vinifera",
+    "estrategia": "isohydric_moderado",
+    "region_calibracion": "Colonia Caroya, Córdoba, Argentina (~700m)",
+    "t_base_gdd": 10.0,
+    "nwsb_a": 1.5,
+    "nwsb_slope": -1.80,
+    "dt_upper": 3.50,
+    "cwsi_umbral_alerta": 0.30,
+    "cwsi_umbral_rescate": 0.60,
+    "psi_stem_alerta_mpa": -1.2,
+    "psi_stem_rescate_mpa": -1.5,
+    "referencias": [
+      "Bellvert et al. (2016) - Malbec en Argentina",
+      "Jackson (1981) - CWSI baseline",
+      "Calibración experimental Colonia Caroya (en curso)"
+    ],
+    "estado_calibracion": "en_curso"
+  },
+
+  "cabernet_sauvignon": {
+    "nombre": "Cabernet Sauvignon",
+    "especie": "Vitis vinifera",
+    "estrategia": "anisohydric",
+    "region_calibracion": "Mendoza, Argentina",
+    "t_base_gdd": 10.0,
+    "nwsb_a": 1.5,
+    "nwsb_slope": -1.875,
+    "dt_upper": 3.20,
+    "cwsi_umbral_alerta": 0.35,
+    "cwsi_umbral_rescate": 0.65,
+    "psi_stem_alerta_mpa": -1.4,
+    "psi_stem_rescate_mpa": -1.8,
+    "referencias": [
+      "Bellvert et al. (2016)",
+      "Schultz (2003)"
+    ],
+    "estado_calibracion": "bibliografico"
+  },
+
+  "syrah": {
+    "nombre": "Syrah",
+    "especie": "Vitis vinifera",
+    "estrategia": "anisohydric_fuerte",
+    "region_calibracion": "Mendoza, Argentina",
+    "t_base_gdd": 10.0,
+    "nwsb_a": 1.5,
+    "nwsb_slope": -2.00,
+    "dt_upper": 3.00,
+    "cwsi_umbral_alerta": 0.40,
+    "cwsi_umbral_rescate": 0.70,
+    "psi_stem_alerta_mpa": -1.4,
+    "psi_stem_rescate_mpa": -1.8,
+    "referencias": [
+      "Schultz (2003)",
+      "Medrano et al. (2003)"
+    ],
+    "estado_calibracion": "bibliografico"
+  },
+
+  "bonarda": {
+    "nombre": "Bonarda",
+    "especie": "Vitis vinifera",
+    "estrategia": "isohydric",
+    "region_calibracion": "Mendoza / Córdoba, Argentina",
+    "t_base_gdd": 10.0,
+    "nwsb_a": 1.5,
+    "nwsb_slope": -1.65,
+    "dt_upper": 3.00,
+    "cwsi_umbral_alerta": 0.28,
+    "cwsi_umbral_rescate": 0.58,
+    "psi_stem_alerta_mpa": -1.1,
+    "psi_stem_rescate_mpa": -1.4,
+    "referencias": [
+      "Estimado por analogía con Malbec (Monteoliva, INTA 2026)"
+    ],
+    "estado_calibracion": "provisional"
+  },
+
+  "torrontes_riojano": {
+    "nombre": "Torrontés Riojano",
+    "especie": "Vitis vinifera",
+    "estrategia": "isohydric",
+    "region_calibracion": "La Rioja / Salta, Argentina",
+    "t_base_gdd": 10.0,
+    "nwsb_a": 1.5,
+    "nwsb_slope": -1.70,
+    "dt_upper": 3.00,
+    "cwsi_umbral_alerta": 0.30,
+    "cwsi_umbral_rescate": 0.60,
+    "psi_stem_alerta_mpa": -1.2,
+    "psi_stem_rescate_mpa": -1.5,
+    "referencias": [
+      "Estimado por analogía con Malbec — pendiente calibración (Monteoliva, INTA 2026)"
+    ],
+    "estado_calibracion": "provisional"
+  },
+
+  "chardonnay": {
+    "nombre": "Chardonnay",
+    "especie": "Vitis vinifera",
+    "estrategia": "anisohydric",
+    "region_calibracion": "San Juan / Mendoza, Argentina",
+    "t_base_gdd": 10.0,
+    "nwsb_a": 1.5,
+    "nwsb_slope": -1.925,
+    "dt_upper": 3.20,
+    "cwsi_umbral_alerta": 0.35,
+    "cwsi_umbral_rescate": 0.65,
+    "psi_stem_alerta_mpa": -1.3,
+    "psi_stem_rescate_mpa": -1.7,
+    "referencias": [
+      "Bellvert et al. (2016)"
+    ],
+    "estado_calibracion": "bibliografico"
+  },
+
+  "sauvignon_blanc": {
+    "nombre": "Sauvignon Blanc",
+    "especie": "Vitis vinifera",
+    "estrategia": "anisohydric_moderado",
+    "region_calibracion": "Mendoza, Argentina",
+    "t_base_gdd": 10.0,
+    "nwsb_a": 1.5,
+    "nwsb_slope": -1.85,
+    "dt_upper": 3.00,
+    "cwsi_umbral_alerta": 0.33,
+    "cwsi_umbral_rescate": 0.63,
+    "psi_stem_alerta_mpa": -1.3,
+    "psi_stem_rescate_mpa": -1.6,
+    "referencias": [
+      "Estimado por analogía con Chardonnay (Monteoliva, INTA 2026)"
+    ],
+    "estado_calibracion": "provisional"
+  },
+
+  "olivo": {
+    "nombre": "Olivo",
+    "especie": "Olea europaea",
+    "estrategia": "anisohydric_muy_fuerte",
+    "region_calibracion": "San Juan, Argentina",
+    "t_base_gdd": 12.5,
+    "nwsb_a": 1.0,
+    "nwsb_slope": -1.40,
+    "dt_upper": 6.00,
+    "cwsi_umbral_alerta": 0.40,
+    "cwsi_umbral_rescate": 0.75,
+    "psi_stem_alerta_mpa": -2.5,
+    "psi_stem_rescate_mpa": -3.0,
+    "referencias": [
+      "García-Tejero et al. (2018)",
+      "Capraro et al. (2025)"
+    ],
+    "estado_calibracion": "bibliografico",
+    "_nota_especial": "Tolerancia extrema a déficit. Umbrales de rescate NO aplicables a vid."
+  },
+
+  "cerezo": {
+    "nombre": "Cerezo",
+    "especie": "Prunus avium",
+    "estrategia": "isohydric_moderado",
+    "region_calibracion": "Cuyo / Patagonia, Argentina",
+    "t_base_gdd": 7.0,
+    "nwsb_a": 1.2,
+    "nwsb_slope": -1.50,
+    "dt_upper": 2.50,
+    "cwsi_umbral_alerta": 0.30,
+    "cwsi_umbral_rescate": 0.60,
+    "psi_stem_alerta_mpa": -0.9,
+    "psi_stem_rescate_mpa": -1.2,
+    "referencias": [
+      "Blanco & Kalcsits (2021)"
+    ],
+    "estado_calibracion": "bibliografico"
+  },
+
+  "pistacho": {
+    "nombre": "Pistacho",
+    "especie": "Pistacia vera",
+    "estrategia": "anisohydric_extremo",
+    "region_calibracion": "San Juan / Catamarca, Argentina",
+    "t_base_gdd": 12.0,
+    "nwsb_a": 0.8,
+    "nwsb_slope": -1.20,
+    "dt_upper": 7.00,
+    "cwsi_umbral_alerta": 0.45,
+    "cwsi_umbral_rescate": 0.80,
+    "psi_stem_alerta_mpa": -3.0,
+    "psi_stem_rescate_mpa": -3.5,
+    "referencias": [
+      "Kanber et al. (1993)"
+    ],
+    "estado_calibracion": "bibliografico",
+    "_nota_especial": "Cultivo de ciclo muy largo — GDD menos relevante para fenología."
+  },
+
+  "nogal": {
+    "nombre": "Nogal",
+    "especie": "Juglans regia",
+    "estrategia": "isohydric_moderado",
+    "region_calibracion": "Coquimbo (Chile) / Mendoza, Argentina",
+    "t_base_gdd": 10.0,
+    "nwsb_a": 1.3,
+    "nwsb_slope": -1.60,
+    "dt_upper": 3.50,
+    "cwsi_umbral_alerta": 0.35,
+    "cwsi_umbral_rescate": 0.65,
+    "psi_stem_alerta_mpa": -1.2,
+    "psi_stem_rescate_mpa": -1.5,
+    "referencias": [
+      "Espadafor et al. (2015)",
+      "Sparks (1992)"
+    ],
+    "estado_calibracion": "bibliografico"
+  },
+
+  "arandano": {
+    "nombre": "Arándano",
+    "especie": "Vaccinium corymbosum",
+    "estrategia": "isohydric_sensible",
+    "region_calibracion": "Buenos Aires / Entre Ríos, Argentina",
+    "t_base_gdd": 7.0,
+    "nwsb_a": 1.5,
+    "nwsb_slope": -1.80,
+    "dt_upper": 2.00,
+    "cwsi_umbral_alerta": 0.25,
+    "cwsi_umbral_rescate": 0.50,
+    "psi_stem_alerta_mpa": -0.6,
+    "psi_stem_rescate_mpa": -0.8,
+    "referencias": [
+      "Williamson et al. (2015)",
+      "USDA Hancock & Finn (2012)"
+    ],
+    "estado_calibracion": "bibliografico",
+    "_nota_especial": "Especie más sensible al estrés hídrico del portfolio. Umbrales de alerta muy bajos."
+  },
+
+  "naranja": {
+    "nombre": "Naranja",
+    "especie": "Citrus sinensis",
+    "estrategia": "isohydric",
+    "region_calibracion": "NOA / Cuyo, Argentina",
+    "t_base_gdd": 13.0,
+    "nwsb_a": 1.2,
+    "nwsb_slope": -1.40,
+    "dt_upper": 4.00,
+    "cwsi_umbral_alerta": 0.30,
+    "cwsi_umbral_rescate": 0.60,
+    "psi_stem_alerta_mpa": -1.2,
+    "psi_stem_rescate_mpa": -1.5,
+    "referencias": [
+      "García-Tejero et al. (2011)",
+      "FAO-56 Allen et al. (1998)"
+    ],
+    "estado_calibracion": "bibliografico",
+    "_nota_especial": "Ciclo casi perenne — GDD de menor relevancia para fenología."
+  },
+
+  "limon": {
+    "nombre": "Limón",
+    "especie": "Citrus limon",
+    "estrategia": "isohydric",
+    "region_calibracion": "NOA / Cuyo, Argentina",
+    "t_base_gdd": 13.0,
+    "nwsb_a": 1.2,
+    "nwsb_slope": -1.45,
+    "dt_upper": 4.00,
+    "cwsi_umbral_alerta": 0.32,
+    "cwsi_umbral_rescate": 0.62,
+    "psi_stem_alerta_mpa": -1.3,
+    "psi_stem_rescate_mpa": -1.6,
+    "referencias": [
+      "FAO-56 Allen et al. (1998)"
+    ],
+    "estado_calibracion": "bibliografico",
+    "_nota_especial": "Ciclo casi perenne — GDD de menor relevancia para fenología."
+  }
+}

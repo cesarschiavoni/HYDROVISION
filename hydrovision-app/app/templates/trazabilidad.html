@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trazabilidad Hídrica — HydroVision AG</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"IBM Plex Sans"','Inter','system-ui','sans-serif'],
+            mono: ['"IBM Plex Mono"','ui-monospace','monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; font-size: 10px; }
+      .print-break { page-break-before: always; }
+      .shadow-sm, .shadow { box-shadow: none !important; }
+    }
+    .bar-fill { transition: width 0.6s ease; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans" x-data="traza()" x-init="init()" x-cloak>
+
+  <!-- NAV -->
+  <nav class="bg-white border-b border-gray-200 shadow-sm no-print sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-2 text-sm">
+        <a href="/dashboard" class="text-gray-500 hover:text-gray-800 transition-colors">Dashboard</a>
+        <span class="text-gray-300">/</span>
+        <a href="/informe" class="text-gray-500 hover:text-gray-800 transition-colors">Informe</a>
+        <span class="text-gray-300">/</span>
+        <span class="text-gray-800 font-medium">Trazabilidad Hídrica</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs bg-blue-100 text-blue-700 border border-blue-200 px-2 py-0.5 rounded font-medium">ISO 14046 · PEF-UE</span>
+        <button @click="downloadCSV()" x-show="data && !error"
+                class="no-print bg-gray-800 text-white text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-gray-700 transition-colors flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14"/>
+          </svg>
+          Exportar CSV
+        </button>
+        <button @click="window.print()" x-show="data && !error"
+                class="no-print bg-white text-gray-700 border border-gray-200 text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+          Imprimir / PDF
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- GATE: Sin acceso (tier < 3) -->
+    <template x-if="error === 403">
+      <div class="flex flex-col items-center justify-center py-24 text-center">
+        <div class="w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286z"/>
+          </svg>
+        </div>
+        <h2 class="text-lg font-semibold text-gray-800 mb-2">Informe de Trazabilidad Hídrica</h2>
+        <p class="text-sm text-gray-500 max-w-sm mb-6">Este informe auditable (ISO 14046 / PEF-UE) está disponible exclusivamente para clientes con <strong>Plan Tier 3</strong>.</p>
+        <a href="/dashboard" class="bg-blue-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Volver al dashboard</a>
+      </div>
+    </template>
+
+    <!-- CARGANDO -->
+    <template x-if="loading && !error">
+      <div class="flex flex-col items-center justify-center py-24">
+        <div class="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mb-3"></div>
+        <p class="text-sm text-gray-500">Generando informe de trazabilidad…</p>
+      </div>
+    </template>
+
+    <!-- CONTENIDO -->
+    <template x-if="data && !loading">
+      <div>
+
+        <!-- ── ENCABEZADO DEL REPORTE ───────────────────────────────── -->
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
+          <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <h1 class="text-xl font-bold text-gray-900">Reporte de Trazabilidad de Riego</h1>
+              </div>
+              <p class="text-sm text-gray-500" x-text="data.field.name + (data.field.location ? ' · ' + data.field.location : '')"></p>
+              <p class="text-xs text-gray-400 mt-0.5">
+                Generado el <span x-text="data.generated_at?.substring(0,10)"></span>
+                · Periodo: <span x-text="data.period.from"></span> → <span x-text="data.period.to"></span>
+              </p>
+            </div>
+
+            <!-- Filtros de periodo y zona -->
+            <div class="flex flex-wrap gap-3 items-end no-print">
+              <div>
+                <label class="text-xs text-gray-500 block mb-1">Periodo</label>
+                <select x-model.number="days" @change="load()" class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="30">Últimos 30 días</option>
+                  <option value="90">Últimos 90 días</option>
+                  <option value="180">Últimos 6 meses</option>
+                  <option value="365">Última campaña (1 año)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── KPI CARDS ───────────────────────────────────────────── -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+
+          <!-- Agua estimada total -->
+          <div class="bg-blue-600 text-white rounded-2xl p-5 shadow-sm">
+            <p class="text-xs font-medium text-blue-200 uppercase tracking-wider mb-2">Agua aplicada</p>
+            <p class="text-3xl font-bold" x-text="totalWaterM3().toLocaleString('es-AR')"></p>
+            <p class="text-xs text-blue-200 mt-1">m³ estimado total</p>
+          </div>
+
+          <!-- Eventos -->
+          <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Eventos de riego</p>
+            <p class="text-3xl font-bold text-gray-900" x-text="data.summary.total_irrigation_events"></p>
+            <p class="text-xs text-gray-400 mt-1">activaciones ON registradas</p>
+          </div>
+
+          <!-- Duración total -->
+          <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Tiempo total</p>
+            <p class="text-3xl font-bold text-gray-900" x-text="formatMinutes(data.summary.total_irrigation_min)"></p>
+            <p class="text-xs text-gray-400 mt-1">de riego en el período</p>
+          </div>
+
+          <!-- Integridad -->
+          <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+            <p class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Integridad</p>
+            <p class="text-2xl font-bold text-green-700" x-text="data.methodology.data_integrity"></p>
+            <p class="text-xs text-gray-400 mt-1">cadena de datos continua</p>
+          </div>
+
+        </div>
+
+        <!-- ── CONSUMO POR ZONA ─────────────────────────────────────── -->
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold text-gray-800 uppercase tracking-wider">Consumo hídrico por zona</h2>
+            <span class="text-xs text-gray-400" x-text="data.summary.zones.length + ' zona(s)'"></span>
+          </div>
+
+          <template x-if="data.summary.zones.length === 0">
+            <p class="text-sm text-gray-400 py-4 text-center">Sin datos de zona en este período.</p>
+          </template>
+
+          <div class="space-y-3" x-show="data.summary.zones.length > 0">
+            <template x-for="z in zonasSorted()" :key="z.zone">
+              <div class="flex items-center gap-4">
+                <!-- Nombre + variedad -->
+                <div class="w-36 flex-shrink-0">
+                  <p class="text-sm font-medium text-gray-800 truncate" x-text="z.zone"></p>
+                  <p class="text-xs text-gray-400 truncate" x-text="z.varietal || '—'"></p>
+                </div>
+                <!-- Barra de agua -->
+                <div class="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
+                  <div class="bar-fill h-3 rounded-full bg-blue-500"
+                       :style="`width: ${maxWaterZone() > 0 ? (z.estimated_water_m3_ha / maxWaterZone() * 100) : 0}%`"></div>
+                </div>
+                <!-- Valor -->
+                <div class="w-24 text-right flex-shrink-0">
+                  <span class="text-sm font-semibold text-blue-700" x-text="z.estimated_water_m3_ha.toLocaleString('es-AR')"></span>
+                  <span class="text-xs text-gray-400"> m³/ha</span>
+                </div>
+                <!-- Activaciones -->
+                <div class="w-20 text-right flex-shrink-0 hidden md:block">
+                  <span class="text-xs text-gray-500" x-text="z.activations + ' eventos'"></span>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <!-- Totales -->
+          <div x-show="data.summary.zones.length > 0"
+               class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+            <span class="text-gray-500">Total acumulado</span>
+            <span class="font-semibold text-gray-800">
+              <span x-text="totalWaterM3().toLocaleString('es-AR')"></span> m³ ·
+              <span x-text="data.summary.total_irrigation_events"></span> activaciones ·
+              <span x-text="data.summary.total_irrigation_min.toLocaleString('es-AR')"></span> min
+            </span>
+          </div>
+        </div>
+
+        <!-- ── DETALLE DE EVENTOS ───────────────────────────────────── -->
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6 print-break">
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <h2 class="text-sm font-semibold text-gray-800 uppercase tracking-wider">
+              Cadena de eventos auditables
+              <span class="text-gray-400 font-normal normal-case" x-text="' · ' + filteredEvents().length + ' registros'"></span>
+            </h2>
+            <!-- Buscador / filtro nodo -->
+            <div class="no-print">
+              <input x-model="searchEvt" type="text" placeholder="Filtrar por nodo o zona…"
+                     class="border border-gray-200 rounded-lg px-3 py-1.5 text-xs w-52 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+          </div>
+
+          <template x-if="data.events.length === 0">
+            <p class="text-sm text-gray-400 py-8 text-center">Sin eventos de riego en el período seleccionado.</p>
+          </template>
+
+          <div x-show="data.events.length > 0" class="overflow-x-auto -mx-2">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="bg-gray-50 border-y border-gray-200">
+                  <th class="text-left px-3 py-2.5 font-semibold text-gray-500 whitespace-nowrap">Fecha / hora</th>
+                  <th class="text-left px-3 py-2.5 font-semibold text-gray-500">Nodo</th>
+                  <th class="text-left px-3 py-2.5 font-semibold text-gray-500">Zona</th>
+                  <th class="text-center px-3 py-2.5 font-semibold text-gray-500">Acción</th>
+                  <th class="text-right px-3 py-2.5 font-semibold text-gray-500">Duración</th>
+                  <th class="text-right px-3 py-2.5 font-semibold text-gray-500">CWSI</th>
+                  <th class="text-right px-3 py-2.5 font-semibold text-gray-500">HSI</th>
+                  <th class="text-right px-3 py-2.5 font-semibold text-gray-500 hidden md:table-cell">T aire</th>
+                  <th class="text-right px-3 py-2.5 font-semibold text-gray-500 hidden md:table-cell">HR%</th>
+                  <th class="text-right px-3 py-2.5 font-semibold text-gray-500 hidden lg:table-cell">Viento</th>
+                  <th class="text-right px-3 py-2.5 font-semibold text-gray-500 hidden lg:table-cell">Lluvia</th>
+                  <th class="text-center px-3 py-2.5 font-semibold text-gray-500">Calidad</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-50">
+                <template x-for="(e, i) in pagedEvents()" :key="i">
+                  <tr class="hover:bg-blue-50/30 transition-colors"
+                      :class="e.action !== 'riego_on' ? 'opacity-60' : ''">
+                    <td class="px-3 py-2.5 text-gray-600 font-mono whitespace-nowrap"
+                        x-text="e.timestamp ? e.timestamp.replace('T',' ').substring(0,16) : '—'"></td>
+                    <td class="px-3 py-2.5 font-mono text-gray-800 font-medium" x-text="e.node_id || '—'"></td>
+                    <td class="px-3 py-2.5 text-gray-700" x-text="e.zone || '—'"></td>
+                    <td class="px-3 py-2.5 text-center">
+                      <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-semibold"
+                            :class="e.action === 'riego_on'
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'bg-gray-100 text-gray-500'"
+                            x-text="e.action === 'riego_on' ? 'ON' : 'OFF'"></span>
+                    </td>
+                    <td class="px-3 py-2.5 text-right text-gray-700"
+                        x-text="e.duration_min != null ? e.duration_min + ' min' : '—'"></td>
+                    <!-- CWSI con semáforo -->
+                    <td class="px-3 py-2.5 text-right font-semibold">
+                      <span class="px-1.5 py-0.5 rounded"
+                            :class="e.trigger_cwsi >= 0.6 ? 'bg-red-100 text-red-700'
+                                   : e.trigger_cwsi >= 0.3 ? 'bg-amber-100 text-amber-700'
+                                   : 'bg-green-100 text-green-700'"
+                            x-text="e.trigger_cwsi != null ? e.trigger_cwsi.toFixed(3) : '—'"></span>
+                    </td>
+                    <td class="px-3 py-2.5 text-right text-gray-700"
+                        x-text="e.trigger_hsi != null ? e.trigger_hsi.toFixed(3) : '—'"></td>
+                    <td class="px-3 py-2.5 text-right text-gray-600 hidden md:table-cell"
+                        x-text="e.t_air_c != null ? e.t_air_c + ' °C' : '—'"></td>
+                    <td class="px-3 py-2.5 text-right text-gray-600 hidden md:table-cell"
+                        x-text="e.rh_pct != null ? e.rh_pct + '%' : '—'"></td>
+                    <td class="px-3 py-2.5 text-right text-gray-600 hidden lg:table-cell"
+                        x-text="e.wind_ms != null ? e.wind_ms + ' m/s' : '—'"></td>
+                    <td class="px-3 py-2.5 text-right text-gray-600 hidden lg:table-cell"
+                        x-text="e.rain_mm != null ? e.rain_mm + ' mm' : '—'"></td>
+                    <td class="px-3 py-2.5 text-center">
+                      <span class="w-2 h-2 rounded-full inline-block"
+                            :class="e.data_quality === 'good' ? 'bg-green-500' : 'bg-amber-400'"
+                            :title="e.data_quality || '—'"></span>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Paginación -->
+          <div x-show="filteredEvents().length > pageSize" class="no-print mt-4 flex items-center justify-between text-xs text-gray-500">
+            <span x-text="`Mostrando ${Math.min((page+1)*pageSize, filteredEvents().length)} de ${filteredEvents().length}`"></span>
+            <div class="flex gap-2">
+              <button @click="page = Math.max(0, page-1)" :disabled="page === 0"
+                      class="px-3 py-1.5 rounded border border-gray-200 hover:bg-gray-50 disabled:opacity-40 transition-colors">Anterior</button>
+              <button @click="page = page+1" :disabled="(page+1)*pageSize >= filteredEvents().length"
+                      class="px-3 py-1.5 rounded border border-gray-200 hover:bg-gray-50 disabled:opacity-40 transition-colors">Siguiente</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── METODOLOGÍA (colapsable) ─────────────────────────────── -->
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm mb-6 overflow-hidden no-print">
+          <button @click="showMeta = !showMeta"
+                  class="w-full flex items-center justify-between px-6 py-4 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+            <span>Metodología de medición</span>
+            <svg class="w-4 h-4 text-gray-400 transition-transform" :class="showMeta ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div x-show="showMeta" class="px-6 pb-6 border-t border-gray-100">
+            <div class="grid md:grid-cols-2 gap-x-8 gap-y-3 text-sm text-gray-600 mt-4">
+              <div>
+                <span class="font-medium text-gray-700 block text-xs uppercase tracking-wide mb-0.5">Índice de estrés</span>
+                <span x-text="data.methodology.stress_index"></span>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700 block text-xs uppercase tracking-wide mb-0.5">Frecuencia de medición</span>
+                <span x-text="data.methodology.measurement_frequency"></span>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700 block text-xs uppercase tracking-wide mb-0.5">Complemento satelital</span>
+                <span x-text="data.methodology.satellite_complement"></span>
+              </div>
+              <div>
+                <span class="font-medium text-gray-700 block text-xs uppercase tracking-wide mb-0.5">Protocolo de decisión</span>
+                <span x-text="data.methodology.decision_protocol"></span>
+              </div>
+              <div class="col-span-2">
+                <span class="font-medium text-gray-700 block text-xs uppercase tracking-wide mb-0.5">Integridad de datos</span>
+                <span x-text="data.methodology.data_integrity"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── SELLO DE AUDITORÍA ───────────────────────────────────── -->
+        <div class="rounded-2xl border border-green-200 bg-green-50 p-6 mb-6">
+          <div class="flex items-start gap-4">
+            <!-- Icono sello -->
+            <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+              <svg class="w-6 h-6 text-green-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-sm font-semibold text-green-800 mb-1">Nota de Auditoría</h3>
+              <p class="text-sm text-green-700 leading-relaxed" x-text="data.audit_note"></p>
+              <div class="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs text-green-600">
+                <span><strong>Estándar:</strong> <span x-text="data.standard"></span></span>
+                <span><strong>Período:</strong> <span x-text="data.period.from + ' → ' + data.period.to"></span></span>
+                <span><strong>Generado:</strong> <span x-text="data.generated_at?.replace('T',' ').substring(0,19)"></span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PIE DE PÁGINA ───────────────────────────────────────── -->
+        <div class="text-center text-xs text-gray-400 py-4 border-t border-gray-200">
+          <p class="font-medium text-gray-500">HydroVision AG — Sistema de monitoreo hídrico de precisión</p>
+          <p class="mt-0.5">Colonia Caroya, Córdoba · ANPCyT STARTUP 2025 TRL 3-4</p>
+        </div>
+
+      </div>
+    </template>
+
+  </div>
+
+<script>
+function traza() {
+  return {
+    data: null,
+    loading: true,
+    error: null,
+    days: 365,
+    searchEvt: '',
+    page: 0,
+    pageSize: 50,
+    showMeta: false,
+
+    async init() {
+      await this.load();
+    },
+
+    async load() {
+      this.loading = true;
+      this.error = null;
+      this.page = 0;
+      try {
+        let url = `/api/report/traceability?days=${this.days}`;
+        const r = await fetch(url);
+        if (r.status === 403) { this.error = 403; this.loading = false; return; }
+        if (!r.ok) throw new Error(r.status);
+        this.data = await r.json();
+      } catch (e) {
+        this.error = e.message || 'error';
+      }
+      this.loading = false;
+    },
+
+    downloadCSV() {
+      window.open(`/api/report/traceability?days=${this.days}&fmt=csv`, '_blank');
+    },
+
+    filteredEvents() {
+      if (!this.data?.events) return [];
+      const q = this.searchEvt.trim().toLowerCase();
+      if (!q) return this.data.events;
+      return this.data.events.filter(e =>
+        (e.node_id || '').toLowerCase().includes(q) ||
+        (e.zone || '').toLowerCase().includes(q)
+      );
+    },
+
+    pagedEvents() {
+      const evts = this.filteredEvents();
+      const start = this.page * this.pageSize;
+      return evts.slice(start, start + this.pageSize);
+    },
+
+    zonasSorted() {
+      return [...(this.data?.summary?.zones || [])].sort((a, b) =>
+        b.estimated_water_m3_ha - a.estimated_water_m3_ha
+      );
+    },
+
+    maxWaterZone() {
+      const zones = this.data?.summary?.zones || [];
+      if (!zones.length) return 1;
+      return Math.max(...zones.map(z => z.estimated_water_m3_ha), 1);
+    },
+
+    totalWaterM3() {
+      return (this.data?.summary?.zones || []).reduce((s, z) => s + (z.estimated_water_m3_ha || 0), 0);
+    },
+
+    formatMinutes(min) {
+      if (!min) return '0 min';
+      if (min < 60) return min + ' min';
+      const h = Math.floor(min / 60);
+      const m = min % 60;
+      return h + 'h ' + (m > 0 ? m + 'min' : '');
+    },
+  };
+}
+</script>
+</body>
+</html>

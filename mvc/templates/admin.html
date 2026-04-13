@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HydroVision AG — Configuración</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            green: {
+              50:'#F0F9F4',100:'#D1F2E0',200:'#A3E4C1',300:'#6FCE9C',
+              400:'#27AE60',500:'#1E7B55',600:'#1B6B4A',700:'#155A3C',
+              800:'#1B6B4A',900:'#0F3624',
+            },
+            yellow: { 500:'#F39C12',600:'#F39C12' },
+            red:    { 500:'#E74C3C',600:'#E74C3C' },
+            blue:   { 500:'#2980B9',600:'#2980B9' },
+            gray:   { 100:'#FAFAF7' },
+          },
+          fontFamily: {
+            sans:  ['"IBM Plex Sans"','Inter','system-ui','sans-serif'],
+            title: ['Inter','system-ui','sans-serif'],
+            mono:  ['"IBM Plex Mono"','ui-monospace','monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+  <style>
+    [x-cloak]         { display: none !important; }
+    html, body        { height: 100%; margin: 0; }
+    #map-container    { height: calc(100vh - 56px); }  /* viewport menos header */
+    .zone-item        { transition: background 0.15s; }
+    .zone-item:hover  { background: #F0F9F4; }
+    .zone-item.active { background: #EBF5FB; border-left: 3px solid #1B6B4A; }
+    .tool-btn         { transition: background 0.12s; }
+    .tool-btn.active  { background: #1B6B4A !important; color: white !important; }
+    /* Ocultar toolbar nativo de Leaflet.draw */
+    .leaflet-draw-toolbar { display: none !important; }
+    /* Superposición de zonas: mix-blend-mode en cada path SVG */
+    .zone-fill { mix-blend-mode: multiply; }
+    /* Tooltips estilizados */
+    .tip-wrap { position: relative; display: inline-block; }
+    .tip-box {
+      position: absolute;
+      z-index: 9999;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      background: #2D3436;
+      color: #f9fafb;
+      font-size: 11px;
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s ease;
+      line-height: 1.5;
+      white-space: normal;
+    }
+    .tip-wrap:hover .tip-box { opacity: 1; }
+    .tip-box::after {
+      content: '';
+      position: absolute;
+      top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #2D3436;
+    }
+    .tip-box.tip-right { left: auto; right: 0; transform: none; }
+    .tip-box.tip-right::after { left: auto; right: 12px; transform: none; }
+    .tip-box.tip-left  { left: 0; transform: none; }
+    .tip-box.tip-left::after  { left: 12px; transform: none; }
+  </style>
+</head>
+
+<body class="bg-gray-100" x-data="adminPanel()" x-init="init()" x-cloak>
+
+  <!-- HEADER (56px fijo) -->
+  <nav class="bg-green-800 text-white shadow-md flex-shrink-0">
+    <div class="max-w-full px-5 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="/" class="flex items-center gap-2">
+          <span class="text-lg font-bold tracking-tight font-title">HydroVision AG</span>
+        </a>
+        <span class="text-green-300 text-xs hidden sm:block" x-text="cfg.field_name + ' · ' + cfg.field_varietal"></span>
+      </div>
+      <div class="flex items-center gap-1">
+        <a href="/"          class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Inicio</a>
+        <a href="/dashboard"  class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Dashboard</a>
+        <a href="/informe"    class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Informe</a>
+        <a href="/admin"      class="px-3 py-1.5 rounded text-sm font-medium bg-green-700 text-white">Admin</a>
+        <span class="mx-1 w-px h-5 bg-green-600"></span>
+        <!-- Admin tabs -->
+        <button @click="activeTab = 'campo'"
+                :class="activeTab === 'campo' ? 'bg-green-600 text-white' : 'text-green-200 hover:text-white'"
+                class="text-xs font-medium px-3 py-1.5 rounded transition-colors">
+          Campo
+        </button>
+        <button @click="activeTab = 'nodos'"
+                :class="activeTab === 'nodos' ? 'bg-green-600 text-white' : 'text-green-200 hover:text-white'"
+                class="text-xs font-medium px-3 py-1.5 rounded transition-colors">
+          Nodos
+        </button>
+        <button @click="toggleSimulate()" :disabled="simLoading"
+                class="disabled:opacity-50 text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors"
+                :class="simRunning ? 'bg-red-600 hover:bg-red-500' : 'bg-purple-600 hover:bg-purple-500'">
+          <span x-show="simLoading">...</span>
+          <span x-show="!simLoading && simRunning">&#9209; Detener sim.</span>
+          <span x-show="!simLoading && !simRunning">&#9654; Simular</span>
+        </button>
+        <span class="bg-green-700 text-green-200 px-2 py-0.5 rounded text-xs font-mono ml-1">TRL 4</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- TOAST -->
+  <div x-show="toast.visible" x-transition
+       class="fixed top-4 right-4 z-[9999] px-4 py-3 rounded-lg shadow-xl text-sm font-medium max-w-xs"
+       :class="toast.type === 'ok' ? 'bg-green-600 text-white' : toast.type === 'warn' ? 'bg-amber-500 text-white' : 'bg-red-600 text-white'"
+       x-text="toast.text">
+  </div>
+
+  <!-- LAYOUT PRINCIPAL: panel izq + mapa -->
+  <div id="map-container" class="flex overflow-hidden">
+
+    <!-- ═══════════════════════════════════════════════════════
+         PANEL IZQUIERDO
+    ═══════════════════════════════════════════════════════ -->
+    <aside class="w-72 bg-white border-r border-gray-200 flex flex-col overflow-hidden flex-shrink-0">
+
+      <!-- TAB: CAMPO / CONFIG -->
+      <div x-show="activeTab === 'campo'" class="flex flex-col h-full overflow-y-auto">
+        <div class="p-4 border-b border-gray-100">
+          <h2 class="text-sm font-semibold text-gray-700 mb-3">Información del campo</h2>
+          <div class="space-y-2">
+            <div>
+              <label class="block text-xs text-gray-400 mb-0.5">Nombre</label>
+              <input x-model="cfg.field_name" type="text"
+                     class="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" />
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-0.5">Ubicación</label>
+              <input x-model="cfg.field_location" type="text"
+                     class="w-full border border-gray-200 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-green-400" />
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs text-gray-400 mb-0.5">Varietales</label>
+                <div class="w-full border border-gray-200 rounded px-2 py-1.5 text-sm bg-gray-50 text-gray-500"
+                     x-text="cfg.field_varietal || 'Definidas por zona'"></div>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-400 mb-0.5">Superficie (ha)</label>
+                <div class="w-full border border-gray-200 rounded px-2 py-1.5 text-sm bg-gray-50 text-gray-500"
+                     x-text="cfg.field_area_ha || '—'"></div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-gray-100">
+            <h3 class="text-xs font-semibold text-gray-500 mb-2">Umbrales CWSI</h3>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-xs text-gray-400 mb-0.5">
+                  Medio
+                  <span class="text-yellow-500">●</span>
+                </label>
+                <div class="w-full border border-gray-200 rounded px-2 py-1.5 text-sm bg-gray-50 text-gray-500"
+                     x-text="cfg.cwsi_medio"></div>
+              </div>
+              <div>
+                <label class="block text-xs text-gray-400 mb-0.5">
+                  Alto
+                  <span class="text-red-500">●</span>
+                </label>
+                <div class="w-full border border-gray-200 rounded px-2 py-1.5 text-sm bg-gray-50 text-gray-500"
+                     x-text="cfg.cwsi_alto"></div>
+              </div>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">Jackson et al. (1981) / FAO-56</p>
+          </div>
+          <button @click="saveConfig()" :disabled="saving"
+                  class="mt-3 w-full bg-green-700 hover:bg-green-800 disabled:opacity-50
+                         text-white text-xs font-semibold px-3 py-2 rounded transition-colors">
+            <span x-text="saving ? 'Guardando...' : 'Guardar configuración'"></span>
+          </button>
+        </div>
+
+        <!-- Lista de zonas -->
+        <div class="flex items-center justify-between px-4 pt-3 pb-2">
+          <h2 class="text-sm font-semibold text-gray-700">Zonas (<span x-text="zones.length"></span>)</h2>
+          <span class="text-xs text-gray-400">Usá las herramientas del mapa →</span>
+        </div>
+
+        <div class="flex-1 overflow-y-auto">
+          <template x-if="zones.length === 0">
+            <div class="px-4 py-6 text-center text-gray-400 text-xs">
+              <p class="mb-1">Sin zonas aún.</p>
+              <p>Dibujá un polígono en el mapa.</p>
+            </div>
+          </template>
+
+          <template x-for="zone in zones" :key="zone.id">
+            <div class="zone-item border-l-2 border-transparent px-4 py-2.5 cursor-pointer"
+                 :class="selectedZoneId === zone.id ? 'active' : ''"
+                 @click="selectZone(zone)">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="text-xs font-mono text-gray-300 flex-shrink-0" x-text="'Z' + zone.id"></span>
+                  <span class="text-sm font-medium text-gray-700 truncate" x-text="zone.name"></span>
+                </div>
+                <button @click.stop="confirmDeleteZone(zone.id)"
+                        class="text-gray-300 hover:text-red-500 ml-2 flex-shrink-0 transition-colors"
+                        title="Eliminar zona">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                <template x-if="zone.varietal">
+                  <span class="text-xs text-green-600 font-medium" x-text="zone.varietal"></span>
+                </template>
+                <template x-if="zone.vertices">
+                  <span class="text-xs text-blue-400">polígono</span>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- TAB: NODOS -->
+      <div x-show="activeTab === 'nodos'" class="flex flex-col h-full overflow-y-auto">
+        <div class="flex items-center justify-between px-4 pt-4 pb-2">
+          <h2 class="text-sm font-semibold text-gray-700">Nodos conocidos</h2>
+          <button @click="fetchNodes()" class="text-xs text-green-700 hover:text-green-900">↻</button>
+        </div>
+        <p class="px-4 pb-3 text-xs text-gray-400">
+          Los nodos aparecen al recibir su primera telemetría.
+        </p>
+
+        <template x-if="nodes.length === 0">
+          <div class="px-4 py-6 text-center text-gray-400 text-xs">
+            <p>Sin nodos registrados.</p>
+            <p class="mt-1">Usá <strong>Simular datos</strong> desde el dashboard.</p>
+          </div>
+        </template>
+
+        <div class="flex-1 overflow-y-auto">
+          <template x-for="node in nodes" :key="node.node_id">
+            <div class="px-4 py-3 border-b border-gray-50 last:border-0">
+              <!-- Vista normal -->
+              <template x-if="editingNode?.node_id !== node.node_id">
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-medium text-sm text-gray-700"
+                            x-text="node.name || node.node_id"></span>
+                      <span x-show="node.origen === 'simulado'"
+                            class="bg-purple-100 text-purple-600 text-xs px-1 rounded">SIM</span>
+                      <span x-show="node.origen === 'real'"
+                            class="bg-green-100 text-green-700 text-xs px-1 rounded">REAL</span>
+                    </div>
+                    <button @click="startEditNode(node)"
+                            class="text-xs text-blue-500 hover:text-blue-700">Editar</button>
+                  </div>
+                  <div class="flex items-center gap-3 text-xs text-gray-400">
+                    <span x-text="node.zona_name ? 'Zona ' + node.zona_id : 'Sin zona'"></span>
+                    <template x-if="node.solenoid">
+                      <span class="text-blue-600 font-medium" x-text="'Sol. ' + node.solenoid"></span>
+                    </template>
+                    <template x-if="!node.solenoid">
+                      <span class="text-gray-300">Sin solenoide</span>
+                    </template>
+                    <span x-show="node.sol_sim"
+                          class="bg-amber-100 text-amber-600 text-xs px-1 rounded font-medium">PRUEBA</span>
+                    <template x-if="node.cwsi !== null">
+                      <span :class="node.cwsi < 0.3 ? 'text-green-600' : node.cwsi < 0.6 ? 'text-yellow-600' : 'text-red-600'"
+                            class="font-semibold"
+                            x-text="'CWSI ' + node.cwsi.toFixed(2)"></span>
+                    </template>
+                    <span x-show="node.bat_pct !== null" x-text="node.bat_pct + '%'"></span>
+                  </div>
+                  <div class="text-xs text-gray-300 mt-0.5 font-mono" x-text="node.node_id"></div>
+                </div>
+              </template>
+
+              <!-- Vista edición -->
+              <template x-if="editingNode?.node_id === node.node_id">
+                <div class="space-y-2">
+                  <input x-model="editingNode.name" type="text" placeholder="Nombre del nodo"
+                         class="w-full border border-blue-300 rounded px-2 py-1.5 text-sm focus:outline-none" />
+                  <div class="w-full border border-gray-200 rounded px-2 py-1.5 text-sm bg-gray-50 text-gray-500 flex items-center justify-between">
+                    <span x-text="node.zona_name ? 'Zona ' + node.zona_id + ' — ' + node.zona_name : 'Sin zona (esperando GPS)'"></span>
+                    <span class="text-xs text-gray-400 ml-2">GPS</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <label class="text-xs text-gray-400 whitespace-nowrap">Solenoide</label>
+                    <div class="flex-1 border border-gray-200 rounded px-2 py-1.5 text-sm bg-gray-50 text-gray-500"
+                         x-text="editingNode.solenoid ? 'Canal ' + editingNode.solenoid : 'No informado por el nodo'"></div>
+                  </div>
+                  <!-- Toggle modo prueba (simulación solenoide) -->
+                  <template x-if="editingNode.solenoid">
+                    <div class="flex items-center gap-2">
+                      <label class="text-xs text-gray-400 whitespace-nowrap">Modo prueba</label>
+                      <button @click="toggleSolSim(editingNode)"
+                              class="flex-1 flex items-center justify-between border rounded px-2 py-1.5 text-sm transition-colors"
+                              :class="editingNode.sol_sim
+                                  ? 'bg-amber-50 border-amber-300 text-amber-700'
+                                  : 'bg-gray-50 border-gray-200 text-gray-500'">
+                        <span x-text="editingNode.sol_sim
+                            ? 'GPIO desactivado — solo simula decisiones'
+                            : 'Normal — el solenoide riega cuando corresponde'"></span>
+                      </button>
+                    </div>
+                  </template>
+                  <div class="flex gap-2">
+                    <button @click="saveNode()"
+                            class="flex-1 bg-green-700 text-white text-xs font-semibold py-1.5 rounded">
+                      Guardar
+                    </button>
+                    <button @click="editingNode = null"
+                            class="flex-1 bg-gray-100 text-gray-500 text-xs py-1.5 rounded">
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════════════
+         SECCIÓN CENTRAL: mapa + panel de edición de zona
+    ═══════════════════════════════════════════════════════ -->
+    <div class="flex-1 flex flex-col overflow-hidden relative">
+
+      <!-- Toolbar del mapa (superpuesto sobre el mapa) -->
+      <div class="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] flex items-center
+                  bg-white rounded-lg shadow-lg border border-gray-200 divide-x divide-gray-100 text-xs">
+
+        <!-- Seleccionar / mover -->
+        <button @click="setTool('select')"
+                :class="mapTool === 'select' ? 'active' : 'hover:bg-gray-50 text-gray-600'"
+                class="tool-btn flex items-center gap-1.5 px-3 py-2 rounded-l-lg font-medium"
+                title="Seleccionar / mover zona (V)">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/>
+          </svg>
+          Seleccionar
+        </button>
+
+        <!-- Dibujar polígono -->
+        <button @click="setTool('poly')"
+                :class="mapTool === 'poly' ? 'active' : 'hover:bg-gray-50 text-gray-600'"
+                class="tool-btn flex items-center gap-1.5 px-3 py-2 font-medium"
+                title="Dibujar zona poligonal libre (P)">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <polygon points="12,3 21,9 17,20 7,20 3,9" stroke-width="2" fill="none"/>
+          </svg>
+          Polígono
+        </button>
+
+        <!-- Eliminar seleccionada -->
+        <button @click="confirmDeleteZone(selectedZoneId)"
+                x-show="selectedZoneId"
+                class="tool-btn flex items-center gap-1.5 px-3 py-2 rounded-r-lg
+                       text-red-500 hover:bg-red-50 font-medium"
+                title="Eliminar zona seleccionada (Del)">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+          Eliminar
+        </button>
+      </div>
+
+      <!-- Hint contextual bajo el toolbar -->
+      <div class="absolute top-14 left-1/2 -translate-x-1/2 z-[1000] text-xs
+                  bg-black/50 text-white px-3 py-1 rounded-full pointer-events-none
+                  transition-opacity duration-300"
+           :class="mapHint ? 'opacity-100' : 'opacity-0'"
+           x-text="mapHint">
+      </div>
+
+      <!-- MAPA -->
+      <div id="admin-map" class="flex-1"></div>
+
+      <!-- Panel de edición de zona (aparece al seleccionar o dibujar) -->
+      <div x-show="showEditPanel" x-transition:enter="transition ease-out duration-200"
+           x-transition:enter-start="translate-y-2 opacity-0"
+           x-transition:enter-end="translate-y-0 opacity-100"
+           class="flex-shrink-0 bg-white border-t border-gray-200 shadow-lg px-5 py-4">
+
+        <div class="flex items-start gap-5">
+          <div class="flex-1 grid grid-cols-5 gap-3">
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">
+                Nombre de la zona
+                <span class="tip-wrap cursor-help text-gray-300 text-xs">
+                  (?)
+                  <span class="tip-box tip-left">Nombre descriptivo de la zona. Se muestra en el Dashboard, el Informe y las alertas.</span>
+                </span>
+              </label>
+              <input x-model="editZone.name" type="text" placeholder="Bloque Norte"
+                     id="zone-name-input"
+                     @blur="autoSaveZone()"
+                     class="w-full border border-gray-300 rounded px-2.5 py-2 text-sm
+                            focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">
+                Variedad / cultivo <span class="text-red-400">*</span>
+                <span class="tip-wrap cursor-help text-gray-300 text-xs">
+                  (?)
+                  <span class="tip-box tip-left">Requerido. El Ky FAO-56 y la fenología se determinan automáticamente según la variedad y el mes.</span>
+                </span>
+              </label>
+              <select x-model="editZone.varietal"
+                      @change="onVarietalChange(editZone.varietal)"
+                      :class="!editZone.varietal && zoneFormTouched ? 'border-red-400' : 'border-gray-300'"
+                      class="w-full border rounded px-2.5 py-2 text-sm
+                             focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <option value="">-- Seleccionar variedad --</option>
+                <template x-for="v in varieties" :key="v">
+                  <option :value="v" x-text="v"></option>
+                </template>
+              </select>
+              <p x-show="!editZone.varietal && zoneFormTouched" class="text-red-400 text-xs mt-0.5">Requerido</p>
+            </div>
+            <div>
+              <label class="block text-xs text-gray-400 mb-1">
+                Rendimiento (kg/ha) <span class="text-red-400">*</span>
+                <span class="tip-wrap cursor-help text-gray-300 text-xs">
+                  (?)
+                  <span class="tip-box">Rendimiento potencial de la zona. Se sugiere un valor según la variedad seleccionada.</span>
+                </span>
+              </label>
+              <input x-model="editZone.crop_yield_kg_ha" type="number" min="100"
+                     :placeholder="yieldPlaceholder"
+                     @blur="autoSaveZone()"
+                     :class="!editZone.crop_yield_kg_ha && zoneFormTouched ? 'border-red-400' : 'border-gray-300'"
+                     class="w-full border rounded px-2.5 py-2 text-sm
+                            focus:outline-none focus:ring-2 focus:ring-blue-400" />
+              <p x-show="!editZone.crop_yield_kg_ha && zoneFormTouched" class="text-red-400 text-xs mt-0.5">Requerido</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-4">
+            <!-- Nueva zona: botones Crear + Descartar -->
+            <template x-if="!editZone.id">
+              <div class="flex items-center gap-2">
+                <button @click="saveEditZone()" :disabled="saving"
+                        class="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white
+                               text-sm font-semibold px-4 py-2 rounded transition-colors">
+                  <span x-text="saving ? 'Guardando...' : 'Crear zona'"></span>
+                </button>
+                <button @click="cancelEdit()"
+                        class="text-gray-400 hover:text-gray-600 text-sm px-3 py-2">
+                  Descartar
+                </button>
+              </div>
+            </template>
+            <!-- Zona existente: indicador auto-guardado -->
+            <template x-if="editZone.id">
+              <span x-show="saving" class="text-xs text-gray-400 italic">Guardando...</span>
+            </template>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+  function adminPanel() {
+    return {
+      // ── Estado general ──────────────────────────────────────────────
+      cfg: { field_name:'', field_varietal:'', field_area_ha:'', field_location:'', cwsi_medio:'', cwsi_alto:'' },
+      zones:        [],
+      nodes:        [],
+
+      // ── Variedades soportadas (Ky FAO-56 gestionado automáticamente por el servidor) ──
+      // Prioridad 1: Mendoza (vid) + San Juan (olivo) — mercados con mayor ROI
+      // Prioridad 2: Cerezo, pistacho, arándano (alto valor exportación)
+      varieties: [
+        'vid - malbec',
+        'vid - cabernet',
+        'vid - bonarda',
+        'vid - syrah',
+        'olivo',
+        'cerezo',
+        'pistacho',
+        'arándano',
+        'nogal',
+        'citrus - naranja',
+        'citrus - limón',
+        'citrus - pomelo',
+      ],
+
+      activeTab:    'campo',
+      saving:       false,
+      toast:        { visible: false, type: 'ok', text: '' },
+
+      // ── Simulación ──────────────────────────────────────────────────
+      simRunning:   false,
+      simLoading:   false,
+
+      // ── Formulario zona ─────────────────────────────────────────────
+      zoneFormTouched: false,
+      yieldPlaceholder: 'ej: 8000',
+
+      // Rendimientos sugeridos por variedad (kg/ha) — valores típicos Argentina
+      yieldDefaults: {
+        'vid - malbec': 8000, 'vid - cabernet': 7500, 'vid - bonarda': 9000,
+        'vid - syrah': 8500, 'olivo': 6000, 'cerezo': 10000, 'pistacho': 3500,
+        'arándano': 12000, 'nogal': 4000, 'citrus - naranja': 35000,
+        'citrus - limón': 30000, 'citrus - pomelo': 28000,
+      },
+
+      // ── Mapa ────────────────────────────────────────────────────────
+      adminMap:         null,
+      mapTool:          'select',   // 'select' | 'rect' | 'poly'
+      mapHint:          '',
+      _drawControl:     null,
+      _featureGroup:    null,
+      _zoneLayers:      {},         // {zone_id: L.layer}
+      _editHandles:     [],
+      _labelMarkers:    [],         // markers de etiquetas de zona (se limpian en cada render)
+      _nodeMapLayers:   [],
+      _pendingLayer:    null,       // capa recién dibujada (antes de guardar)
+
+      // ── Panel de edición ────────────────────────────────────────────
+      selectedZoneId:   null,
+      showEditPanel:    false,
+      editZone:         { id: null, name: '', varietal: '', crop_yield_kg_ha: '' },
+      editingNode:      null,
+
+      // ── Vértices pendientes (zona nueva aún no guardada) ────────────
+      pendingVertices:  null,   // [[lat,lon], ...] de la zona dibujada
+      _editHandles:     [],
+
+      // ── Init ────────────────────────────────────────────────────────
+      async init() {
+        await Promise.all([this.fetchConfig(), this.fetchZones(), this.fetchNodes()]);
+        this.$nextTick(() => this.initAdminMap());
+        // Estado de simulación
+        try {
+          const r = await fetch('/api/simulate/status');
+          if (r.ok) { const d = await r.json(); this.simRunning = d.running ?? false; }
+        } catch {}
+
+        // Atajos de teclado
+        document.addEventListener('keydown', e => {
+          if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+          if (e.key === 'v' || e.key === 'V' || e.key === 'Escape') this.setTool('select');
+          if (e.key === 'p' || e.key === 'P') this.setTool('poly');
+          if ((e.key === 'Delete' || e.key === 'Backspace') && this.selectedZoneId)
+            this.confirmDeleteZone(this.selectedZoneId);
+        });
+      },
+
+      showToast(text, type = 'ok') {
+        this.toast = { visible: true, type, text };
+        setTimeout(() => { this.toast.visible = false; }, type === 'ok' ? 3000 : type === 'warn' ? 5000 : 6000);
+      },
+
+      // ── Config ──────────────────────────────────────────────────────
+      async fetchConfig() {
+        const res = await fetch('/api/admin/config');
+        this.cfg = { ...this.cfg, ...(await res.json()) };
+      },
+
+      async saveConfig() {
+        this.saving = true;
+        try {
+          const res = await fetch('/api/admin/config', {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              field_name: this.cfg.field_name,
+              field_location: this.cfg.field_location,
+            }),
+          });
+          this.showToast(res.ok ? 'Configuración guardada' : 'Error al guardar', res.ok ? 'ok' : 'err');
+        } catch { this.showToast('Error de conexión', 'err'); }
+        this.saving = false;
+      },
+
+      // ── Mapa: inicialización ─────────────────────────────────────────
+      initAdminMap() {
+        this.adminMap = L.map('admin-map', { zoomControl: true });
+        L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+          attribution: '© Google', maxNativeZoom: 20, maxZoom: 21,
+        }).addTo(this.adminMap);
+
+        this._featureGroup = new L.FeatureGroup().addTo(this.adminMap);
+
+        // Evento: figura dibujada
+        this.adminMap.on(L.Draw.Event.CREATED, (e) => {
+          if (this._pendingLayer) this._pendingLayer.remove();
+          this._pendingLayer = e.layer;
+          e.layer.addTo(this.adminMap);
+          e.layer.setStyle({ color: '#1B6B4A', weight: 2, fillOpacity: 0.15, dashArray: '5,3' });
+
+          const lls = e.layer.getLatLngs();
+          // Para polígono Leaflet devuelve array anidado; rectángulo también
+          const pts = Array.isArray(lls[0]) ? lls[0] : lls;
+          this.pendingVertices = pts.map(ll => [ll.lat, ll.lng]);
+
+          // Si es rect, calcula centroide para lat/lon
+          const b = e.layer.getBounds();
+          this.editZone.id  = null;  // nueva zona
+          this.showEditPanel = true;
+          // Autofoco en nombre (patrón Felt/ArcGIS)
+          this.$nextTick(() => document.getElementById('zone-name-input')?.focus());
+
+          // Captura bounds para overlap check en rect
+          this._pendingBounds = b;
+
+          this.setTool('select');   // vuelve a modo selección automáticamente
+        });
+
+        this.renderZoneLayers();
+        this.fetchAndRenderNodes();
+        this._fitToZones();
+      },
+
+      _fitToZones() {
+        if (!this.adminMap) return;
+        const layers = Object.values(this._zoneLayers);
+        if (!layers.length) {
+          this.adminMap.setView([-31.2015, -64.0928], 18);
+          return;
+        }
+        const group = L.featureGroup(layers);
+        this.adminMap.fitBounds(group.getBounds(), { padding: [40, 40], maxZoom: 20 });
+      },
+
+      // ── Mapa: herramientas ───────────────────────────────────────────
+      setTool(tool) {
+        // Desactivar draw anterior
+        if (this._drawControl) { this._drawControl.disable(); this._drawControl = null; }
+
+        this.mapTool = tool;
+
+        const hints = {
+          select: '',
+          poly:   'Click para agregar vértices. Doble-click para cerrar el polígono.',
+        };
+        this.mapHint = hints[tool] || '';
+
+        if (tool === 'poly') {
+          this._drawControl = new L.Draw.Polygon(this.adminMap, {
+            shapeOptions: { color: '#1B6B4A', weight: 2, fillOpacity: 0.1 },
+            showArea: false, allowIntersection: false,
+          });
+          this._drawControl.enable();
+        }
+      },
+
+      // ── Mapa: renderizar zonas ───────────────────────────────────────
+      renderZoneLayers() {
+        if (!this.adminMap) return;
+        this._clearEditHandles();
+        Object.values(this._zoneLayers).forEach(l => l.remove());
+        this._zoneLayers = {};
+        this._labelMarkers.forEach(m => m.remove());
+        this._labelMarkers = [];
+
+        const HL = 0.000117, HO = 0.000168;
+
+        this.zones.forEach(zone => {
+          const isSelected = this.selectedZoneId === zone.id;
+          let layer;
+
+          const zoneStyle = {
+            color:       isSelected ? '#1B6B4A' : '#64748b',
+            weight:      isSelected ? 2.5 : 1.5,
+            fillColor:   '#27AE60',
+            fillOpacity: 0.82,
+            dashArray:   isSelected ? null : '5,3',
+            className:   'zone-fill',   // mix-blend-mode: multiply en el <path> SVG
+          };
+
+          if (zone.vertices) {
+            layer = L.polygon(JSON.parse(zone.vertices), zoneStyle);
+          } else {
+            // Zona legacy sin vértices: convertir bounding box a polígono de 4 vértices
+            const swLat = zone.sw_lat ?? zone.lat - HL, swLon = zone.sw_lon ?? zone.lon - HO;
+            const neLat = zone.ne_lat ?? zone.lat + HL, neLon = zone.ne_lon ?? zone.lon + HO;
+            layer = L.polygon([
+              [neLat, swLon], [neLat, neLon], [swLat, neLon], [swLat, swLon]
+            ], zoneStyle);
+          }
+
+          layer.addTo(this.adminMap);
+          layer.bindTooltip(`Z${zone.id} — ${zone.name}`, { direction: 'top', sticky: true });
+          layer.on('click', () => this.selectZone(zone));
+
+          // Etiqueta centrada
+          const c = layer.getBounds().getCenter();
+          const lbl = L.divIcon({
+            html: `<div style="font-size:10px;font-weight:700;color:#1e293b;
+                               background:rgba(255,255,255,0.8);padding:1px 5px;
+                               border-radius:3px;white-space:nowrap;pointer-events:none">
+                     Z${zone.id} ${zone.name}
+                   </div>`,
+            className: '', iconAnchor: [25, 7],
+          });
+          this._labelMarkers.push(
+            L.marker([c.lat, c.lng], { icon: lbl, interactive: false }).addTo(this.adminMap)
+          );
+
+          this._zoneLayers[zone.id] = layer;
+
+          // Handles de esquina si está seleccionada
+          if (isSelected) this._addEditHandles(zone);
+        });
+      },
+
+      // ── Selección de zona ────────────────────────────────────────────
+      selectZone(zone) {
+        this.selectedZoneId = zone.id;
+        this.editZone = { id: zone.id, name: zone.name,
+                          vertices: zone.vertices,
+                          varietal: (zone.varietal || '').toLowerCase().trim(),
+                          crop_yield_kg_ha: zone.crop_yield_kg_ha ?? '' };
+        this.pendingVertices = null;
+        this._pendingBounds  = null;
+        if (this._pendingLayer) { this._pendingLayer.remove(); this._pendingLayer = null; }
+        this.showEditPanel = true;
+        this.renderZoneLayers();
+      },
+
+      // ── Handles de edición (SVG — mismo pane que polígonos) ─────────
+      _makeDraggable(circle, onDrag) {
+        const el = circle.getElement?.() || circle._path;
+        if (!el) return;
+        el.style.cursor = 'grab';
+        let dragging = false, startLatLng;
+        const map = this.adminMap;
+
+        const onMouseDown = (e) => {
+          L.DomEvent.stopPropagation(e); L.DomEvent.preventDefault(e);
+          dragging = true; el.style.cursor = 'grabbing';
+          startLatLng = map.mouseEventToLatLng(e);
+          map.dragging.disable();
+          document.addEventListener('mousemove', onMouseMove);
+          document.addEventListener('mouseup', onMouseUp);
+        };
+        const onMouseMove = (e) => {
+          if (!dragging) return;
+          const ll = map.mouseEventToLatLng(e);
+          onDrag(ll);
+        };
+        const onMouseUp = () => {
+          dragging = false; el.style.cursor = 'grab';
+          map.dragging.enable();
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+          this.autoSaveZone();  // guardar geometría actualizada al soltar el handle
+        };
+        el.addEventListener('mousedown', onMouseDown);
+        circle._dragCleanup = () => {
+          el.removeEventListener('mousedown', onMouseDown);
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        };
+      },
+
+      _addEditHandles(zone) {
+        const layer = this._zoneLayers[zone.id];
+        if (!layer) return;
+
+        const handleStyle = { radius: 6, color: '#fff', weight: 2, fillColor: '#1B6B4A',
+                              fillOpacity: 1, pane: 'overlayPane' };
+        const centerStyle = { radius: 8, color: '#fff', weight: 2, fillColor: '#f59e0b',
+                              fillOpacity: 1, pane: 'overlayPane' };
+
+        // ── Polígono libre ──────────────────────────────────────────────
+        if (zone.vertices) {
+          const verts = JSON.parse(zone.vertices).map(v => L.latLng(v[0], v[1]));
+
+          // Handles de vértices individuales
+          const vertHandles = [];
+          verts.forEach((v, i) => {
+            const c = L.circleMarker(v, handleStyle).addTo(this.adminMap);
+            this._makeDraggable(c, (ll) => {
+              verts[i] = ll; c.setLatLng(ll); layer.setLatLngs(verts);
+              // Reposicionar handle central
+              const cLat = verts.reduce((s,p) => s+p.lat, 0) / verts.length;
+              const cLon = verts.reduce((s,p) => s+p.lng, 0) / verts.length;
+              centerHandle.setLatLng([cLat, cLon]);
+            });
+            vertHandles.push(c);
+            this._editHandles.push(c);
+          });
+
+          // Handle central para mover todo el polígono
+          let pLat = verts.reduce((s,p) => s+p.lat, 0) / verts.length;
+          let pLon = verts.reduce((s,p) => s+p.lng, 0) / verts.length;
+          const centerHandle = L.circleMarker([pLat, pLon], centerStyle).addTo(this.adminMap);
+          this._makeDraggable(centerHandle, (ll) => {
+            const dLat = ll.lat - pLat, dLon = ll.lng - pLon;
+            pLat = ll.lat; pLon = ll.lng;
+            verts.forEach((v, i) => {
+              verts[i] = L.latLng(v.lat + dLat, v.lng + dLon);
+              vertHandles[i].setLatLng(verts[i]);
+            });
+            centerHandle.setLatLng(ll);
+            layer.setLatLngs(verts);
+          });
+          this._editHandles.push(centerHandle);
+        }   // fin if (zone.vertices)
+      },    // fin _addEditHandles
+
+      _clearEditHandles() {
+        this._editHandles.forEach(m => {
+          if (m._dragCleanup) m._dragCleanup();
+          m.remove();
+        });
+        this._editHandles = [];
+      },
+
+      // ── Guardar zona (nueva o editada) ───────────────────────────────
+      async saveEditZone() {
+        this.zoneFormTouched = true;
+        if (!this.editZone.name?.trim())        return this.showToast('El nombre es obligatorio', 'err');
+        if (!this.editZone.varietal)            return this.showToast('La variedad es obligatoria', 'err');
+        if (!this.editZone.crop_yield_kg_ha)    return this.showToast('El rendimiento (kg/ha) es obligatorio', 'err');
+
+        let vertices = null, lat, lon;
+
+        if (this.pendingVertices) {
+          // Zona nueva dibujada en el mapa (siempre polígono)
+          vertices = JSON.stringify(this.pendingVertices);
+          const lats = this.pendingVertices.map(p=>p[0]);
+          const lons = this.pendingVertices.map(p=>p[1]);
+          lat = lats.reduce((s,v)=>s+v,0)/lats.length;
+          lon = lons.reduce((s,v)=>s+v,0)/lons.length;
+        } else if (this.editZone.id) {
+          // Zona existente: leer vértices del layer en su estado actual
+          const zone = this.zones.find(z => z.id === this.editZone.id);
+          const layer = this._zoneLayers[this.editZone.id];
+          const lls = layer ? layer.getLatLngs() : null;
+          if (lls) {
+            const pts = Array.isArray(lls[0]) ? lls[0] : lls;
+            vertices = JSON.stringify(pts.map(ll => [ll.lat, ll.lng]));
+            const parsed = JSON.parse(vertices);
+            lat = parsed.reduce((s,p)=>s+p[0],0)/parsed.length;
+            lon = parsed.reduce((s,p)=>s+p[1],0)/parsed.length;
+          } else {
+            vertices = zone?.vertices || null;
+            lat = zone?.lat; lon = zone?.lon;
+          }
+        } else {
+          return this.showToast('Dibujá la zona en el mapa primero', 'err');
+        }
+
+        const body = {
+          name: this.editZone.name.trim(),
+          lat, lon,
+          vertices: vertices,
+          sw_lat: null, sw_lon: null, ne_lat: null, ne_lon: null,
+          varietal: this.editZone.varietal?.trim() || null,
+          crop_yield_kg_ha: this.editZone.crop_yield_kg_ha !== '' ? parseFloat(this.editZone.crop_yield_kg_ha) : null,
+        };
+
+        this.saving = true;
+        try {
+          const url = this.editZone.id
+            ? `/api/admin/zones/${this.editZone.id}`
+            : '/api/admin/zones';
+          const res = await fetch(url, {
+            method: this.editZone.id ? 'PUT' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+
+          if (res.ok) {
+            const d = await res.json();
+            if (this._pendingLayer) { this._pendingLayer.remove(); this._pendingLayer = null; }
+            this.pendingVertices = null;
+            this.showEditPanel   = false;
+            this.selectedZoneId  = null;
+            await this.fetchZones();
+            if (d.warning) {
+              this.showToast('Guardado. Nota: ' + d.warning, 'warn');
+            } else {
+              this.showToast(this.editZone.id ? 'Zona actualizada' : 'Zona creada');
+            }
+            this.editZone = { id: null, name: '', varietal: '', crop_yield_kg_ha: '' }; this.zoneFormTouched = false; this.yieldPlaceholder = 'ej: 8000';
+          } else {
+            this.showToast('Error al guardar', 'err');
+          }
+        } catch { this.showToast('Error de conexión', 'err'); }
+        this.saving = false;
+      },
+
+      cancelEdit() {
+        if (this._pendingLayer) { this._pendingLayer.remove(); this._pendingLayer = null; }
+        this.pendingVertices = null;
+        this.showEditPanel   = false;
+        this.selectedZoneId  = null;
+        this.editZone = { id: null, name: '', varietal: '', crop_yield_kg_ha: '' }; this.zoneFormTouched = false; this.yieldPlaceholder = 'ej: 8000';
+        this._clearEditHandles();
+        this.renderZoneLayers();
+      },
+
+      onVarietalChange(val) {
+        this.editZone.varietal = val;
+        // Siempre actualizar rendimiento al cambiar variedad
+        const def = this.yieldDefaults[val];
+        if (def) { this.editZone.crop_yield_kg_ha = def; }
+        this.yieldPlaceholder = def ? `sugerido: ${def.toLocaleString()}` : 'ej: 8000';
+        this.autoSaveZone();
+      },
+
+      async autoSaveZone() {
+        if (!this.editZone.id) return;  // solo zonas existentes
+        if (!this.editZone.name?.trim() ||
+            !this.editZone.varietal || !this.editZone.crop_yield_kg_ha) return;
+
+        const zone = this.zones.find(z => z.id === this.editZone.id);
+        if (!zone) return;
+
+        // Leer vértices del layer en su estado actual (handles pueden haberlo modificado)
+        let vertices = null, lat, lon;
+        const layer = this._zoneLayers[this.editZone.id];
+        const lls = layer ? layer.getLatLngs() : null;
+        if (lls) {
+          const pts = Array.isArray(lls[0]) ? lls[0] : lls;
+          vertices = JSON.stringify(pts.map(ll => [ll.lat, ll.lng]));
+          const parsed = JSON.parse(vertices);
+          lat = parsed.reduce((s,p)=>s+p[0],0)/parsed.length;
+          lon = parsed.reduce((s,p)=>s+p[1],0)/parsed.length;
+        } else {
+          vertices = zone.vertices;
+          lat = zone.lat; lon = zone.lon;
+        }
+
+        const body = {
+          name:             this.editZone.name.trim(),
+          lat, lon,
+          vertices:         vertices,
+          sw_lat: null, sw_lon: null, ne_lat: null, ne_lon: null,
+          varietal:         this.editZone.varietal?.trim() || null,
+          crop_yield_kg_ha: parseFloat(this.editZone.crop_yield_kg_ha),
+        };
+
+        this.saving = true;
+        try {
+          const res = await fetch(`/api/admin/zones/${this.editZone.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          });
+          if (res.ok) { await this.fetchZones(); }
+        } catch {}
+        this.saving = false;
+      },
+
+      async toggleSimulate() {
+        this.simLoading = true;
+        try {
+          const url = this.simRunning ? '/api/simulate/stop' : '/api/simulate/start';
+          const res = await fetch(url, { method: 'POST' });
+          if (res.ok) { this.simRunning = !this.simRunning; }
+          else { this.showToast('Error al cambiar simulación', 'err'); }
+        } catch { this.showToast('Error de conexión', 'err'); }
+        this.simLoading = false;
+      },
+
+      // ── CRUD zonas ───────────────────────────────────────────────────
+      async fetchZones() {
+        const res  = await fetch('/api/admin/zones');
+        this.zones = await res.json();
+        if (this.adminMap) this.renderZoneLayers();
+      },
+
+      confirmDeleteZone(id) {
+        if (!id) return;
+        const zone = this.zones.find(z => z.id === id);
+        if (!zone) return;
+        if (!confirm(`¿Eliminar la zona "${zone.name}"?\nEsta acción no se puede deshacer.`)) return;
+        this.deleteZone(id);
+      },
+
+      async deleteZone(id) {
+        const res = await fetch(`/api/admin/zones/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          if (this.selectedZoneId === id) {
+            this.showEditPanel = false;
+            this.selectedZoneId = null;
+          }
+          await this.fetchZones();
+          this.showToast('Zona eliminada');
+        } else {
+          this.showToast('Error al eliminar', 'err');
+        }
+      },
+
+      // ── Nodos en el mapa ─────────────────────────────────────────────
+      async fetchAndRenderNodes() {
+        if (!this.adminMap) return;
+        this._nodeMapLayers.forEach(l => l.remove());
+        this._nodeMapLayers = [];
+        try {
+          const nodes = await (await fetch('/api/status')).json();
+          nodes.forEach(node => {
+            if (node.lat == null || node.lon == null) return;
+            const isSim = node.origen === 'simulado';
+            const pos   = [node.lat, node.lon];
+            const circle = L.circle(pos, {
+              radius: 25, color: isSim ? '#9333ea' : '#1B6B4A', weight: 1,
+              dashArray: isSim ? '4,3' : null, fillColor: '#AED6F1', fillOpacity: 0.15, interactive: false,
+            }).addTo(this.adminMap);
+            const marker = L.circleMarker(pos, {
+              radius: 8, color: isSim ? '#9333ea' : '#1B6B4A',
+              weight: 2, fillColor: '#2980B9', fillOpacity: 0.9,
+            }).addTo(this.adminMap);
+            marker.bindTooltip(
+              `<strong>${node.name || node.node_id}</strong>${isSim?' (SIM)':''}<br>CWSI: ${node.cwsi?.toFixed(2)??'—'}`,
+              { direction: 'top' }
+            );
+            this._nodeMapLayers.push(circle, marker);
+          });
+        } catch {}
+      },
+
+      // ── CRUD nodos ───────────────────────────────────────────────────
+      async fetchNodes() {
+        const res  = await fetch('/api/admin/nodes');
+        this.nodes = await res.json();
+      },
+
+      startEditNode(node) {
+        this.editingNode = {
+          node_id: node.node_id,
+          name: node.name || '',
+          zona_id: node.zona_id || '',
+          solenoid: node.solenoid || 0,
+          sol_sim: node.sol_sim || false,
+        };
+      },
+
+      async toggleSolSim(editNode) {
+        try {
+          const res = await fetch(`/api/sol_sim/${editNode.node_id}`, { method: 'POST' });
+          if (res.ok) {
+            const d = await res.json();
+            editNode.sol_sim = d.sol_sim;
+            // Actualizar también en la lista de nodos
+            const n = this.nodes.find(n => n.node_id === editNode.node_id);
+            if (n) n.sol_sim = d.sol_sim;
+            this.showToast(d.sol_sim ? 'Modo prueba activado' : 'Modo normal activado');
+          }
+        } catch { this.showToast('Error de conexión', 'err'); }
+      },
+
+      async saveNode() {
+        this.saving = true;
+        try {
+          const res = await fetch(`/api/admin/nodes/${this.editingNode.node_id}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: this.editingNode.name || null,
+            }),
+          });
+          if (res.ok) { this.editingNode = null; await this.fetchNodes(); this.showToast('Nodo actualizado'); }
+          else { this.showToast('Error al guardar', 'err'); }
+        } catch { this.showToast('Error de conexión', 'err'); }
+        this.saving = false;
+      },
+    };
+  }
+  </script>
+
+</body>
+</html>

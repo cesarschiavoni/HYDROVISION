@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ subject }}</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f4f7f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #333; }
+    .wrapper { max-width: 600px; margin: 0 auto; background: #ffffff; }
+    .header { background: #1B6B4A; padding: 24px 32px; text-align: center; }
+    .header h1 { color: #ffffff; font-size: 20px; margin: 0; font-weight: 700; }
+    .header p { color: #A3E4C1; font-size: 12px; margin: 6px 0 0; }
+    .content { padding: 32px; }
+    .content h2 { color: #1B6B4A; font-size: 18px; margin: 0 0 16px; }
+    .content p { font-size: 14px; line-height: 1.6; margin: 0 0 12px; }
+    .stat-grid { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .stat-grid td { padding: 16px; text-align: center; border: 1px solid #e8e8e8; }
+    .stat-value { font-size: 28px; font-weight: 800; color: #1B6B4A; display: block; }
+    .stat-label { font-size: 11px; color: #888; display: block; margin-top: 4px; }
+    .highlight-box { background: #F0F9F4; border-left: 4px solid #1B6B4A; padding: 16px 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+    .highlight-box p { margin: 0; font-size: 14px; }
+    .warning-box { background: #FFF8E1; border-left: 4px solid #F39C12; padding: 16px 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+    .cta-btn { display: inline-block; background: #1B6B4A; color: #ffffff; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 600; margin: 16px 0; }
+    .section-title { font-size: 13px; font-weight: 700; color: #1B6B4A; text-transform: uppercase; letter-spacing: 1px; margin: 24px 0 12px; border-bottom: 2px solid #D1F2E0; padding-bottom: 6px; }
+    .data-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+    .data-table th { background: #F0F9F4; color: #1B6B4A; padding: 10px 12px; text-align: left; font-weight: 600; }
+    .data-table td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
+    .footer { background: #0F3624; padding: 20px 32px; text-align: center; }
+    .footer p { color: #6FCE9C; font-size: 11px; margin: 4px 0; }
+    .footer a { color: #A3E4C1; text-decoration: underline; }
+    {% block extra_styles %}{% endblock %}
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>HydroVision AG</h1>
+      <p>Sistema de monitoreo hidrico de precision</p>
+    </div>
+    <div class="content">
+      {% block content %}{% endblock %}
+    </div>
+    <div class="footer">
+      <p>HydroVision AG &middot; Colonia Caroya, Cordoba</p>
+      <p>Este email fue generado automaticamente con datos de tu campo.</p>
+      <p><a href="{{ unsubscribe_url | default('#') }}">Dejar de recibir estos emails</a></p>
+    </div>
+  </div>
+</body>
+</html>

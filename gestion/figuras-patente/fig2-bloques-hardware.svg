@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 620" width="860" height="620" font-family="Arial, sans-serif">
+  <title>Figura 2 — Diagrama de bloques del hardware del nodo</title>
+  <rect width="860" height="620" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="430" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">FIGURA 2 — Diagrama de bloques del hardware del nodo</text>
+  <text x="430" y="44" text-anchor="middle" font-size="10" fill="#555">HydroVision AG — Solicitud de Patente INPI Argentina</text>
+  <line x1="20" y1="52" x2="840" y2="52" stroke="#ccc" stroke-width="0.8"/>
+
+  <!-- ════ DEFINICIÓN DE BLOQUES ════ -->
+
+  <!-- Helpers: rectángulo de bloque -->
+  <!-- MCU CENTRAL -->
+  <rect x="320" y="240" width="200" height="130" fill="#d4edda" stroke="#1a7a2a" stroke-width="2.5" rx="6"/>
+  <text x="420" y="260" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a4a1a">ESP32-S3</text>
+  <text x="420" y="274" text-anchor="middle" font-size="9" fill="#2a6a2a">Dual-core Xtensa LX7 · 240 MHz</text>
+  <text x="420" y="286" text-anchor="middle" font-size="9" fill="#2a6a2a">8 MB Flash · 2 MB PSRAM</text>
+  <line x1="330" y1="293" x2="510" y2="293" stroke="#4a9a4a" stroke-width="0.7"/>
+  <text x="420" y="305" text-anchor="middle" font-size="8.5" fill="#1a4a1a">Pipeline CWSI · MDS · HSI · GDD</text>
+  <text x="420" y="317" text-anchor="middle" font-size="8.5" fill="#1a4a1a">Auto-calibración · Riego autónomo</text>
+  <text x="420" y="329" text-anchor="middle" font-size="8.5" fill="#1a4a1a">TFLite Micro INT8 · FreeRTOS</text>
+  <text x="420" y="341" text-anchor="middle" font-size="8.5" fill="#1a4a1a">Deep sleep 8 µA · Watchdog</text>
+  <text x="420" y="357" text-anchor="middle" font-size="8" fill="#336633">Consumo promedio: ~0.18 W</text>
+
+  <!-- ════ SENSORES IZQUIERDA ════ -->
+
+  <!-- Cámara LWIR -->
+  <rect x="60" y="65" width="145" height="52" fill="#e8f0ff" stroke="#2244aa" stroke-width="1.5" rx="4"/>
+  <text x="132" y="83" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a2a8a">[1] Cámara LWIR</text>
+  <text x="132" y="95" text-anchor="middle" font-size="8" fill="#1a2a8a">MLX90640ESF-BAB</text>
+  <text x="132" y="107" text-anchor="middle" font-size="8" fill="#1a2a8a">32×24 px · I2C · NETD 100mK</text>
+
+  <!-- Gimbal / IMU -->
+  <rect x="60" y="128" width="145" height="52" fill="#f0e8ff" stroke="#6633aa" stroke-width="1.5" rx="4"/>
+  <text x="132" y="146" text-anchor="middle" font-size="9" font-weight="bold" fill="#4a1a8a">[10] Gimbal + IMU</text>
+  <text x="132" y="158" text-anchor="middle" font-size="8" fill="#4a1a8a">2× MG90S (PWM LEDC)</text>
+  <text x="132" y="170" text-anchor="middle" font-size="8" fill="#4a1a8a">ICM-42688-P · SPI</text>
+
+  <!-- Extensómetro -->
+  <rect x="60" y="191" width="145" height="52" fill="#fff8e0" stroke="#aa8800" stroke-width="1.5" rx="4"/>
+  <text x="132" y="209" text-anchor="middle" font-size="9" font-weight="bold" fill="#7a5500">[4] Extensómetro tronco</text>
+  <text x="132" y="221" text-anchor="middle" font-size="8" fill="#7a5500">ADS1231 24-bit ADC</text>
+  <text x="132" y="233" text-anchor="middle" font-size="8" fill="#7a5500">+ DS18B20 corr. térmica</text>
+
+  <!-- SHT31 -->
+  <rect x="60" y="254" width="145" height="42" fill="#f8e8ff" stroke="#8844cc" stroke-width="1.5" rx="4"/>
+  <text x="132" y="270" text-anchor="middle" font-size="9" font-weight="bold" fill="#5a2288">[7] SHT31 — T / HR</text>
+  <text x="132" y="284" text-anchor="middle" font-size="8" fill="#5a2288">±0.3°C · ±2% HR · I2C</text>
+
+  <!-- Anemómetro -->
+  <rect x="60" y="307" width="145" height="42" fill="#e8f8e8" stroke="#228844" stroke-width="1.5" rx="4"/>
+  <text x="132" y="323" text-anchor="middle" font-size="9" font-weight="bold" fill="#115522">[5] Anemómetro</text>
+  <text x="132" y="337" text-anchor="middle" font-size="8" fill="#115522">RS485 Modbus · MAX485</text>
+
+  <!-- Pluviómetro -->
+  <rect x="60" y="360" width="145" height="42" fill="#e0f0ff" stroke="#2266bb" stroke-width="1.5" rx="4"/>
+  <text x="132" y="376" text-anchor="middle" font-size="9" font-weight="bold" fill="#1133aa">[6] Pluviómetro</text>
+  <text x="132" y="390" text-anchor="middle" font-size="8" fill="#1133aa">Báscula balancín · GPIO</text>
+
+  <!-- GPS -->
+  <rect x="60" y="413" width="145" height="42" fill="#e8ffe8" stroke="#33aa33" stroke-width="1.5" rx="4"/>
+  <text x="132" y="429" text-anchor="middle" font-size="9" font-weight="bold" fill="#116611">[8] GPS NEO-6M</text>
+  <text x="132" y="443" text-anchor="middle" font-size="8" fill="#116611">UART · Hemisferio auto</text>
+
+  <!-- RTC -->
+  <rect x="60" y="466" width="145" height="42" fill="#fff0e8" stroke="#cc6633" stroke-width="1.5" rx="4"/>
+  <text x="132" y="482" text-anchor="middle" font-size="9" font-weight="bold" fill="#8a3300">[9] RTC DS3231</text>
+  <text x="132" y="496" text-anchor="middle" font-size="8" fill="#8a3300">I2C · CR2032 backup</text>
+
+  <!-- PMS5003 -->
+  <rect x="60" y="519" width="145" height="42" fill="#fff4e0" stroke="#cc8822" stroke-width="1.5" rx="4"/>
+  <text x="132" y="535" text-anchor="middle" font-size="9" font-weight="bold" fill="#885500">[14b] PMS5003</text>
+  <text x="132" y="549" text-anchor="middle" font-size="8" fill="#885500">PM2.5/PM10 · UART 9600</text>
+
+  <!-- ════ BLOQUES SUPERIORES (calibración) ════ -->
+
+  <!-- Dry Ref / Wet Ref -->
+  <rect x="320" y="65" width="200" height="52" fill="#f0f4e8" stroke="#557722" stroke-width="1.5" rx="4"/>
+  <text x="420" y="83" text-anchor="middle" font-size="9" font-weight="bold" fill="#334400">[13] Paneles Dry Ref / Wet Ref</text>
+  <text x="420" y="95" text-anchor="middle" font-size="8" fill="#334400">Al. negro mate (ε=0.98) + Fieltro húmedo</text>
+  <text x="420" y="107" text-anchor="middle" font-size="8" fill="#334400">Bomba peristáltica 6V GPIO · 96 cal/día</text>
+
+  <!-- Piranómetro -->
+  <rect x="320" y="128" width="200" height="42" fill="#fffae0" stroke="#aaa000" stroke-width="1.5" rx="4"/>
+  <text x="420" y="146" text-anchor="middle" font-size="9" font-weight="bold" fill="#777700">[7b] Piranómetro BPW34</text>
+  <text x="420" y="160" text-anchor="middle" font-size="8" fill="#777700">Radiación solar · ADC · Balance energético</text>
+
+  <!-- Piezo limpieza -->
+  <rect x="320" y="181" width="200" height="42" fill="#ffe8f8" stroke="#cc2288" stroke-width="1.5" rx="4"/>
+  <text x="420" y="199" text-anchor="middle" font-size="9" font-weight="bold" fill="#8a1166">[7c] Limpieza piezoeléctrica</text>
+  <text x="420" y="213" text-anchor="middle" font-size="8" fill="#8a1166">Murata MZB1001T02 · 1 kHz · GPIO</text>
+
+  <!-- ════ BLOQUES DERECHA (comunicación + actuación) ════ -->
+
+  <!-- LoRa -->
+  <rect x="630" y="65" width="180" height="52" fill="#e0e8ff" stroke="#2244cc" stroke-width="1.5" rx="4"/>
+  <text x="720" y="83" text-anchor="middle" font-size="9" font-weight="bold" fill="#112288">[3] LoRa SX1262</text>
+  <text x="720" y="95" text-anchor="middle" font-size="8" fill="#112288">915 MHz · SPI · TX payload</text>
+  <text x="720" y="107" text-anchor="middle" font-size="8" fill="#112288">RX downlink 5s post-TX</text>
+
+  <!-- Panel solar + batería -->
+  <rect x="630" y="128" width="180" height="52" fill="#fff8c0" stroke="#aa9900" stroke-width="1.5" rx="4"/>
+  <text x="720" y="146" text-anchor="middle" font-size="9" font-weight="bold" fill="#775500">[11] Energía solar</text>
+  <text x="720" y="158" text-anchor="middle" font-size="8" fill="#775500">Panel 6W + LiFePO₄ 6Ah</text>
+  <text x="720" y="170" text-anchor="middle" font-size="8" fill="#775500">+25.7 Wh/día · margen 6×</text>
+
+  <!-- SSR + Solenoide -->
+  <rect x="630" y="191" width="180" height="52" fill="#ffe0e0" stroke="#cc1111" stroke-width="1.5" rx="4"/>
+  <text x="720" y="209" text-anchor="middle" font-size="9" font-weight="bold" fill="#8a0000">[17] Actuador riego Tier 2-3</text>
+  <text x="720" y="221" text-anchor="middle" font-size="8" fill="#8a0000">GPIO → SSR 24VAC 2A</text>
+  <text x="720" y="233" text-anchor="middle" font-size="8" fill="#8a0000">→ Solenoide Rain Bird 1"</text>
+
+  <!-- PCB / Carcasa -->
+  <rect x="630" y="254" width="180" height="52" fill="#f0f0f0" stroke="#666" stroke-width="1.5" rx="4"/>
+  <text x="720" y="272" text-anchor="middle" font-size="9" font-weight="bold" fill="#333">[12] PCB + Carcasa</text>
+  <text x="720" y="284" text-anchor="middle" font-size="8" fill="#444">PCB 4-layer MBG Controls</text>
+  <text x="720" y="296" text-anchor="middle" font-size="8" fill="#444">ABS/PC IP65 · −10°C a +55°C</text>
+
+  <!-- Flash JSON -->
+  <rect x="630" y="317" width="180" height="52" fill="#e8ffe8" stroke="#336633" stroke-width="1.5" rx="4"/>
+  <text x="720" y="335" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a4a1a">Flash NVM (8 MB)</text>
+  <text x="720" y="347" text-anchor="middle" font-size="8" fill="#1a4a1a">Offsets calibración (JSON)</text>
+  <text x="720" y="359" text-anchor="middle" font-size="8" fill="#1a4a1a">GDD acumulados · Fenología</text>
+
+  <!-- ════ FLECHAS: sensores → MCU ════ -->
+  <!-- Izquierda → MCU (I2C bus) -->
+  <line x1="205" y1="91" x2="320" y2="275" stroke="#2244aa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="205" y1="154" x2="320" y2="280" stroke="#6633aa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="205" y1="217" x2="320" y2="290" stroke="#aa8800" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="205" y1="275" x2="320" y2="295" stroke="#8844cc" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="205" y1="328" x2="320" y2="305" stroke="#228844" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="205" y1="381" x2="320" y2="315" stroke="#2266bb" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="205" y1="434" x2="320" y2="335" stroke="#33aa33" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="205" y1="487" x2="320" y2="345" stroke="#cc6633" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="205" y1="540" x2="320" y2="355" stroke="#cc8822" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+
+  <!-- Superior → MCU -->
+  <line x1="420" y1="117" x2="420" y2="240" stroke="#557722" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="420" y1="170" x2="420" y2="240" stroke="#aaa000" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="420" y1="223" x2="420" y2="240" stroke="#cc2288" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+
+  <!-- MCU → Derecha -->
+  <line x1="520" y1="275" x2="630" y2="91" stroke="#2244cc" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="520" y1="290" x2="630" y2="154" stroke="#aa9900" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <line x1="520" y1="305" x2="630" y2="217" stroke="#cc1111" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="520" y1="320" x2="630" y2="280" stroke="#666" stroke-width="1.2" stroke-dasharray="4,2"/>
+  <line x1="520" y1="335" x2="630" y2="343" stroke="#336633" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+
+  <!-- Protocolo bus labels -->
+  <text x="245" y="200" font-size="8" fill="#888" transform="rotate(-28,245,200)">I2C / SPI / UART</text>
+  <text x="560" y="188" font-size="8" fill="#888" transform="rotate(28,560,188)">SPI / GPIO / UART</text>
+
+  <!-- Marcador de flecha -->
+  <defs>
+    <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3 Z" fill="#555"/>
+    </marker>
+  </defs>
+
+  <!-- ════ LEYENDA BUS ════ -->
+  <rect x="20" y="570" width="820" height="38" fill="#f8f8f8" stroke="#ccc" stroke-width="0.8" rx="3"/>
+  <text x="30" y="585" font-size="8.5" font-weight="bold" fill="#333">Interfaces:</text>
+  <text x="30" y="598" font-size="8" fill="#555">I2C: MLX90640 · SHT31 · DS3231 · ICM-42688P · ADS1231    SPI: LoRa SX1262 · ICM-42688P    UART: GPS · PMS5003    GPIO: Pluviómetro · SSR · Bomba · Piezo · Servos (LEDC PWM)    RS485: Anemómetro (MAX485)</text>
+</svg>

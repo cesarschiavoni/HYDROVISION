@@ -1,0 +1,182 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>Informe anual — Campaña {{ campaign_year }}</h2>
+<p>Hola {{ client_name }},</p>
+<p>
+  Hace {{ years_active }} {{ "año" if years_active == 1 else "años" }} que monitoreas
+  <strong>{{ total_ha }} ha</strong> en {{ region }} con HydroVision.
+  Este es el resumen de lo que el sistema hizo por tu campo esta campaña.
+</p>
+
+<!-- Métricas globales -->
+<table class="stat-grid" role="presentation">
+  <tr>
+    <td>
+      <span class="stat-value">{{ stress_events }}</span>
+      <span class="stat-label">Eventos de estrés detectados</span>
+    </td>
+    <td>
+      <span class="stat-value">{{ water_saved_m3 | default('—') }} m&sup3;</span>
+      <span class="stat-label">Agua ahorrada vs calendario</span>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <span class="stat-value">USD {{ roi_usd | default('—') }}</span>
+      <span class="stat-label">Rendimiento protegido estimado</span>
+    </td>
+    <td>
+      <span class="stat-value">{{ total_measurements | default('—') }}</span>
+      <span class="stat-label">Mediciones acumuladas</span>
+    </td>
+  </tr>
+</table>
+
+{# ══════════════════════════════════════════════════════════════════════════
+   RESUMEN FENOLÓGICO POR ZONA
+   ══════════════════════════════════════════════════════════════════════════ #}
+
+{% if zones %}
+<div class="section-title">Resumen fenológico por zona</div>
+<p>Tu campo tiene {{ zones | length }} zonas con distintas variedades. Cada una tuvo su propio ciclo:</p>
+
+{% for z in zones %}
+<div style="background: #F8F9FA; border-left: 4px solid {% if z.crop_group == 'vid' %}#7C3AED{% elif z.crop_group == 'olivo' %}#059669{% else %}#DC2626{% endif %}; padding: 14px 18px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+  <p style="margin: 0 0 4px; font-size: 15px; font-weight: 700; color: #333;">
+    {{ z.zone_name }} <span style="font-weight: 400; color: #888;">— {{ z.varietal_short }}</span>
+    {% if z.nodos %}<span style="font-size: 12px; color: #999;"> ({{ z.nodos }} nodos)</span>{% endif %}
+  </p>
+  <p style="margin: 0; font-size: 13px; color: #555;">
+    {% if z.crop_group == "vid" %}
+    Campaña Oct → Abr: brotación, floración, cuajado, envero, maduración y cosecha.
+    {% if frost_events and frost_events > 0 %}{{ frost_events }} heladas registradas durante dormancia.{% endif %}
+    {% elif z.crop_group == "olivo" %}
+    Temporada Sep → Jun: floración, cuajado, crecimiento de fruto, maduración y cosecha.
+    Monitoreo continuo (perenne).
+    {% elif z.crop_group == "cerezo" %}
+    Campaña Ago → Dic: brotación, floración, cuajado, envero y cosecha.
+    Ventana de cosecha corta (10-15 días).
+    {% endif %}
+  </p>
+</div>
+{% endfor %}
+
+{% else %}
+{# Fallback sin zonas #}
+<div class="section-title">Resumen fenológico</div>
+{% if crop_group == "vid" %}
+<p>La campaña {{ campaign_year }} de tu {{ crop_short }} abarcó desde la brotación (octubre) hasta la cosecha (marzo-abril).</p>
+{% elif crop_group == "olivo" %}
+<p>La temporada {{ campaign_year }} de tus olivos cubrió desde la floración (septiembre) hasta la cosecha (mayo-junio).</p>
+{% elif crop_group == "cerezo" %}
+<p>La campaña {{ campaign_year }} de tus cerezos fue de agosto (brotación) a diciembre (cosecha).</p>
+{% endif %}
+{% endif %}
+
+<!-- Eventos destacados -->
+<div class="section-title">Eventos de estrés detectados y evitados</div>
+{% if events %}
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Zona</th>
+      <th>Severidad</th>
+      <th>Acción</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ev in events %}
+    <tr>
+      <td>{{ ev.date }}</td>
+      <td>{{ ev.zone }}</td>
+      <td>{{ ev.severity }}</td>
+      <td>{{ ev.action }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No se registraron eventos de estrés severo esta campaña — el sistema mantuvo tus lotes en rango óptimo.</p>
+{% endif %}
+
+<!-- Ahorro de agua -->
+<div class="section-title">Ahorro de agua</div>
+<div class="highlight-box">
+  <p>
+    <strong>{{ water_saved_m3 | default('—') }} m&sup3; ahorrados</strong> esta campaña
+    — equivalente a <strong>{{ water_saved_pct | default('—') }}% menos consumo</strong>
+    que riego por calendario.
+  </p>
+</div>
+
+<!-- ROI -->
+<div class="section-title">Retorno de inversión estimado</div>
+<p>
+  La detección temprana de estrés hídrico protegió un rendimiento estimado de
+  <strong>USD {{ roi_usd | default('—') }}</strong> sobre tus {{ total_ha }} ha.
+</p>
+<p>
+  Tu suscripción anual: <strong>USD {{ subscription_cost }}</strong>.
+  Retorno: <strong>{{ roi_multiple | default('—') }}x</strong> la inversión.
+</p>
+
+<!-- Calibración del modelo -->
+<div class="section-title">Precisión del modelo</div>
+<p>
+  Tu modelo tiene <strong>{{ total_measurements | default('—') }} mediciones</strong> acumuladas.
+  {% if r2_start and r2_end %}
+  La precisión R&sup2; pasó de <strong>{{ r2_start }}</strong> al inicio
+  a <strong>{{ r2_end }}</strong> al cierre — el sistema se vuelve más preciso con cada temporada.
+  {% endif %}
+</p>
+
+<!-- Benchmarking -->
+{% if benchmark_pct %}
+<div class="section-title">Tu campo vs la región</div>
+<div class="highlight-box">
+  <p>
+    Tus plantas tuvieron un CWSI promedio
+    <strong>{{ benchmark_diff }} {{ "menor" if benchmark_better else "mayor" }}</strong>
+    que el promedio de {{ region }}.
+    Mejor hidratadas que el <strong>{{ benchmark_pct }}%</strong> de los productores.
+  </p>
+</div>
+{% endif %}
+
+<!-- Compliance (Tier 3) -->
+{% if tier == 3 %}
+<div class="section-title">Huella hídrica — Compliance UE</div>
+<p>
+  Tu reporte de huella hídrica ISO 14046 de la campaña {{ campaign_year }} está listo.
+  Incluye trazabilidad de riego por zona, consumo por lote y métricas auditables.
+</p>
+{% if zones %}
+<p style="font-size: 13px; color: #666;">Zonas cubiertas:
+  {% for z in zones %}{{ z.zone_name }} ({{ z.varietal_short }}){% if not loop.last %}, {% endif %}{% endfor %}.
+</p>
+{% endif %}
+<a href="{{ compliance_report_url | default('#') }}" class="cta-btn">Descargar reporte ISO 14046</a>
+{% endif %}
+
+<!-- Recomendaciones -->
+<div class="section-title">Recomendaciones para la próxima campaña</div>
+{% if recommendations %}
+<ul style="font-size: 14px; line-height: 1.8; padding-left: 20px;">
+  {% for rec in recommendations %}
+  <li>{{ rec }}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Sin recomendaciones especiales — tus umbrales y configuración actual son óptimos.</p>
+{% endif %}
+
+<!-- CTA -->
+<div style="text-align: center; margin: 32px 0 16px;">
+  <p style="font-size: 14px; color: #666;">
+    Cada temporada que pasa, tu modelo se vuelve más preciso y tu ventaja competitiva crece.
+  </p>
+  <a href="{{ dashboard_url | default('#') }}" class="cta-btn">Ver mi dashboard</a>
+</div>
+{% endblock %}

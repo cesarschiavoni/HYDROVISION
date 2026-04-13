@@ -1,0 +1,12 @@
+metrica,valor
+R2_modelo_calibrado,0.9567
+MAE_cwsi,0.0414
+RMSE_cwsi,0.0563
+n_calibration_points,96
+R2_ndwi_cwsi,0.9212
+n_pixels_mapa,200
+n_anomalias_ndvi,4
+cwsi_mapa_mean,0.4353
+cwsi_mapa_std,0.1752
+datos,sinteticos_seed42
+nota,Re-ejecutar con datos reales S2 via GEE/STAC

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" width="900" height="600" font-family="Arial, sans-serif">
+  <title>Figura 6 — Arquitectura del sistema completo HydroVision AG</title>
+  <rect width="900" height="600" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="450" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">FIGURA 6 — Arquitectura del sistema completo — Reivindicación 10</text>
+  <text x="450" y="44" text-anchor="middle" font-size="10" fill="#555">HydroVision AG — Solicitud de Patente INPI Argentina</text>
+  <line x1="20" y1="52" x2="880" y2="52" stroke="#ccc" stroke-width="0.8"/>
+
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#444"/>
+    </marker>
+    <marker id="arrW" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#fff"/>
+    </marker>
+    <marker id="arrB" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#2244cc"/>
+    </marker>
+  </defs>
+
+  <!-- ═══════════════════════════
+       CAPA 1 — CAMPO
+  ═══════════════════════════ -->
+  <rect x="20" y="60" width="280" height="340" fill="#f0f8f0" stroke="#2d6a2d" stroke-width="2" rx="6"/>
+  <text x="160" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a4a1a">CAPA 1 — CAMPO</text>
+  <line x1="30" y1="86" x2="290" y2="86" stroke="#2d6a2d" stroke-width="0.8"/>
+
+  <!-- Nodo 1 -->
+  <rect x="35" y="96" width="118" height="90" fill="#d4edda" stroke="#1a7a2a" stroke-width="1.5" rx="4"/>
+  <text x="94" y="113" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1a4a1a">NODO HV-A1</text>
+  <text x="94" y="125" text-anchor="middle" font-size="7.5" fill="#1a4a1a">Zona 1 — Malbec</text>
+  <text x="94" y="137" text-anchor="middle" font-size="7.5" fill="#1a4a1a">CWSI: 0.42 | HSI: 0.38</text>
+  <text x="94" y="149" text-anchor="middle" font-size="7.5" fill="#1a4a1a">MDS: 312 µm | Bat: 87%</text>
+  <text x="94" y="161" text-anchor="middle" font-size="7.5" fill="#cc2200">⚠ Riego activo</text>
+  <text x="94" y="177" text-anchor="middle" font-size="7" fill="#555">MLX90640 + ADS1231</text>
+
+  <!-- Nodo 2 -->
+  <rect x="162" y="96" width="118" height="90" fill="#d4edda" stroke="#1a7a2a" stroke-width="1.5" rx="4"/>
+  <text x="221" y="113" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1a4a1a">NODO HV-B2</text>
+  <text x="221" y="125" text-anchor="middle" font-size="7.5" fill="#1a4a1a">Zona 3 — Syrah</text>
+  <text x="221" y="137" text-anchor="middle" font-size="7.5" fill="#1a4a1a">CWSI: 0.18 | HSI: 0.21</text>
+  <text x="221" y="149" text-anchor="middle" font-size="7.5" fill="#1a4a1a">MDS: 145 µm | Bat: 94%</text>
+  <text x="221" y="161" text-anchor="middle" font-size="7.5" fill="#22aa22">✓ Sin estrés</text>
+  <text x="221" y="177" text-anchor="middle" font-size="7" fill="#555">MLX90640 + ADS1231</text>
+
+  <!-- Nodo 3 (simulado) -->
+  <rect x="35" y="198" width="118" height="90" fill="#f0e8ff" stroke="#6633aa" stroke-width="1.5" rx="4" stroke-dasharray="5,2"/>
+  <text x="94" y="215" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#4a1a8a">NODO HV-D7 (SIM)</text>
+  <text x="94" y="227" text-anchor="middle" font-size="7.5" fill="#4a1a8a">Zona 12 — Syrah</text>
+  <text x="94" y="239" text-anchor="middle" font-size="7.5" fill="#4a1a8a">CWSI: 0.61 | HSI: 0.55</text>
+  <text x="94" y="251" text-anchor="middle" font-size="7.5" fill="#cc6600">⚠ Estrés moderado</text>
+  <text x="94" y="263" text-anchor="middle" font-size="7.5" fill="#cc6600">Datos simulados</text>
+  <text x="94" y="279" text-anchor="middle" font-size="7" fill="#666">Modo simulación activo</text>
+
+  <!-- Nodo N (puntos suspensivos) -->
+  <rect x="162" y="198" width="118" height="90" fill="#e8e8e8" stroke="#aaa" stroke-width="1" rx="4" stroke-dasharray="4,3"/>
+  <text x="221" y="248" text-anchor="middle" font-size="20" fill="#bbb">⋯</text>
+  <text x="221" y="272" text-anchor="middle" font-size="8" fill="#999">N nodos por lote</text>
+
+  <!-- Planta física -->
+  <rect x="35" y="302" width="245" height="80" fill="#fff" stroke="#aaa" stroke-width="1" rx="4"/>
+  <text x="157" y="320" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#334400">Actuación en campo (Tier 2–3)</text>
+  <text x="157" y="334" text-anchor="middle" font-size="8" fill="#555">Nodo → GPIO → SSR 24VAC → Solenoide Rain Bird</text>
+  <text x="157" y="347" text-anchor="middle" font-size="8" fill="#555">HSI ≥ 0.30 → Activar riego  |  HSI ≤ 0.20 → Desactivar</text>
+  <text x="157" y="360" text-anchor="middle" font-size="7.5" fill="#888">Sin depender del servidor · Decisión autónoma local</text>
+  <text x="157" y="373" text-anchor="middle" font-size="7.5" fill="#888">Override vía downlink LoRa disponible</text>
+
+  <!-- ═══════════════════════════
+       CAPA 2 — GATEWAY LoRa
+  ═══════════════════════════ -->
+  <rect x="330" y="190" width="130" height="110" fill="#e8e0ff" stroke="#5533aa" stroke-width="2" rx="6"/>
+  <text x="395" y="210" text-anchor="middle" font-size="10" font-weight="bold" fill="#3311aa">GATEWAY</text>
+  <text x="395" y="222" text-anchor="middle" font-size="9" fill="#3311aa">LoRa / LoRaWAN</text>
+  <line x1="340" y1="228" x2="450" y2="228" stroke="#5533aa" stroke-width="0.6"/>
+  <text x="395" y="242" text-anchor="middle" font-size="8" fill="#3311aa">915 MHz RX</text>
+  <text x="395" y="254" text-anchor="middle" font-size="8" fill="#3311aa">→ TCP/IP upstream</text>
+  <text x="395" y="266" text-anchor="middle" font-size="8" fill="#3311aa">← Downlink TX</text>
+  <text x="395" y="278" text-anchor="middle" font-size="7.5" fill="#666">LoRa SX1302 + RPi</text>
+  <text x="395" y="290" text-anchor="middle" font-size="7.5" fill="#666">o Gateway comercial</text>
+
+  <!-- ═══════════════════════════
+       CAPA 3 — SERVIDOR BACKEND
+  ═══════════════════════════ -->
+  <rect x="490" y="60" width="200" height="340" fill="#e8f0ff" stroke="#2244aa" stroke-width="2" rx="6"/>
+  <text x="590" y="80" text-anchor="middle" font-size="11" font-weight="bold" fill="#1122aa">CAPA 3 — BACKEND</text>
+  <line x1="500" y1="86" x2="680" y2="86" stroke="#2244aa" stroke-width="0.8"/>
+
+  <!-- FastAPI -->
+  <rect x="500" y="94" width="175" height="38" fill="#fff" stroke="#2244aa" stroke-width="1.2" rx="3"/>
+  <text x="587" y="109" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1122aa">FastAPI + SQLite/PostgreSQL</text>
+  <text x="587" y="122" text-anchor="middle" font-size="7.5" fill="#444">/ingest · /api/zones · /api/status</text>
+
+  <!-- PINN -->
+  <rect x="500" y="142" width="175" height="44" fill="#f0e8ff" stroke="#8833cc" stroke-width="1.5" rx="3"/>
+  <text x="587" y="159" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#5511aa">PINN — Inferencia alta precisión</text>
+  <text x="587" y="171" text-anchor="middle" font-size="7.5" fill="#5511aa">MobileNetV3 INT8 + L_física</text>
+  <text x="587" y="182" text-anchor="middle" font-size="7.5" fill="#5511aa">Refinamiento CWSI post-TX</text>
+
+  <!-- Motor HSI + GDD -->
+  <rect x="500" y="196" width="175" height="38" fill="#fff8e0" stroke="#cc8800" stroke-width="1.2" rx="3"/>
+  <text x="587" y="211" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#885500">Motor HSI + GDD (backend)</text>
+  <text x="587" y="224" text-anchor="middle" font-size="7.5" fill="#885500">Fusión multi-nodo · Alertas</text>
+
+  <!-- Fusión Sentinel-2 -->
+  <rect x="500" y="244" width="175" height="44" fill="#e8ffe8" stroke="#1a7a2a" stroke-width="1.5" rx="3"/>
+  <text x="587" y="261" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1a4a1a">Fusión Sentinel-2</text>
+  <text x="587" y="273" text-anchor="middle" font-size="7.5" fill="#1a4a1a">NDWI/NDVI/NDRE ↔ CWSI</text>
+  <text x="587" y="284" text-anchor="middle" font-size="7.5" fill="#1a4a1a">Mapa prescripción ~50 ha/nodo</text>
+
+  <!-- MQTT broker -->
+  <rect x="500" y="298" width="175" height="38" fill="#ffe0f8" stroke="#cc2288" stroke-width="1.2" rx="3"/>
+  <text x="587" y="313" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#8a1166">MQTT Broker</text>
+  <text x="587" y="326" text-anchor="middle" font-size="7.5" fill="#8a1166">Comandos riego · Alertas push</text>
+
+  <!-- IrrigationLog -->
+  <rect x="500" y="346" width="175" height="38" fill="#f0f0f0" stroke="#666" stroke-width="1.2" rx="3"/>
+  <text x="587" y="361" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#333">Base de datos histórica</text>
+  <text x="587" y="374" text-anchor="middle" font-size="7.5" fill="#555">Telemetría · IrrigationLog · S2Cache</text>
+
+  <!-- ═══════════════════════════
+       SATÉLITE (superior)
+  ═══════════════════════════ -->
+  <rect x="570" y="420" width="120" height="50" fill="#555" stroke="#333" stroke-width="1.5" rx="4"/>
+  <rect x="490" y="430" width="75" height="26" fill="#b0c8e8" stroke="#2255aa" stroke-width="1" rx="2"/>
+  <rect x="650" y="430" width="75" height="26" fill="#b0c8e8" stroke="#2255aa" stroke-width="1" rx="2"/>
+  <text x="630" y="450" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#fff">SENTINEL-2</text>
+  <text x="630" y="462" text-anchor="middle" font-size="7.5" fill="#ddd">ESA · revisita 5 días</text>
+  <line x1="590" y1="420" x2="587" y2="388" stroke="#1a7a2a" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+
+  <!-- ═══════════════════════════
+       CAPA 4 — DASHBOARD / APP
+  ═══════════════════════════ -->
+  <rect x="720" y="60" width="155" height="340" fill="#fff8e8" stroke="#cc8822" stroke-width="2" rx="6"/>
+  <text x="797" y="80" text-anchor="middle" font-size="10" font-weight="bold" fill="#885500">CAPA 4</text>
+  <text x="797" y="93" text-anchor="middle" font-size="9" font-weight="bold" fill="#885500">VISUALIZACIÓN</text>
+  <line x1="730" y1="99" x2="865" y2="99" stroke="#cc8822" stroke-width="0.8"/>
+
+  <!-- Dashboard web -->
+  <rect x="730" y="108" width="135" height="55" fill="#fff" stroke="#cc8822" stroke-width="1.2" rx="3"/>
+  <text x="797" y="124" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#885500">Dashboard Web</text>
+  <text x="797" y="136" text-anchor="middle" font-size="7.5" fill="#555">Mapa GeoJSON · CWSI</text>
+  <text x="797" y="147" text-anchor="middle" font-size="7.5" fill="#555">HSI · MDS · Fenología</text>
+  <text x="797" y="158" text-anchor="middle" font-size="7.5" fill="#555">Historial · Admin zonas</text>
+
+  <!-- App móvil -->
+  <rect x="730" y="174" width="135" height="55" fill="#fff" stroke="#cc8822" stroke-width="1.2" rx="3"/>
+  <text x="797" y="190" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#885500">App Móvil</text>
+  <text x="797" y="202" text-anchor="middle" font-size="7.5" fill="#555">Notificaciones push</text>
+  <text x="797" y="213" text-anchor="middle" font-size="7.5" fill="#555">Alertas críticas SMS</text>
+  <text x="797" y="224" text-anchor="middle" font-size="7.5" fill="#555">Override riego manual</text>
+
+  <!-- Informe / Prescripción -->
+  <rect x="730" y="240" width="135" height="55" fill="#fff" stroke="#cc8822" stroke-width="1.2" rx="3"/>
+  <text x="797" y="256" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#885500">Informe / Prescripción</text>
+  <text x="797" y="268" text-anchor="middle" font-size="7.5" fill="#555">Mapa prescripción riego</text>
+  <text x="797" y="279" text-anchor="middle" font-size="7.5" fill="#555">CWSI × zona × estadio</text>
+  <text x="797" y="290" text-anchor="middle" font-size="7.5" fill="#555">Exportable PDF/GeoJSON</text>
+
+  <!-- Alertas configurables -->
+  <rect x="730" y="306" width="135" height="80" fill="#fff8e0" stroke="#aa8800" stroke-width="1.2" rx="3"/>
+  <text x="797" y="323" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#774400">Alertas configurables</text>
+  <text x="797" y="335" text-anchor="middle" font-size="7" fill="#555">CWSI &gt; umbral → Push</text>
+  <text x="797" y="345" text-anchor="middle" font-size="7" fill="#555">Helada &lt; 2°C → Push+SMS</text>
+  <text x="797" y="355" text-anchor="middle" font-size="7" fill="#555">Riesgo mildiú → Push</text>
+  <text x="797" y="365" text-anchor="middle" font-size="7" fill="#555">Brotación detectada → Push</text>
+  <text x="797" y="375" text-anchor="middle" font-size="7" fill="#555">Batería baja → Push+email</text>
+  <text x="797" y="385" text-anchor="middle" font-size="7" fill="#555">ψ_stem crítico → Push+SMS</text>
+
+  <!-- ═══ FLECHAS ENTRE CAPAS ═══ -->
+  <!-- Nodos → Gateway (LoRa TX) -->
+  <line x1="300" y1="210" x2="330" y2="230" stroke="#5533aa" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="290" y="225" font-size="8" fill="#5533aa" transform="rotate(15,290,225)">LoRa TX</text>
+  <!-- Gateway → Nodos (downlink) -->
+  <path d="M330,260 Q310,260 295,250" fill="none" stroke="#5533aa" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <text x="295" y="270" font-size="7.5" fill="#5533aa">Downlink</text>
+
+  <!-- Gateway → Backend -->
+  <line x1="460" y1="245" x2="490" y2="245" stroke="#2244aa" stroke-width="2" marker-end="url(#arrB)"/>
+  <text x="465" y="240" font-size="8" fill="#2244aa">TCP/IP</text>
+
+  <!-- Backend → Dashboard -->
+  <line x1="695" y1="200" x2="720" y2="200" stroke="#cc8822" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="697" y="195" font-size="8" fill="#cc8822">HTTP/WS</text>
+
+  <!-- Backend → Gateway (MQTT downlink) -->
+  <path d="M490,310 Q460,310 460,260" fill="none" stroke="#cc2288" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <text x="430" y="306" font-size="7.5" fill="#cc2288">MQTT cmd</text>
+
+  <!-- ═══ LEYENDA CAPAS ABAJO ═══ -->
+  <rect x="20" y="415" width="280" height="160" fill="#f0f8f0" stroke="#2d6a2d" stroke-width="1" rx="4"/>
+  <text x="160" y="433" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1a4a1a">Flujo de datos principal:</text>
+  <text x="30" y="450" font-size="8" fill="#333">① Nodo mide CWSI/MDS/HSI/GDD localmente</text>
+  <text x="30" y="464" font-size="8" fill="#333">② TX LoRa payload JSON cada 15 min</text>
+  <text x="30" y="478" font-size="8" fill="#333">③ Nodo abre RX 5s para recibir comandos</text>
+  <text x="30" y="492" font-size="8" fill="#333">④ Gateway reenvía a backend vía TCP/IP</text>
+  <text x="30" y="506" font-size="8" fill="#333">⑤ Backend ejecuta PINN + fusión S2</text>
+  <text x="30" y="520" font-size="8" fill="#333">⑥ Dashboard actualiza mapa prescripción</text>
+  <text x="30" y="534" font-size="8" fill="#333">⑦ Alertas push configurables al productor</text>
+  <text x="30" y="548" font-size="8" fill="#cc2222">★ Riego autónomo: nodo opera sin servidor</text>
+  <text x="30" y="562" font-size="7.5" fill="#888">   Servidor agrega precisión y visibilidad</text>
+
+  <!-- Leyenda tiers -->
+  <rect x="330" y="415" width="355" height="80" fill="#f8f8f8" stroke="#ccc" stroke-width="0.8" rx="3"/>
+  <text x="507" y="433" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#333">Tiers de producto:</text>
+  <rect x="340" y="440" width="10" height="10" fill="#d4edda" stroke="#1a7a2a" stroke-width="1"/>
+  <text x="360" y="449" font-size="8" fill="#333">Tier 1 — Monitoreo USD 950: sin actuador (solo sensado + dashboard)</text>
+  <rect x="340" y="458" width="10" height="10" fill="#ffe0e0" stroke="#cc2222" stroke-width="1"/>
+  <text x="360" y="467" font-size="8" fill="#333">Tier 2 — Control manual USD 1.200: actuador + override app</text>
+  <rect x="340" y="476" width="10" height="10" fill="#e8e0ff" stroke="#6633aa" stroke-width="1"/>
+  <text x="360" y="485" font-size="8" fill="#333">Tier 3 — Automatización USD 1.450: riego autónomo completo</text>
+</svg>

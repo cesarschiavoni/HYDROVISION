@@ -1,0 +1,41 @@
+# HydroVision AG — ML Engineer dependencies
+#
+# IMPORTANTE — instalación en dos pasos:
+#
+#   Paso 1: PyTorch con CUDA (RTX 3070, CUDA 12.1)
+#     pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#
+#   Paso 2: resto de dependencias
+#     pip install -r requirements.txt
+#
+#   O ejecutar directamente: install_gpu.bat
+#
+#   Verificar GPU tras instalar:
+#     python verify_gpu.py
+#
+# NOTA: NO instalar con "pip install torch" sin --index-url → instala CPU-only.
+
+# Core científico
+numpy>=1.24
+scipy>=1.11
+pandas>=2.0
+matplotlib>=3.7
+scikit-learn>=1.3
+Pillow>=10.0
+tqdm>=4.66
+h5py>=3.9           # almacenamiento eficiente del dataset 1M imágenes
+
+# Deep Learning — ver nota arriba para instalación con CUDA
+# torch y torchvision se instalan con install_gpu.bat (no con este requirements)
+timm>=0.9.12        # backbones MobileNetV3-Tiny, ResNet34
+
+# Segmentación semántica
+segmentation-models-pytorch>=0.3.3   # U-Net++ con backbone ResNet34
+
+# Exportación edge
+tensorflow>=2.14    # para TFLite Micro export (INT8)
+onnx>=1.15
+onnxruntime>=1.16
+
+# Experimentos y tracking
+wandb>=0.16         # Weights & Biases — tracking de entrenamientos

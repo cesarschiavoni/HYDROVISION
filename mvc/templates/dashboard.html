@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HydroVision AG — Dashboard TRL 4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            green: {
+              50:'#F0F9F4',100:'#D1F2E0',200:'#A3E4C1',300:'#6FCE9C',
+              400:'#27AE60',500:'#1E7B55',600:'#1B6B4A',700:'#155A3C',
+              800:'#1B6B4A',900:'#0F3624',
+            },
+            yellow: { 500:'#F39C12',600:'#F39C12' },
+            red:    { 500:'#E74C3C',600:'#E74C3C' },
+            blue:   { 500:'#2980B9',600:'#2980B9' },
+            gray:   { 100:'#FAFAF7' },
+          },
+          fontFamily: {
+            sans:  ['"IBM Plex Sans"','Inter','system-ui','sans-serif'],
+            title: ['Inter','system-ui','sans-serif'],
+            mono:  ['"IBM Plex Mono"','ui-monospace','monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    .node-label {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      font-size: 10px;
+      font-weight: 600;
+      color: #1f2937;
+      white-space: nowrap;
+    }
+  </style>
+  <style>
+    [x-cloak] { display: none !important; }
+    /* Superposición de zonas: color más intenso donde se solapan */
+    .zone-fill { mix-blend-mode: multiply; }
+    .sigla {
+      cursor: help;
+      text-decoration: underline;
+      text-decoration-style: dotted;
+      text-underline-offset: 3px;
+    }
+    /* Etiqueta permanente de zona (tooltip SVG, sin flecha) */
+    .zone-label-tip {
+      background: rgba(255,255,255,0.75) !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 1px 4px !important;
+      border-radius: 3px !important;
+    }
+    .zone-label-tip::before { display: none !important; }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen" x-data="dashboard()" x-init="init()" x-cloak>
+
+  <!-- ===== NAV ===== -->
+  <nav class="bg-green-800 text-white shadow-md">
+    <div class="max-w-full px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="/" class="flex items-center gap-2">
+          <span class="text-lg font-bold tracking-tight font-title">HydroVision AG</span>
+        </a>
+        <p class="text-green-300 text-sm hidden sm:block" x-text="fieldSubtitle"></p>
+      </div>
+      <div class="flex items-center gap-1">
+        <a href="/"          class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Inicio</a>
+        <a href="/dashboard"  class="px-3 py-1.5 rounded text-sm font-medium bg-green-700 text-white">Dashboard</a>
+        <a href="/informe"    class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Informe</a>
+        <a href="/admin"      class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Admin</a>
+        <span class="mx-1 w-px h-5 bg-green-600"></span>
+        <button @click="toggleSimulate()"
+                :disabled="simLoading"
+                class="disabled:opacity-50 text-white text-xs font-semibold px-3 py-1.5 rounded transition-colors"
+                :class="simRunning ? 'bg-red-600 hover:bg-red-500' : 'bg-green-600 hover:bg-green-500'">
+          <span x-show="simLoading">...</span>
+          <span x-show="!simLoading && simRunning">⏹ Detener sim.</span>
+          <span x-show="!simLoading && !simRunning">▶ Simular</span>
+        </button>
+        <span class="bg-green-700 text-green-200 px-2 py-0.5 rounded text-xs font-mono">TRL 4</span>
+        <div class="flex items-center gap-1.5 text-xs"
+             :class="refreshing ? 'text-white' : 'text-green-300'">
+          <span class="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                :class="refreshing ? 'bg-white animate-ping' : (nodes.length ? 'bg-green-400' : 'bg-gray-400')">
+          </span>
+          <span x-text="refreshing ? '...' : (nodes.length ? nodes.length + 'n' : '')"></span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== BANNER ALERTAS ===== -->
+  <div x-show="hasAlerts" x-transition
+       class="bg-red-600 text-white px-6 py-2.5 flex items-center gap-3 text-sm">
+    <span class="text-lg">⚠</span>
+    <span>
+      <strong x-text="stressedNodes"></strong>
+      <span x-text="stressedNodes === 1 ? ' nodo' : ' nodos'"></span>
+      con estrés Alto (CWSI &gt; 0.60) —
+      <span class="font-mono" x-text="alertNodeIds"></span>
+    </span>
+  </div>
+
+  <!-- ===== ESTADO VACÍO (F1) ===== -->
+  <div x-show="!nodes.length && !refreshing" x-transition
+       class="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3 text-sm text-amber-800">
+      <span class="text-lg">📡</span>
+      <span>
+        Sin lecturas de nodos aún.
+        Podés <strong>simular datos</strong> para ver el sistema en acción,
+        o configurar zonas y nodos en
+        <a href="/admin" class="underline font-medium">Configuración</a>.
+      </span>
+    </div>
+    <button @click="toggleSimulate()" :disabled="simLoading"
+            class="disabled:opacity-50 text-white text-xs font-semibold px-3 py-1.5
+                   rounded transition-colors flex-shrink-0"
+            :class="simRunning ? 'bg-red-600 hover:bg-red-500' : 'bg-amber-600 hover:bg-amber-700'">
+      <span x-show="simLoading">...</span>
+      <span x-show="!simLoading && simRunning">⏹ Detener simulación</span>
+      <span x-show="!simLoading && !simRunning">▶ Iniciar simulación</span>
+    </button>
+  </div>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-8">
+
+    <!-- ===== RESUMEN ===== -->
+    <section class="grid grid-cols-5 gap-4">
+
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4 text-center">
+        <div class="text-3xl font-bold text-gray-800" x-text="avgCwsi"></div>
+        <div class="text-xs text-gray-500 mt-1">CWSI promedio</div>
+        <div class="mt-2 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+          <div class="h-full rounded-full transition-all duration-500"
+               :style="'width:' + (parseFloat(avgCwsi) * 100 || 0) + '%'"
+               :class="parseFloat(avgCwsi) < 0.3 ? 'bg-green-400'
+                     : parseFloat(avgCwsi) < 0.6 ? 'bg-yellow-400' : 'bg-red-500'">
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4 text-center">
+        <div class="text-3xl font-bold"
+             :class="stressedNodes > 0 ? 'text-red-600' : 'text-gray-300'"
+             x-text="stressedNodes"></div>
+        <div class="text-xs text-gray-500 mt-1">Nodos estrés Alto</div>
+      </div>
+
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4 text-center">
+        <div class="text-3xl font-bold"
+             :class="activeZones > 0 ? 'text-blue-600' : 'text-gray-300'"
+             x-text="activeZones"></div>
+        <div class="text-xs text-gray-500 mt-1">Nodos regando</div>
+      </div>
+
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4 text-center">
+        <div class="text-3xl font-bold text-gray-800" x-text="nodes.length"></div>
+        <div class="text-xs text-gray-500 mt-1">Nodos conectados</div>
+      </div>
+
+      <!-- Homogeneidad del campo -->
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4 text-center">
+        <template x-if="fieldHomogeneity">
+          <div>
+            <div class="text-3xl font-bold"
+                 :class="fieldHomogeneity.color === 'green'  ? 'text-green-600'
+                       : fieldHomogeneity.color === 'yellow' ? 'text-yellow-500' : 'text-red-600'"
+                 x-text="fieldHomogeneity.cv + '%'"></div>
+            <div class="text-xs text-gray-500 mt-1">
+              <span class="relative group cursor-help underline decoration-dotted underline-offset-2">
+                CV CWSI
+                <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64
+                            bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                            opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                  <p class="font-semibold mb-1">Coeficiente de Variación del CWSI</p>
+                  <p>Mide la dispersión del estrés hídrico entre todos los nodos activos.</p>
+                  <p class="mt-1"><span class="text-green-300 font-semibold">&lt; 15%</span> — lote homogéneo: un nodo representa bien todo el campo.</p>
+                  <p class="mt-0.5"><span class="text-yellow-300 font-semibold">15–25%</span> — moderado: revisar zonas con CWSI outlier.</p>
+                  <p class="mt-0.5"><span class="text-red-300 font-semibold">&gt; 25%</span> — heterogéneo: cada zona necesita su propio nodo.</p>
+                  <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                </div>
+              </span>
+            </div>
+            <div class="mt-1.5 relative group inline-block cursor-help">
+              <div class="text-xs font-semibold px-2 py-0.5 rounded-full"
+                   :class="fieldHomogeneity.color === 'green'  ? 'bg-green-100 text-green-700'
+                         : fieldHomogeneity.color === 'yellow' ? 'bg-yellow-100 text-yellow-700'
+                                                               : 'bg-red-100 text-red-700'"
+                   x-text="fieldHomogeneity.label"></div>
+              <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-64
+                          bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                          opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                <template x-if="fieldHomogeneity.color === 'green'">
+                  <div>
+                    <p class="font-semibold mb-1 text-green-300">Campo homogéneo</p>
+                    <p>El estrés hídrico es uniforme entre zonas (CV &lt; 15%). Un solo nodo representa bien todo el campo y la estimación satelital es confiable con una sola calibración.</p>
+                  </div>
+                </template>
+                <template x-if="fieldHomogeneity.color === 'yellow'">
+                  <div>
+                    <p class="font-semibold mb-1 text-yellow-300">Campo moderadamente heterogéneo</p>
+                    <p>Hay diferencias de estrés apreciables entre zonas (CV 15–25%). Revisar si alguna zona tiene CWSI anómalo. Considerar agregar nodos en las zonas con mayor diferencia.</p>
+                  </div>
+                </template>
+                <template x-if="fieldHomogeneity.color === 'red'">
+                  <div>
+                    <p class="font-semibold mb-1 text-red-300">Campo heterogéneo</p>
+                    <p>El estrés varía significativamente entre zonas (CV &gt; 25%). Cada zona puede requerir una decisión de riego distinta. Se recomienda al menos un nodo por zona para confirmar el dato satelital con medición directa.</p>
+                  </div>
+                </template>
+                <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+              </div>
+            </div>
+            <div class="text-xs text-gray-400 mt-1"
+                 x-text="'Δ ' + fieldHomogeneity.spread + ' CWSI entre nodos'"></div>
+          </div>
+        </template>
+        <template x-if="!fieldHomogeneity">
+          <div>
+            <div class="text-3xl font-bold text-gray-300">—</div>
+            <div class="text-xs text-gray-400 mt-1">CV CWSI</div>
+            <div class="text-xs text-gray-300 mt-1">
+              <span x-text="nodes.length < 2 ? 'Necesitás ≥ 2 nodos' : 'Sin datos'"></span>
+            </div>
+          </div>
+        </template>
+      </div>
+
+    </section>
+
+    <!-- ===== NODOS ===== -->
+    <section>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-base font-semibold text-gray-700">Nodos activos</h2>
+        <button @click="fetchStatus()"
+                class="text-xs text-green-700 hover:text-green-900">↻ Actualizar</button>
+      </div>
+
+      <template x-if="nodes.length === 0">
+        <div class="bg-white rounded-lg border border-dashed border-gray-300 p-8 text-center text-gray-400">
+          <p class="text-sm">Sin lecturas aún.</p>
+          <p class="text-xs mt-1">Usá
+            <span class="font-mono bg-gray-100 px-1 rounded">POST /ingest</span>
+            o el botón <strong>Simular datos</strong> del header.
+          </p>
+        </div>
+      </template>
+
+      <template x-if="nodes.length > 0">
+        <div class="rounded-lg border border-gray-200 bg-white shadow-sm">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500 uppercase text-xs border-b border-gray-200 relative">
+              <tr>
+                <th class="px-4 py-3 text-left">Nodo</th>
+                <th class="px-4 py-3 text-center">
+                  <span class="relative group cursor-help underline decoration-dotted underline-offset-2">CWSI
+                    <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-56
+                                bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl font-normal
+                                opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                      <p class="font-semibold mb-1">Crop Water Stress Index</p>
+                      <p>Índice de estrés hídrico térmico. Compara la temperatura del canopeo con los límites de referencia hídrica.</p>
+                      <p class="mt-1"><span class="text-green-300">0.0–0.3</span> sin estrés · <span class="text-yellow-300">0.3–0.6</span> moderado · <span class="text-red-300">0.6–1.0</span> alto</p>
+                      <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                    </div>
+                  </span>
+                </th>
+                <th class="px-4 py-3 text-center">Estrés</th>
+                <th class="px-4 py-3 text-center">
+                  <span class="relative group cursor-help underline decoration-dotted underline-offset-2">HSI
+                    <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-60
+                                bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl font-normal
+                                opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                      <p class="font-semibold mb-1">HydroVision Stress Index</p>
+                      <p>Índice compuesto que fusiona CWSI térmico (cámara MLX90640) y MDS dendrométrico (extensómetro de tronco).</p>
+                      <p class="mt-1">El HSI está disponible 24/7 — incluso de noche y con nubes, cuando el CWSI térmico no puede calcularse.</p>
+                      <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                    </div>
+                  </span>
+                </th>
+                <th class="px-4 py-3 text-center">
+                  <span class="relative group cursor-help underline decoration-dotted underline-offset-2">MDS (mm)
+                    <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-60
+                                bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl font-normal
+                                opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                      <p class="font-semibold mb-1">Maximum Daily Shrinkage</p>
+                      <p>Contracción máxima diaria del tallo (mm), medida con el dendrómetro ADS1231.</p>
+                      <p class="mt-1">Indica el déficit hídrico interno acumulado de la planta. Aumenta cuando la planta consume más agua de la que absorbe.</p>
+                      <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                    </div>
+                  </span>
+                </th>
+                <th class="px-4 py-3 text-center">T° aire</th>
+                <th class="px-4 py-3 text-center">
+                  <span class="relative group cursor-help underline decoration-dotted underline-offset-2">HR%
+                    <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-56
+                                bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl font-normal
+                                opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                      <p class="font-semibold mb-1">Humedad Relativa</p>
+                      <p>Porcentaje de humedad del aire. Alta HR reduce la demanda evapotranspirativa (VPD bajo) y puede suavizar el CWSI.</p>
+                      <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                    </div>
+                  </span>
+                </th>
+                <th class="px-4 py-3 text-center">Viento</th>
+                <th class="px-4 py-3 text-center">Batería</th>
+                <th class="px-4 py-3 text-center">Lectura</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              <template x-for="node in nodes" :key="node.node_id">
+                <tr class="hover:bg-gray-50 cursor-pointer transition-colors"
+                    :class="selectedNode === node.node_id
+                              ? 'bg-blue-50 ring-1 ring-inset ring-blue-200' : ''"
+                    @click="selectNode(node.node_id)">
+                  <td class="px-4 py-3 text-xs">
+                    <span class="font-mono text-gray-500" x-text="node.node_id"></span>
+                    <span x-show="node.origen === 'simulado'"
+                          class="ml-1 bg-purple-100 text-purple-600 text-xs font-semibold
+                                 px-1.5 py-0.5 rounded">SIM</span>
+                  </td>
+                  <td class="px-4 py-3 text-center font-bold text-gray-800"
+                      x-text="node.cwsi.toFixed(2)"></td>
+                  <td class="px-4 py-3 text-center">
+                    <span class="px-2 py-0.5 rounded-full text-xs font-semibold"
+                          :class="stressClass(node.cwsi)" x-text="node.stress"></span>
+                  </td>
+                  <td class="px-4 py-3 text-center text-gray-600" x-text="node.hsi.toFixed(2)"></td>
+                  <td class="px-4 py-3 text-center text-gray-600" x-text="node.mds_mm.toFixed(3)"></td>
+                  <td class="px-4 py-3 text-center text-gray-600" x-text="node.t_air + '°C'"></td>
+                  <td class="px-4 py-3 text-center text-gray-600" x-text="node.rh + '%'"></td>
+                  <td class="px-4 py-3 text-center text-gray-600" x-text="node.wind_ms + ' m/s'"></td>
+                  <td class="px-4 py-3 text-center">
+                    <span :class="batClass(node.bat_pct)" x-text="node.bat_pct + '%'"></span>
+                  </td>
+                  <td class="px-4 py-3 text-center text-gray-400 text-xs"
+                      x-text="node.hace_min === 0 ? 'ahora' : 'hace ' + node.hace_min + ' min'"></td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+      </template>
+    </section>
+
+    <!-- ===== RIEGO ===== -->
+    <section>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-base font-semibold text-gray-700">Control de riego — por nodo</h2>
+        <!-- Leyenda fuente de datos -->
+        <div class="flex gap-3 text-xs text-gray-400">
+          <span class="flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span> Nodo real
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-purple-400 inline-block"></span> Nodo simulado
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-sky-400 inline-block"></span>
+            <span class="relative group cursor-help underline decoration-dotted underline-offset-2">Satélite S2 (sim)
+              <div class="absolute z-50 bottom-full left-0 mb-2 w-72
+                          bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                          opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                <p class="font-semibold mb-1">Fusión nodo-satélite Sentinel-2</p>
+                <p>CWSI estimado por <span class="text-sky-300">CWSINDWICorrelationModel</span>, calibrado con los nodos activos y aplicado a los índices espectrales (NDWI, NDVI, NDRE) de cada zona.</p>
+                <p class="mt-1 text-gray-300">TRL 4: datos S2 sintéticos · TRL 5+: imagen GEE real</p>
+                <div class="absolute top-full left-4 border-4 border-transparent border-t-gray-800"></div>
+              </div>
+            </span>
+          </span>
+          <span class="flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-gray-300 inline-block"></span> Sin datos
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <template x-for="zone in zones" :key="zone.id">
+          <div class="bg-white rounded-xl border shadow-sm transition-all relative flex flex-col overflow-hidden"
+               :class="zone.active ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-200 hover:shadow-md'">
+
+            <!-- ── BARRA DE ESTADO superior (color según CWSI) ── -->
+            <div class="h-1.5"
+                 :class="zone.fuente === 'sin_cobertura' ? 'bg-amber-300'
+                       : zone.cwsi === null ? 'bg-gray-200'
+                       : zone.cwsi < 0.3 ? 'bg-green-400'
+                       : zone.cwsi < 0.6 ? 'bg-yellow-400' : 'bg-red-400'"></div>
+
+            <!-- ── CABECERA ── -->
+            <div class="px-4 pt-3 pb-1">
+              <!-- Fila 1: identidad -->
+              <div class="flex items-start justify-between">
+                <div>
+                  <div class="text-sm font-bold text-gray-800 leading-tight" x-text="zone.name"></div>
+                  <div class="text-xs text-gray-400 mt-0.5">
+                    <span x-show="zone.varietal" class="text-purple-500 font-medium" x-text="zone.varietal"></span>
+                    <template x-if="zone.densidad_nodos">
+                      <span class="text-gray-400" x-text="' · ' + zone.densidad_nodos.area_ha.toFixed(1) + ' ha'"></span>
+                    </template>
+                  </div>
+                </div>
+                <div class="text-right flex-shrink-0">
+                  <div class="text-xs text-gray-400 font-mono" x-text="'Z' + zone.id"></div>
+                </div>
+              </div>
+
+              <!-- Fila 2: CWSI hero -->
+              <div class="mt-3 flex items-end justify-between">
+                <div>
+                  <!-- Caso 1: CWSI disponible -->
+                  <div x-show="zone.cwsi != null" class="flex items-baseline gap-1 relative group/cwsi cursor-help">
+                    <span class="text-3xl font-black leading-none tracking-tight"
+                          :class="zone.cwsi < 0.3 ? 'text-green-600'
+                                : zone.cwsi < 0.6 ? 'text-yellow-600' : 'text-red-600'"
+                          x-text="zone.cwsi != null ? zone.cwsi.toFixed(2) : ''"></span>
+                    <span class="text-xs text-gray-400 font-medium">CWSI</span>
+                    <!-- Tooltip CWSI -->
+                    <div class="absolute z-50 bottom-full left-0 mb-2 w-64
+                                bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                                opacity-0 group-hover/cwsi:opacity-100 pointer-events-none transition-opacity duration-150">
+                      <p class="font-semibold mb-1" x-text="zone.cwsi < 0.3 ? 'Estres bajo' : zone.cwsi < 0.6 ? 'Estres moderado' : 'Estres alto'"></p>
+                      <p x-text="zone.cwsi < 0.3
+                        ? 'La planta tiene agua suficiente. No requiere riego inmediato.'
+                        : zone.cwsi < 0.6
+                          ? 'La planta muestra signos de estres hidrico. Monitorear y considerar riego.'
+                          : 'Estres severo. Se recomienda regar lo antes posible para evitar perdida de produccion.'"></p>
+                      <div x-show="zone.s2_meta" class="mt-1.5 pt-1.5 border-t border-gray-600 text-gray-300"
+                           x-text="zone.s2_meta ? 'NDVI=' + zone.s2_meta.ndvi.toFixed(2) + ' · NDWI=' + zone.s2_meta.ndwi.toFixed(2) + ' · Img: ' + zone.s2_meta.fecha_img : ''"></div>
+                      <div class="absolute top-full left-4 border-4 border-transparent border-t-gray-800"></div>
+                    </div>
+                  </div>
+                  <!-- Caso 2: Sin cobertura vegetal (satelite real, NDVI<0.20) -->
+                  <div x-show="zone.cwsi == null && zone.fuente === 'sin_cobertura'" class="relative group/nocover cursor-help">
+                    <span class="text-lg text-amber-500 font-medium">Sin cobertura vegetal</span>
+                    <div class="absolute z-50 bottom-full left-0 mb-2 w-64
+                                bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                                opacity-0 group-hover/nocover:opacity-100 pointer-events-none transition-opacity duration-150">
+                      <p class="font-semibold mb-1">Vegetacion insuficiente</p>
+                      <p>El satelite Sentinel-2 detecta NDVI &lt; 0.20 en esta zona, lo que indica suelo desnudo o rastrojo post-cosecha. No es posible estimar estres hidrico sin vegetacion activa.</p>
+                      <div x-show="zone.s2_meta" class="mt-1.5 pt-1.5 border-t border-gray-600 text-gray-300"
+                           x-text="zone.s2_meta ? 'NDVI=' + zone.s2_meta.ndvi.toFixed(2) + ' · NDWI=' + zone.s2_meta.ndwi.toFixed(2) + ' · Img: ' + zone.s2_meta.fecha_img : ''"></div>
+                      <div class="absolute top-full left-4 border-4 border-transparent border-t-gray-800"></div>
+                    </div>
+                  </div>
+                  <!-- Caso 3: Sin datos (no hay nodo ni satelite) -->
+                  <div x-show="zone.cwsi == null && zone.fuente !== 'sin_cobertura'">
+                    <span class="text-2xl text-gray-200 font-light">Sin datos</span>
+                  </div>
+                </div>
+                <!-- Badge riego activo -->
+                <div x-show="zone.active"
+                     class="px-2 py-0.5 bg-blue-50 text-blue-600 text-xs font-semibold rounded-full flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span> Regando
+                </div>
+                <!-- Badge riego sugerido -->
+                <div x-show="zone.sugerir_riego && !zone.active"
+                     class="px-2 py-0.5 bg-red-50 text-red-600 text-xs font-semibold rounded-full animate-pulse">
+                  Regar
+                </div>
+                <!-- Badge reposo/dormancia -->
+                <div x-show="zone.en_reposo && !zone.active"
+                     class="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs font-medium rounded-full relative group/reposo cursor-help">
+                  Reposo
+                  <div class="absolute z-50 bottom-full right-0 mb-2 w-56
+                              bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                              opacity-0 group-hover/reposo:opacity-100 pointer-events-none transition-opacity duration-150">
+                    <p class="font-semibold mb-1">Periodo de reposo</p>
+                    <p>La vid esta en dormancia. El estres hidrico es normal para esta epoca y no requiere riego. Regar en reposo favorece enfermedades fungicas.</p>
+                    <div class="absolute top-full right-4 border-4 border-transparent border-t-gray-800"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Fila 3: fuente del dato (compacta) -->
+              <div class="mt-1.5 flex items-center gap-1 relative group cursor-help">
+                <span class="w-1.5 h-1.5 rounded-full flex-shrink-0" :class="fuenteColor(zone)"></span>
+                <span class="text-xs text-gray-400 underline decoration-dotted underline-offset-2"
+                      x-text="fuenteLabel(zone)"></span>
+                <div class="absolute z-50 bottom-full left-0 mb-2 w-56
+                            bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                            opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                  <p class="font-semibold mb-1">Fuente del dato</p>
+                  <p x-text="zone.fuente.startsWith('nodo:')
+                    ? 'Medicion directa del sensor termografico del nodo. Precision ±0.03 CWSI.'
+                    : zone.fuente === 'satelite_real'
+                      ? 'Bandas Sentinel-2 reales (Planetary Computer). CWSI estimado via modelo fisico NDWI. Precision ±0.12 CWSI.'
+                      : zone.fuente === 'sin_cobertura'
+                        ? 'El satelite detecta NDVI < 0.20 (suelo desnudo / post-cosecha). No se puede estimar CWSI sin vegetacion activa.'
+                        : zone.fuente === 'satelite_s2'
+                          ? 'Estimacion satelital (Sentinel-2) calibrada con nodos activos. Precision ±0.10 CWSI.'
+                          : 'Sin datos disponibles para esta zona.'"></p>
+                  <div class="absolute top-full left-4 border-4 border-transparent border-t-gray-800"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── INFRAESTRUCTURA: barra de nodos + heterogeneidad ── -->
+            <template x-if="zone.densidad_nodos">
+              <div class="px-4 py-2 relative group cursor-help">
+                <!-- Barra de progreso de nodos -->
+                <div class="flex items-center justify-between text-xs mb-1">
+                  <span class="text-gray-500 font-medium">Cobertura de nodos</span>
+                  <span class="font-mono"
+                        :class="zone.densidad_nodos.cobertura === 'ok' ? 'text-green-600'
+                              : zone.densidad_nodos.cobertura === 'suficiente' ? 'text-yellow-600'
+                              : 'text-red-500'"
+                        x-text="zone.densidad_nodos.actuales + ' de ' + zone.densidad_nodos.recomendados"></span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                  <div class="h-full rounded-full transition-all duration-500"
+                       :class="zone.densidad_nodos.cobertura === 'ok' ? 'bg-green-400'
+                             : zone.densidad_nodos.cobertura === 'suficiente' ? 'bg-yellow-400'
+                             : 'bg-red-400'"
+                       :style="'width:' + Math.min(100, Math.round(zone.densidad_nodos.actuales / zone.densidad_nodos.recomendados * 100)) + '%'"></div>
+                </div>
+
+                <!-- Tooltip de infraestructura (todo el detalle técnico) -->
+                <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-72
+                            bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                            opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                  <p class="font-semibold mb-2 text-sky-300">Infraestructura de la zona</p>
+
+                  <!-- Datos clave -->
+                  <div class="grid grid-cols-2 gap-x-3 gap-y-1 mb-2">
+                    <span class="text-gray-400">Superficie</span>
+                    <span class="font-medium" x-text="zone.densidad_nodos.area_ha.toFixed(2) + ' ha'"></span>
+                    <span class="text-gray-400">Nodos instalados</span>
+                    <span class="font-medium" x-text="zone.densidad_nodos.actuales"></span>
+                    <span class="text-gray-400">Nodos recomendados</span>
+                    <span class="font-medium" x-text="zone.densidad_nodos.recomendados + ' (1 cada ' + zone.densidad_nodos.ha_por_nodo + ' ha)'"></span>
+                  </div>
+
+                  <!-- Heterogeneidad -->
+                  <div class="pt-2 border-t border-gray-600">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="text-gray-400">Variabilidad</span>
+                      <span class="px-1.5 py-0.5 rounded font-semibold"
+                            :class="zone.densidad_nodos.heterogeneidad === 'homogeneo' ? 'bg-green-700 text-green-100'
+                                  : zone.densidad_nodos.heterogeneidad === 'medio' ? 'bg-yellow-700 text-yellow-100'
+                                  : zone.densidad_nodos.heterogeneidad === 'heterogeneo' ? 'bg-red-700 text-red-100'
+                                  : 'bg-gray-600 text-gray-200'"
+                            x-text="zone.densidad_nodos.heterogeneidad === 'sin datos'
+                              ? 'Estimada media'
+                              : zone.densidad_nodos.heterogeneidad.charAt(0).toUpperCase() + zone.densidad_nodos.heterogeneidad.slice(1)"></span>
+                      <span class="text-gray-400" x-show="zone.densidad_nodos.cv_cwsi !== null"
+                            x-text="'CV ' + zone.densidad_nodos.cv_cwsi + '%'"></span>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed"
+                       x-text="zone.densidad_nodos.heterogeneidad === 'sin datos'
+                         ? 'Con 2+ nodos el sistema mide la variabilidad real y ajusta la densidad automaticamente.'
+                         : zone.densidad_nodos.heterogeneidad === 'homogeneo'
+                           ? 'Estres uniforme (CV<15%) — menos nodos necesarios.'
+                           : zone.densidad_nodos.heterogeneidad === 'medio'
+                             ? 'Variabilidad moderada (CV 15-25%) — densidad estandar.'
+                             : 'Alta variabilidad (CV>=25%) — se necesita mayor densidad de nodos.'"></p>
+                  </div>
+
+                  <!-- Referencia -->
+                  <p class="mt-2 text-gray-500 italic text-center">Santesteban et al. 2017, Precision Agriculture</p>
+                  <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                </div>
+              </div>
+            </template>
+
+            <!-- ── SEPARADOR ── -->
+            <div class="border-t border-gray-100 mx-3"></div>
+
+            <!-- ── PIE: acción de riego ── -->
+            <div class="px-4 py-3 flex-1 flex flex-col justify-end min-h-[72px]">
+
+              <!-- CASO 1: zona con nodo + solenoide → control de riego -->
+              <template x-if="zone.assigned_nodes?.some(n => n.solenoid)">
+                <div class="space-y-2">
+                  <template x-for="an in zone.assigned_nodes.filter(n => n.solenoid)" :key="an.node_id">
+                    <div>
+                      <!-- Nodo -->
+                      <div class="flex items-center gap-1.5 mb-1.5 relative group cursor-help">
+                        <span class="w-2 h-2 rounded-full flex-shrink-0"
+                              :class="an.irrigating ? 'bg-blue-500 animate-pulse' : 'bg-gray-300'"></span>
+                        <span class="text-xs font-medium text-gray-600 truncate"
+                              x-text="(an.name || an.node_id)"></span>
+                        <span class="text-xs text-gray-300 ml-auto flex-shrink-0"
+                              x-text="'S' + an.solenoid"></span>
+                        <!-- Tooltip nodo -->
+                        <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-52
+                                    bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                                    opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                          <p class="font-semibold mb-1" x-text="an.name || an.node_id"></p>
+                          <p>CWSI nodo: <strong x-text="an.cwsi?.toFixed(2) ?? '—'"></strong></p>
+                          <p class="text-gray-300" x-text="'Solenoide canal ' + an.solenoid"></p>
+                          <p x-show="an.dist_m !== null" class="text-gray-300"
+                             x-text="'Distancia al centroide: ' + an.dist_m + ' m'"></p>
+                          <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        </div>
+                      </div>
+                      <!-- Botón riego -->
+                      <button @click="toggleNode(an, zone)"
+                              :disabled="an._loading || (zone.en_reposo && !an.irrigating)"
+                              class="w-full py-2 rounded-lg text-xs font-bold transition-colors disabled:opacity-50"
+                              :class="zone.en_reposo && !an.irrigating
+                                  ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
+                                  : an.irrigating
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                    : zone.sugerir_riego
+                                      ? 'bg-red-500 text-white hover:bg-red-600 animate-pulse'
+                                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+                              x-text="an._loading ? '...'
+                                     : zone.en_reposo && !an.irrigating ? 'Riego inhibido (reposo)'
+                                     : an.irrigating ? 'Detener riego'
+                                     : zone.sugerir_riego ? 'Regar ahora' : 'Activar riego'">
+                      </button>
+                      <!-- Indicador modo prueba (se configura en Admin) -->
+                      <div x-show="an.sol_sim"
+                           class="w-full py-1 rounded-lg text-xs font-medium text-center mt-1 bg-amber-50 text-amber-600 ring-1 ring-amber-200">
+                        Modo prueba (solenoide simulado)
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <!-- CASO 2: zona con nodo pero SIN solenoide -->
+              <template x-if="zone.assigned_nodes?.length > 0 && !zone.assigned_nodes.some(n => n.solenoid)">
+                <div class="flex flex-col items-center justify-center gap-1.5 text-center">
+                  <div class="text-xs text-gray-500">
+                    <span class="font-medium" x-text="zone.assigned_nodes[0].name || zone.assigned_nodes[0].node_id"></span>
+                    <span class="text-gray-300"> · solo sensor</span>
+                  </div>
+                </div>
+              </template>
+
+              <!-- CASO 3: zona sin nodo -->
+              <template x-if="!zone.assigned_nodes || zone.assigned_nodes.length === 0">
+                <div class="flex flex-col items-center justify-center gap-1 text-center relative group">
+                  <div class="text-xs text-amber-600 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 w-full cursor-help">
+                    Se necesita nodo para habilitar riego
+                  </div>
+                  <!-- Tooltip -->
+                  <div class="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-60
+                              bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                              opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+                    <p class="font-semibold mb-1 text-amber-300">¿Por que no se puede regar?</p>
+                    <p>El riego autonomo necesita un nodo con solenoide. El nodo mide estres en tiempo real y el solenoide controla la valvula.</p>
+                    <ul class="mt-1 ml-3 list-disc space-y-0.5 text-gray-300">
+                      <li>Precision con nodo: ±0.03 CWSI</li>
+                      <li>Corte automatico en tiempo real</li>
+                      <li>Deteccion de anomalias locales</li>
+                    </ul>
+                    <div class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- ===== MAPA ===== -->
+    <section>
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-base font-semibold text-gray-700" x-text="'Mapa del campo — ' + (fieldCfg.field_location || 'campo')"></h2>
+        <div class="flex gap-3 text-xs text-gray-400">
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-green-400 inline-block"></span> Bajo &lt;0.30</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-yellow-400 inline-block"></span> Medio &lt;0.60</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-red-400 inline-block"></span> Alto ≥0.60</span>
+          <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-gray-300 inline-block"></span> Sin datos</span>
+        </div>
+      </div>
+      <div id="vineyard-map" class="h-80 rounded-lg border border-gray-200 shadow-sm"></div>
+    </section>
+
+    <!-- ===== GRÁFICO ===== -->
+    <section x-show="selectedNode"
+             x-transition:enter="transition ease-out duration-250"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 translate-y-0"
+             x-transition:leave-end="opacity-0 -translate-y-2">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-base font-semibold text-gray-700">
+          Histórico CWSI / HSI —
+          <span class="font-mono text-sm text-gray-500" x-text="selectedNode"></span>
+        </h2>
+        <button @click="closeChart()"
+                class="text-xs text-gray-400 hover:text-gray-600">✕ Cerrar</button>
+      </div>
+
+      <div class="flex gap-5 mb-2 text-xs text-gray-500">
+        <span class="flex items-center gap-1.5">
+          <span class="w-5 border-t-2 border-dashed border-yellow-400 inline-block"></span>
+          <span class="relative group cursor-help underline decoration-dotted underline-offset-2">Umbral Medio 0.30
+            <div class="absolute z-50 bottom-full left-0 mb-2 w-60
+                        bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                        opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+              <p class="font-semibold mb-1 text-yellow-300">Estrés Medio — CWSI ≥ 0.30</p>
+              <p>La planta comienza a regular su apertura estomática para reducir la pérdida de agua. Estrés leve pero sostenido puede afectar el rendimiento y la calidad del fruto.</p>
+              <div class="absolute top-full left-4 border-4 border-transparent border-t-gray-800"></div>
+            </div>
+          </span>
+        </span>
+        <span class="flex items-center gap-1.5">
+          <span class="w-5 border-t-2 border-dashed border-red-400 inline-block"></span>
+          <span class="relative group cursor-help underline decoration-dotted underline-offset-2">Umbral Alto 0.60
+            <div class="absolute z-50 bottom-full left-0 mb-2 w-60
+                        bg-gray-800 text-white text-xs rounded-lg p-3 shadow-xl
+                        opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150">
+              <p class="font-semibold mb-1 text-red-300">Estrés Alto — CWSI ≥ 0.60</p>
+              <p>Déficit hídrico severo. La planta cierra estomas para sobrevivir. Se recomienda riego inmediato para evitar daño irreversible en el rendimiento y calidad del cultivo.</p>
+              <div class="absolute top-full left-4 border-4 border-transparent border-t-gray-800"></div>
+            </div>
+          </span>
+        </span>
+      </div>
+
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
+        <template x-if="historyEmpty">
+          <p class="text-sm text-gray-400 text-center py-8">Sin historial en las últimas 48 h.</p>
+        </template>
+        <canvas id="cwsiChart" height="80"></canvas>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="text-center text-xs text-gray-400 py-6">
+    HydroVision AG — ANPCyT Startup 2025 TRL 3-4 — actualización automática cada 30 s
+  </footer>
+
+  <!-- ===== ALPINE COMPONENT ===== -->
+  <script>
+    function dashboard() {
+      return {
+        nodes:        [],
+        zones:        [],
+        selectedNode: null,
+        historyEmpty: false,
+        chart:        null,
+        leafletMap:   null,
+        zonePolygons: [],
+        nodeMarkers:  [],
+        lastUpdate:   null,
+        simLoading:   false,
+        simRunning:   false,
+        refreshing:   false,
+        fieldCfg:     { field_name: '', field_varietal: '', field_location: '' },
+
+        // ── Propiedades calculadas ───────────────────────────────────────
+        get fieldSubtitle() {
+          const parts = [this.fieldCfg.field_name, this.fieldCfg.field_varietal,
+                         this.fieldCfg.field_location].filter(Boolean);
+          return parts.length ? parts.join(' · ') : 'Monitoreo hídrico';
+        },
+        get hasAlerts()    { return this.nodes.some(n => n.cwsi >= 0.6); },
+        get stressedNodes(){ return this.nodes.filter(n => n.cwsi >= 0.6).length; },
+        get activeZones()  {
+          return this.zones.reduce((n, z) =>
+            n + (z.assigned_nodes || []).filter(an => an.irrigating).length, 0);
+        },
+        get alertNodeIds() {
+          return this.nodes.filter(n => n.cwsi >= 0.6).map(n => n.node_id).join(', ');
+        },
+        get avgCwsi() {
+          if (!this.nodes.length) return '--';
+          const avg = this.nodes.reduce((s, n) => s + n.cwsi, 0) / this.nodes.length;
+          return avg.toFixed(2);
+        },
+
+        get fieldHomogeneity() {
+          const vals = this.nodes.map(n => n.cwsi).filter(v => v != null && !isNaN(v));
+          if (vals.length < 2) return null;
+          const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+          const std  = Math.sqrt(vals.reduce((a, b) => a + (b - mean) ** 2, 0) / vals.length);
+          const cv   = mean > 0 ? (std / mean) * 100 : 0;
+          const min  = Math.min(...vals), max = Math.max(...vals);
+          let label, color;
+          if (cv < 15)      { label = 'Homogéneo';   color = 'green';  }
+          else if (cv < 25) { label = 'Moderado';    color = 'yellow'; }
+          else              { label = 'Heterogéneo'; color = 'red';    }
+          return { cv: cv.toFixed(1), std: std.toFixed(3),
+                   spread: (max - min).toFixed(3), label, color };
+        },
+
+        // ── Init ────────────────────────────────────────────────────────
+        async fetchConfig() {
+          try {
+            const res = await fetch('/api/admin/config');
+            this.fieldCfg = { ...this.fieldCfg, ...(await res.json()) };
+          } catch (e) { console.error('fetchConfig:', e); }
+        },
+
+        async init() {
+          await Promise.all([this.fetchConfig(), this.fetchStatus(), this.fetchZones(), this.fetchSimStatus()]);
+          this.$nextTick(() => { this.initMap(); this.updateMap(); this._fitMapToZones(); });
+          setInterval(async () => {
+            this.refreshing = true;
+            await Promise.all([this.fetchStatus(), this.fetchZones()]);
+            this.updateMap();
+            setTimeout(() => { this.refreshing = false; }, 800);
+          }, 30_000);
+        },
+
+        async fetchStatus() {
+          try {
+            const res  = await fetch('/api/status');
+            this.nodes = await res.json();
+            this.lastUpdate = new Date().toLocaleTimeString('es-AR');
+          } catch (e) { console.error('fetchStatus:', e); }
+        },
+
+        async fetchZones() {
+          try {
+            const res  = await fetch('/api/zones');
+            const data = await res.json();
+            this.zones = data.map(z => ({
+              ...z,
+              loading: false,
+              assigned_nodes: (z.assigned_nodes || []).map(n => ({ ...n, _loading: false })),
+            }));
+          } catch (e) { console.error('fetchZones:', e); }
+        },
+
+        // ── Estilos ─────────────────────────────────────────────────────
+        stressClass(cwsi) {
+          if (cwsi < 0.3) return 'bg-green-100 text-green-800';
+          if (cwsi < 0.6) return 'bg-yellow-100 text-yellow-800';
+          return 'bg-red-100 text-red-800';
+        },
+        batClass(pct) {
+          if (pct > 50) return 'text-green-600 font-semibold';
+          if (pct > 20) return 'text-yellow-600 font-semibold';
+          return 'text-red-600 font-semibold';
+        },
+
+        // ── Riego ───────────────────────────────────────────────────────
+        async toggleNode(an, zone) {
+          an._loading = true;
+          try {
+            const res = await fetch(`/api/irrigate/${an.node_id}`, { method: 'POST' });
+            if (res.ok) {
+              const d = await res.json();
+              if (d.status === 'blocked') {
+                alert(d.detail || 'Riego bloqueado: la variedad esta en reposo/dormancia.');
+              } else {
+                an.irrigating = d.active;
+                zone.active = zone.assigned_nodes.some(n => n.irrigating);
+              }
+            }
+          } catch (e) { console.error('toggleNode:', e); }
+          an._loading = false;
+        },
+
+        // ── Gráfico ─────────────────────────────────────────────────────
+        async selectNode(nodeId) {
+          this.selectedNode = nodeId;
+          try {
+            const res  = await fetch(`/api/history/${nodeId}`);
+            const data = await res.json();
+            this.historyEmpty = data.length === 0;
+            if (data.length > 0) this.$nextTick(() => this.renderChart(data));
+          } catch (e) { console.error('selectNode:', e); }
+        },
+
+        closeChart() {
+          this.selectedNode = null;
+          if (this.chart) { this.chart.destroy(); this.chart = null; }
+        },
+
+        renderChart(data) {
+          const ctx = document.getElementById('cwsiChart');
+          if (!ctx) return;
+          if (this.chart) this.chart.destroy();
+
+          const labels = data.map(d => {
+            const dt = new Date(d.ts);
+            return dt.toLocaleString('es-AR', {
+              day: '2-digit', month: '2-digit',
+              hour: '2-digit', minute: '2-digit',
+            });
+          });
+
+          const refMedio = {
+            label: 'Umbral 0.30', data: data.map(() => 0.30),
+            borderColor: 'rgba(243,156,18,0.7)', borderDash: [5,4],
+            borderWidth: 1.5, pointRadius: 0, fill: false,
+          };
+          const refAlto = {
+            label: 'Umbral 0.60', data: data.map(() => 0.60),
+            borderColor: 'rgba(231,76,60,0.7)', borderDash: [5,4],
+            borderWidth: 1.5, pointRadius: 0, fill: false,
+          };
+
+          this.chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: 'CWSI', data: data.map(d => d.cwsi),
+                  borderColor: '#E74C3C', backgroundColor: 'rgba(231,76,60,0.07)',
+                  tension: 0.35, fill: true, pointRadius: 3, pointHoverRadius: 5,
+                },
+                {
+                  label: 'HSI', data: data.map(d => d.hsi),
+                  borderColor: '#2980B9', backgroundColor: 'rgba(41,128,185,0.07)',
+                  tension: 0.35, fill: true, pointRadius: 3, pointHoverRadius: 5,
+                },
+                refMedio,
+                refAlto,
+              ],
+            },
+            options: {
+              responsive: true,
+              interaction: { mode: 'index', intersect: false },
+              plugins: {
+                legend: {
+                  position: 'top',
+                  labels: { filter: item => !item.text.startsWith('Umbral') },
+                },
+                tooltip: {
+                  filter: item => !item.dataset.label.startsWith('Umbral'),
+                  callbacks: {
+                    label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(3)}`,
+                  },
+                },
+              },
+              scales: {
+                y: {
+                  min: 0, max: 1,
+                  title: { display: true, text: 'Índice [0–1]', font: { size: 11 } },
+                  grid:  { color: 'rgba(0,0,0,0.04)' },
+                },
+                x: {
+                  ticks: { maxRotation: 40, font: { size: 10 }, maxTicksLimit: 12 },
+                  grid:  { display: false },
+                },
+              },
+            },
+          });
+        },
+
+        // ── Mapa Leaflet ─────────────────────────────────────────────────
+        initMap() {
+          this.leafletMap = L.map('vineyard-map', { zoomControl: true }).setView([-31.2015, -64.0928], 18);
+          L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            attribution: '© Google', maxNativeZoom: 20, maxZoom: 21,
+          }).addTo(this.leafletMap);
+
+        },
+
+        _fitMapToZones() {
+          if (!this.leafletMap || !this.zones.length) return;
+          const HL = 0.000117, HO = 0.000168;
+          const allBounds = this.zones.map(z => [
+            [z.sw_lat ?? z.lat - HL, z.sw_lon ?? z.lon - HO],
+            [z.ne_lat ?? z.lat + HL, z.ne_lon ?? z.lon + HO],
+          ]);
+          const group = L.featureGroup(allBounds.map(b => L.rectangle(b)));
+          this.leafletMap.fitBounds(group.getBounds(), { padding: [30, 30], maxZoom: 20 });
+        },
+
+        updateMap() {
+          if (!this.leafletMap) return;
+
+          // Limpiar capas anteriores
+          this.zonePolygons.forEach(l => l.remove());
+          this.nodeMarkers.forEach(l => l.remove());
+          this.zonePolygons = [];
+          this.nodeMarkers = [];
+
+          const HALF_LAT = 0.000117;
+          const HALF_LON = 0.000168;
+
+          const cwsiColor = cwsi =>
+            cwsi === null ? '#9ca3af'
+            : cwsi < 0.3  ? '#27AE60'
+            : cwsi < 0.6  ? '#F39C12'
+            :                '#E74C3C';
+
+          // Patrón SVG para zonas sin datos (hatch diagonal — estándar AgTech)
+          if (!document.getElementById('hatch-pattern')) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '0'); svg.setAttribute('height', '0');
+            svg.style.position = 'absolute';
+            svg.innerHTML = `<defs>
+              <pattern id="hatch-pattern" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="8" stroke="#9ca3af" stroke-width="1.5" opacity="0.5"/>
+              </pattern>
+            </defs>`;
+            document.body.appendChild(svg);
+          }
+
+          // Zonas como polígonos — soporta vértices libres y rectángulos
+          this.zones.forEach(zone => {
+            const color  = cwsiColor(zone.cwsi);
+            let poly;
+
+            const noData     = zone.cwsi === null;
+            const borderColor = zone.active ? '#2980B9' : (noData ? '#9ca3af' : '#6b7280');
+            const polyOpts   = {
+              color:       borderColor,
+              weight:      zone.active ? 3 : 1.5,
+              dashArray:   noData ? '6,4' : (zone.active ? null : '4,3'),
+              fillColor:   color,
+              fillOpacity: noData ? 0.15 : 0.82,
+              className:   'zone-fill',
+            };
+
+            if (zone.vertices) {
+              poly = L.polygon(JSON.parse(zone.vertices), polyOpts).addTo(this.leafletMap);
+            } else {
+              const swLat = zone.sw_lat ?? zone.lat - HALF_LAT;
+              const swLon = zone.sw_lon ?? zone.lon - HALF_LON;
+              const neLat = zone.ne_lat ?? zone.lat + HALF_LAT;
+              const neLon = zone.ne_lon ?? zone.lon + HALF_LON;
+              poly = L.polygon([[neLat,swLon],[neLat,neLon],[swLat,neLon],[swLat,swLon]], polyOpts)
+                      .addTo(this.leafletMap);
+            }
+
+            // Tooltip y etiqueta (común para polígono libre y rectángulo)
+            const cwsiTxt  = zone.cwsi !== null ? zone.cwsi.toFixed(2) : '—';
+            const nodeTxt = zone.assigned_nodes?.length
+              ? zone.assigned_nodes.map(an => {
+                  const rep = an.representatividad === 'buena' ? '✓'
+                            : an.representatividad === 'moderada' ? '~'
+                            : an.representatividad === 'baja' ? '⚠' : '?';
+                  const sol = an.solenoid ? ` · S${an.solenoid}` : '';
+                  const irr = an.irrigating ? ' 💧' : '';
+                  return `${an.name || an.node_id} (CWSI ${an.cwsi ?? '—'})${sol}${irr} ${rep}`;
+                }).join('<br>')
+              : 'Sin nodo asignado';
+            const sugTxt   = zone.sugerir_riego && !zone.active
+                             ? '<br><span style="color:#E74C3C;font-weight:600">⚠ Riego sugerido</span>' : '';
+            const sinNodoWarn = !zone.tiene_nodo && zone.cwsi !== null
+              ? '<br><span style="color:#d97706;font-size:10px">⚠ Sin nodo — precisión limitada (±0.10 CWSI)</span>' : '';
+            // Info detallada al hacer click (popup)
+            poly.bindPopup(
+              `<strong>Zona ${zone.id} — ${zone.name}</strong><br>
+               CWSI: <strong>${cwsiTxt}</strong> · ${zone.stress || '—'}<br>
+               Fuente: ${this.fuenteLabel(zone)}<br>
+               ${nodeTxt}${sugTxt}${sinNodoWarn}`,
+              { maxWidth: 280 }
+            );
+
+            // Etiqueta permanente centrada (tooltip SVG — se mueve con el polígono al zoom)
+            poly.bindTooltip(
+              `<span style="font-size:11px;font-weight:700;color:#1f2937">Z${zone.id} ${cwsiTxt}</span>`,
+              { permanent: true, direction: 'center',
+                className: 'zone-label-tip', interactive: false }
+            );
+            this.zonePolygons.push(poly);
+          });
+
+          // ── Nodos: círculo de influencia + marcador ──────────────────
+          // Radio de influencia: ~25 m por nodo
+          const INFLUENCE_RADIUS_M = 25;
+
+          // Índice node_id → posición (para trazar líneas IDW)
+          const nodePos = {};
+          this.nodes.forEach(n => {
+            if (n.lat != null && n.lon != null) nodePos[n.node_id] = [n.lat, n.lon];
+          });
+
+          this.nodes.forEach(node => {
+            if (node.lat == null || node.lon == null) return;
+            const fillColor = cwsiColor(node.cwsi);
+            const isSim     = node.origen === 'simulado';
+            const pos       = [node.lat, node.lon];
+
+            // Círculo de influencia (área semitransparente)
+            const influence = L.circle(pos, {
+              radius:      INFLUENCE_RADIUS_M,
+              color:       isSim ? '#9333ea' : '#1B6B4A',
+              weight:      1,
+              dashArray:   isSim ? '4,3' : null,
+              fillColor:   fillColor,
+              fillOpacity: 0.10,
+              interactive: false,
+            }).addTo(this.leafletMap);
+            this.nodeMarkers.push(influence);
+
+            // Marcador central del nodo
+            const marker = L.circleMarker(pos, {
+              radius:      9,
+              color:       isSim ? '#9333ea' : '#1B6B4A',
+              weight:      2,
+              dashArray:   isSim ? '4,2' : null,
+              fillColor,
+              fillOpacity: 0.9,
+            }).addTo(this.leafletMap);
+
+            const label = node.name || node.node_id.slice(-6);
+            marker.bindTooltip(
+              `<strong>${label}</strong>${isSim ? ' <em>(SIM)</em>' : ''}<br>
+               CWSI: ${node.cwsi.toFixed(2)} · ${node.stress}<br>
+               Influencia: ~${INFLUENCE_RADIUS_M} m · Batería: ${node.bat_pct}%`,
+              { direction: 'top' }
+            );
+            this.nodeMarkers.push(marker);
+          });
+
+          // ── Líneas satélite: zona estimada por S2 → nodos de calibración ─
+          // Para zonas con fuente satelite_s2, dibujamos líneas punteadas
+          // hacia todos los nodos activos (todos contribuyen a calibrar el modelo).
+          const activeNodes = this.nodes.filter(n => n.lat != null && n.lon != null);
+          this.zones.forEach(zone => {
+            if (zone.fuente !== 'satelite_s2' && zone.fuente !== 'satelite_real') return;
+            activeNodes.forEach(node => {
+              const line = L.polyline(
+                [[zone.lat, zone.lon], [node.lat, node.lon]],
+                { color: '#2980B9', weight: 1, dashArray: '3,6', opacity: 0.45 }
+              ).addTo(this.leafletMap);
+              line.bindTooltip(
+                `S2: Zona ${zone.id} estimada vía fusión nodo-satélite (calibrado por ${node.name || node.node_id.slice(-6)})`,
+                { sticky: true, direction: 'top' }
+              );
+              this.zonePolygons.push(line);
+            });
+          });
+        },
+
+        // ── Fuente / origen de zona ─────────────────────────────────────
+        fuenteColor(zone) {
+          if (zone.fuente === 'sin datos')      return 'bg-gray-300';
+          if (zone.fuente === 'sin_cobertura')  return 'bg-amber-400';
+          if (zone.fuente === 'satelite_real')  return 'bg-emerald-400';
+          if (zone.fuente === 'satelite_s2') {
+            return zone.origen === 'simulado' ? 'bg-sky-300'
+                 : zone.origen === 'mixto'    ? 'bg-sky-400'
+                 :                              'bg-sky-400';
+          }
+          // nodo directo
+          return zone.origen === 'simulado' ? 'bg-purple-400' : 'bg-green-500';
+        },
+        fuenteLabel(zone) {
+          if (zone.fuente === 'sin datos')      return 'Sin datos';
+          if (zone.fuente === 'sin_cobertura')  return 'Sentinel-2 · sin vegetacion';
+          if (zone.fuente === 'satelite_real')  return 'Sentinel-2 real';
+          if (zone.fuente === 'satelite_s2') {
+            return zone.origen === 'simulado' ? 'Satelite S2 (sim)'
+                 : zone.origen === 'mixto'    ? 'Satelite S2 (mixto)'
+                 :                              'Satelite S2';
+          }
+          // nodo directo — muestra solo el ID corto
+          const id = zone.fuente.replace('nodo:', '').slice(-6);
+          return zone.origen === 'simulado' ? 'Nodo ' + id + ' (sim)' : 'Nodo ' + id;
+        },
+
+        // ── Simulación ──────────────────────────────────────────────────
+        async fetchSimStatus() {
+          try {
+            const res = await fetch('/api/simulate/status');
+            const d   = await res.json();
+            this.simRunning = d.running;
+          } catch (e) { console.error('simStatus:', e); }
+        },
+
+        async toggleSimulate() {
+          this.simLoading = true;
+          try {
+            const url = this.simRunning ? '/api/simulate/stop' : '/api/simulate/start';
+            await fetch(url, { method: 'POST' });
+            await this.fetchSimStatus();
+            await Promise.all([this.fetchStatus(), this.fetchZones()]);
+            if (this.selectedNode) await this.selectNode(this.selectedNode);
+          } catch (e) { console.error('toggleSimulate:', e); }
+          this.simLoading = false;
+        },
+      };
+    }
+  </script>
+
+</body>
+</html>

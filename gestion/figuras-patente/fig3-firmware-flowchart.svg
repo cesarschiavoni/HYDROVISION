@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 740" width="900" height="740" font-family="Arial, sans-serif">
+  <title>Figura 3 — Diagrama de flujo del firmware del nodo</title>
+  <rect width="900" height="740" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="450" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">FIGURA 3 — Diagrama de flujo del firmware del nodo</text>
+  <text x="450" y="44" text-anchor="middle" font-size="10" fill="#555">HydroVision AG — Solicitud de Patente INPI Argentina</text>
+  <line x1="20" y1="52" x2="880" y2="52" stroke="#ccc" stroke-width="0.8"/>
+
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#444"/>
+    </marker>
+    <marker id="arrG" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#1a7a2a"/>
+    </marker>
+    <marker id="arrR" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#cc2222"/>
+    </marker>
+  </defs>
+
+  <!-- Helpers: rounded rect para procesos, diamond para decisiones -->
+
+  <!-- ═══ COLUMNA PRINCIPAL (izquierda-centro) ═══ -->
+
+  <!-- INICIO -->
+  <ellipse cx="200" cy="80" rx="80" ry="22" fill="#2d6a2d" stroke="#1a4a1a" stroke-width="2"/>
+  <text x="200" y="85" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">INICIO / WAKEUP</text>
+
+  <line x1="200" y1="102" x2="200" y2="120" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Inicialización sensores -->
+  <rect x="120" y="120" width="160" height="38" fill="#e8f0e8" stroke="#2d6a2d" stroke-width="1.5" rx="4"/>
+  <text x="200" y="136" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a4a1a">Inicializar sensores</text>
+  <text x="200" y="150" text-anchor="middle" font-size="8.5" fill="#2a5a2a">GPS · RTC · SHT31 · MLX90640</text>
+
+  <line x1="200" y1="158" x2="200" y2="176" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ¿Dormancia? -->
+  <polygon points="200,176 280,204 200,232 120,204" fill="#fff8e0" stroke="#aa8800" stroke-width="1.5"/>
+  <text x="200" y="201" text-anchor="middle" font-size="8.5" fill="#7a5500">T_media &lt; T_base</text>
+  <text x="200" y="213" text-anchor="middle" font-size="8.5" fill="#7a5500">14 días consecutivos?</text>
+
+  <!-- Sí → Dormancia -->
+  <line x1="280" y1="204" x2="360" y2="204" stroke="#aa8800" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="296" y="199" font-size="8" fill="#aa8800">SÍ</text>
+  <rect x="360" y="182" width="145" height="44" fill="#fff8e0" stroke="#aa8800" stroke-width="1.5" rx="4"/>
+  <text x="432" y="199" text-anchor="middle" font-size="9" font-weight="bold" fill="#7a5500">MODO HIBERNACIÓN</text>
+  <text x="432" y="213" text-anchor="middle" font-size="8" fill="#7a5500">1 frame / 6h · ~1µA</text>
+  <!-- Heartbeat LoRa semanal -->
+  <line x1="432" y1="226" x2="432" y2="248" stroke="#aa8800" stroke-width="1.2" marker-end="url(#arr)"/>
+  <rect x="360" y="248" width="145" height="30" fill="#fff8e0" stroke="#aa8800" stroke-width="1.2" rx="3"/>
+  <text x="432" y="267" text-anchor="middle" font-size="8" fill="#7a5500">Heartbeat LoRa semanal</text>
+  <!-- Deep sleep larguísimo -->
+  <line x1="432" y1="278" x2="432" y2="296" stroke="#aa8800" stroke-width="1.2" marker-end="url(#arr)"/>
+  <rect x="360" y="296" width="145" height="26" fill="#ffd" stroke="#aa8800" stroke-width="1" rx="3"/>
+  <text x="432" y="313" text-anchor="middle" font-size="8" fill="#7a5500">Deep sleep 6 horas</text>
+
+  <!-- No → continuar -->
+  <line x1="200" y1="232" x2="200" y2="258" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="210" y="247" font-size="8" fill="#555">NO</text>
+
+  <!-- ¿PM2.5 > 200? -->
+  <polygon points="200,258 278,282 200,306 122,282" fill="#fff4e0" stroke="#cc8822" stroke-width="1.5"/>
+  <text x="200" y="279" text-anchor="middle" font-size="8.5" fill="#885500">PM2.5 &gt; 200 µg/m³?</text>
+  <text x="200" y="291" text-anchor="middle" font-size="8" fill="#885500">(fumigación/aerosol)</text>
+
+  <!-- Sí → invalida -->
+  <line x1="122" y1="282" x2="60" y2="282" stroke="#cc8822" stroke-width="1.2" marker-end="url(#arr)"/>
+  <text x="116" y="276" font-size="8" fill="#cc8822">SÍ</text>
+  <rect x="20" y="263" width="40" height="38" fill="#fff4e0" stroke="#cc8822" stroke-width="1.2" rx="3"/>
+  <text x="40" y="279" text-anchor="middle" font-size="7.5" fill="#885500">Invalida</text>
+  <text x="40" y="291" text-anchor="middle" font-size="7.5" fill="#885500">frame</text>
+  <!-- Vuelve arriba con un bucle -->
+  <path d="M40,263 Q40,240 60,230 Q80,220 100,180 Q110,165 120,145" fill="none" stroke="#cc8822" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <text x="22" y="228" font-size="7.5" fill="#cc8822">esperar</text>
+  <text x="22" y="237" font-size="7.5" fill="#cc8822">clearance</text>
+
+  <!-- No → continuar -->
+  <line x1="200" y1="306" x2="200" y2="326" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="210" y="318" font-size="8" fill="#555">NO</text>
+
+  <!-- Captura multi-angular gimbal -->
+  <rect x="120" y="326" width="160" height="44" fill="#e0e8ff" stroke="#2244aa" stroke-width="1.5" rx="4"/>
+  <text x="200" y="343" text-anchor="middle" font-size="9" font-weight="bold" fill="#1122aa">Captura gimbal multi-angular</text>
+  <text x="200" y="355" text-anchor="middle" font-size="8" fill="#1122aa">5 posiciones + 1 cond. (viento)</text>
+  <text x="200" y="365" text-anchor="middle" font-size="8" fill="#1122aa">Limpieza piezoeléctrica previa</text>
+
+  <line x1="200" y1="370" x2="200" y2="388" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Fusión frames + segmentación foliar -->
+  <rect x="120" y="388" width="160" height="44" fill="#e8e0ff" stroke="#6633aa" stroke-width="1.5" rx="4"/>
+  <text x="200" y="405" text-anchor="middle" font-size="9" font-weight="bold" fill="#4a1a8a">Segmentación foliar</text>
+  <text x="200" y="417" text-anchor="middle" font-size="8" fill="#4a1a8a">Fracción foliar P20-P75</text>
+  <text x="200" y="428" text-anchor="middle" font-size="8" fill="#4a1a8a">Retener top-3 frames</text>
+
+  <line x1="200" y1="432" x2="200" y2="450" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Cálculo CWSI -->
+  <rect x="120" y="450" width="160" height="44" fill="#fff0f8" stroke="#cc2288" stroke-width="2" rx="4"/>
+  <text x="200" y="468" text-anchor="middle" font-size="9" font-weight="bold" fill="#8a1166">Calcular CWSI</text>
+  <text x="200" y="480" text-anchor="middle" font-size="8" fill="#8a1166">Jackson 1981 · Dry/Wet Ref</text>
+  <text x="200" y="491" text-anchor="middle" font-size="8" fill="#8a1166">Coefs. fenológicos activos</text>
+
+  <line x1="200" y1="494" x2="200" y2="512" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Cálculo MDS -->
+  <rect x="120" y="512" width="160" height="36" fill="#fff8e0" stroke="#aa8800" stroke-width="1.5" rx="4"/>
+  <text x="200" y="528" text-anchor="middle" font-size="9" font-weight="bold" fill="#7a5500">Calcular MDS → ψ_stem</text>
+  <text x="200" y="542" text-anchor="middle" font-size="8" fill="#7a5500">ADS1231 + corr. DS18B20</text>
+
+  <line x1="200" y1="548" x2="200" y2="566" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Calcular HSI -->
+  <rect x="120" y="566" width="160" height="44" fill="#ffe0e8" stroke="#cc1155" stroke-width="2" rx="4"/>
+  <text x="200" y="584" text-anchor="middle" font-size="9" font-weight="bold" fill="#8a0033">Calcular HSI</text>
+  <text x="200" y="596" text-anchor="middle" font-size="8" fill="#8a0033">w_cwsi(v) · CWSI</text>
+  <text x="200" y="607" text-anchor="middle" font-size="8" fill="#8a0033">+ w_mds(v) · f(MDS)</text>
+
+  <line x1="200" y1="610" x2="200" y2="630" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Actualizar GDD + fenología -->
+  <rect x="120" y="630" width="160" height="36" fill="#e8f8e0" stroke="#338822" stroke-width="1.5" rx="4"/>
+  <text x="200" y="646" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a5500">Actualizar GDD + fenología</text>
+  <text x="200" y="659" text-anchor="middle" font-size="8" fill="#1a5500">Cambio automático de coeficientes</text>
+
+  <!-- ═══ COLUMNA DERECHA: decisión riego + TX ═══ -->
+
+  <!-- Decisión de riego -->
+  <polygon points="560,466 650,492 560,518 470,492" fill="#ffe0e0" stroke="#cc2222" stroke-width="1.5"/>
+  <text x="560" y="489" text-anchor="middle" font-size="9" fill="#8a0000">HSI ≥ 0.30</text>
+  <text x="560" y="501" text-anchor="middle" font-size="9" fill="#8a0000">2 ciclos consec.?</text>
+
+  <!-- Sí → activar riego -->
+  <line x1="650" y1="492" x2="720" y2="492" stroke="#cc2222" stroke-width="1.5" marker-end="url(#arrR)"/>
+  <text x="660" y="487" font-size="8" fill="#cc2222">SÍ</text>
+  <rect x="720" y="472" width="140" height="40" fill="#ffe0e0" stroke="#cc2222" stroke-width="2" rx="4"/>
+  <text x="790" y="488" text-anchor="middle" font-size="9" font-weight="bold" fill="#8a0000">ACTIVAR RIEGO</text>
+  <text x="790" y="500" text-anchor="middle" font-size="8" fill="#8a0000">GPIO → SSR → Solenoide</text>
+  <text x="790" y="511" text-anchor="middle" font-size="8" fill="#8a0000">IrrigationLog → Flash</text>
+
+  <!-- No -->
+  <line x1="560" y1="518" x2="560" y2="538" stroke="#444" stroke-width="1.2" marker-end="url(#arr)"/>
+  <text x="570" y="530" font-size="8" fill="#555">NO</text>
+
+  <!-- ¿HSI ≤ 0.20? -->
+  <polygon points="560,538 640,562 560,586 480,562" fill="#e0ffe0" stroke="#22aa22" stroke-width="1.2"/>
+  <text x="560" y="559" text-anchor="middle" font-size="9" fill="#115500">HSI ≤ 0.20 + riego</text>
+  <text x="560" y="571" text-anchor="middle" font-size="9" fill="#115500">activo?</text>
+
+  <!-- Sí → desactivar riego -->
+  <line x1="640" y1="562" x2="720" y2="562" stroke="#22aa22" stroke-width="1.5" marker-end="url(#arrG)"/>
+  <text x="650" y="557" font-size="8" fill="#22aa22">SÍ</text>
+  <rect x="720" y="546" width="140" height="32" fill="#e0ffe0" stroke="#22aa22" stroke-width="1.5" rx="4"/>
+  <text x="790" y="563" text-anchor="middle" font-size="9" font-weight="bold" fill="#115500">DESACTIVAR RIEGO</text>
+  <text x="790" y="575" text-anchor="middle" font-size="8" fill="#115500">GPIO → SSR OFF</text>
+
+  <!-- TX LoRa -->
+  <rect x="475" y="610" width="170" height="44" fill="#e0e8ff" stroke="#2244cc" stroke-width="2" rx="4"/>
+  <text x="560" y="628" text-anchor="middle" font-size="9" font-weight="bold" fill="#1122aa">TX LoRa — Payload JSON</text>
+  <text x="560" y="640" text-anchor="middle" font-size="8" fill="#1122aa">CWSI · MDS · HSI · GDD · meteo</text>
+  <text x="560" y="651" text-anchor="middle" font-size="8" fill="#1122aa">cal_level · bat_pct · estadio</text>
+
+  <!-- RX Downlink -->
+  <line x1="560" y1="654" x2="560" y2="672" stroke="#2244cc" stroke-width="1.2" marker-end="url(#arr)"/>
+  <rect x="475" y="672" width="170" height="36" fill="#e8e8ff" stroke="#5566cc" stroke-width="1.2" rx="3"/>
+  <text x="560" y="688" text-anchor="middle" font-size="9" font-weight="bold" fill="#3344aa">RX Downlink 5s</text>
+  <text x="560" y="700" text-anchor="middle" font-size="8" fill="#3344aa">varietal · sol_sim · irrigate</text>
+
+  <!-- Deep sleep -->
+  <line x1="560" y1="708" x2="560" y2="720" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+  <ellipse cx="560" cy="727" rx="90" ry="16" fill="#555" stroke="#333" stroke-width="1.5"/>
+  <text x="560" y="732" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">Deep sleep ~13 min</text>
+
+  <!-- Flechas: columna izq → derecha (HSI → decisión riego) -->
+  <line x1="280" y1="588" x2="470" y2="492" stroke="#cc1155" stroke-width="1.5" stroke-dasharray="5,2" marker-end="url(#arrR)"/>
+  <text x="350" y="545" font-size="8" fill="#cc1155" transform="rotate(-28,350,545)">HSI calculado</text>
+
+  <!-- Columna izq → TX LoRa -->
+  <line x1="280" y1="648" x2="475" y2="628" stroke="#2244cc" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <text x="355" y="640" font-size="8" fill="#2244cc">datos ciclo</text>
+
+  <!-- Auto-calibración (lateral) -->
+  <rect x="540" y="326" width="160" height="44" fill="#fff4e0" stroke="#cc8822" stroke-width="1.5" rx="4"/>
+  <text x="620" y="343" text-anchor="middle" font-size="9" font-weight="bold" fill="#885500">Auto-calibración baseline</text>
+  <text x="620" y="355" text-anchor="middle" font-size="8" fill="#885500">Lluvia ≥5mm + MDS≈0 → EMA</text>
+  <text x="620" y="366" text-anchor="middle" font-size="8" fill="#885500">Dry/Wet Ref 96×/día</text>
+  <!-- flecha desde CWSI -->
+  <line x1="280" y1="472" x2="540" y2="348" stroke="#cc8822" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+
+  <!-- PINN refinamiento backend (etiqueta lateral) -->
+  <rect x="540" y="388" width="160" height="44" fill="#f0e8ff" stroke="#8833cc" stroke-width="1.5" rx="4" stroke-dasharray="5,2"/>
+  <text x="620" y="405" text-anchor="middle" font-size="9" font-weight="bold" fill="#5511aa">PINN (backend)</text>
+  <text x="620" y="417" text-anchor="middle" font-size="8" fill="#5511aa">MobileNetV3 INT8 TFLite</text>
+  <text x="620" y="428" text-anchor="middle" font-size="8.5" fill="#8833cc">Refinamiento CWSI</text>
+  <text x="540" y="448" font-size="7.5" fill="#8833cc" font-style="italic">* procesado en servidor</text>
+  <line x1="280" y1="472" x2="540" y2="410" stroke="#8833cc" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+</svg>

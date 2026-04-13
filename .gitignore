@@ -1,0 +1,44 @@
+# Python
+investigador/venv/
+**/__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Datasets grandes (23 GB) — no versionables
+investigador/data/
+
+# Logs de experimentos ML
+investigador/02_modelo/wandb/
+
+# Modelos entrenados (binarios pesados)
+investigador/models/*.pt
+investigador/models/*.onnx
+investigador/models/*.tflite
+
+# Material de referencia (PDFs externos)
+referencias/
+
+# Documentos personales del equipo
+equipo/
+
+# Borradores financieros
+matias/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+*.env.local
+
+# Claude Code (sesiones locales, no compartir)
+.claude/settings.local.json

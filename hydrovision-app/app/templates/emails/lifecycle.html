@@ -1,0 +1,243 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<h2>{{ title }}</h2>
+<p>Hola {{ client_name }},</p>
+
+{# ══════════════════════════════════════════════════════════════════════════
+   BLOQUE POR ZONA — si el cliente tiene zonas, cada una muestra su fenología
+   Si no tiene zonas, fallback al comportamiento por cultivo predominante.
+   ══════════════════════════════════════════════════════════════════════════ #}
+
+{% if zones %}
+{# ── Mapa de zonas ─────────────────────────────────────────────────────── #}
+<div style="margin: 16px 0 8px;">
+  <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin: 0 0 8px; font-weight: 600;">
+    Estado de tus {{ zones | length }} zonas
+  </p>
+</div>
+
+{% for z in zones %}
+<div style="background: #F8F9FA; border-left: 4px solid {% if z.crop_group == 'vid' %}#7C3AED{% elif z.crop_group == 'olivo' %}#059669{% else %}#DC2626{% endif %}; padding: 14px 18px; margin: 12px 0; border-radius: 0 8px 8px 0;">
+  <p style="margin: 0 0 2px; font-size: 15px; font-weight: 700; color: #333;">
+    {{ z.zone_name }} <span style="font-weight: 400; color: #888;">— {{ z.varietal_short }}</span>
+  </p>
+  <p style="margin: 0 0 6px; font-size: 13px; font-weight: 600; color: {% if z.crop_group == 'vid' %}#7C3AED{% elif z.crop_group == 'olivo' %}#059669{% else %}#DC2626{% endif %};">
+    {{ z.phase_display }}
+  </p>
+  <p style="margin: 0; font-size: 13px; color: #555;">{{ z.phase_description }}</p>
+  {% if z.phase_risk %}
+  <p style="margin: 6px 0 0; font-size: 12px; color: #B45309;">⚠ {{ z.phase_risk }}</p>
+  {% endif %}
+</div>
+{% endfor %}
+
+{% else %}
+{# ── Fallback sin zonas: bloque genérico por cultivo ──────────────────── #}
+<div class="highlight-box">
+  <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #1B6B4A; margin: 0 0 4px; font-weight: 700;">
+    {{ crop_short }} — {{ phase_display }}
+  </p>
+  <p style="margin: 0;">{{ phase_description }}</p>
+</div>
+{% endif %}
+
+{# ══════════════════════════════════════════════════════════════════════════
+   CONTENIDO POR TIPO DE EMAIL
+   ══════════════════════════════════════════════════════════════════════════ #}
+
+{% if email_type == "campaign_start" %}
+<p>
+  Tu sistema HydroVision está activo para la campaña {{ campaign_year }}.
+  <strong>{{ nodes_online }} nodos online</strong> monitoreando {{ total_ha }} ha.
+</p>
+
+{% if zones %}
+<p>Cada zona está calibrada para su variedad y fase fenológica:</p>
+<ul style="font-size: 14px; line-height: 1.8; padding-left: 20px;">
+  {% for z in zones %}
+  <li><strong>{{ z.zone_name }}</strong> ({{ z.varietal_short }}): {{ z.phase_display | lower }}{% if z.nodos %} — {{ z.nodos }} nodos{% endif %}</li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Mediciones cada 15 min — 96 lecturas por día por nodo. El sistema alerta automáticamente si el CWSI supera tus umbrales.</p>
+{% endif %}
+
+{% elif email_type == "first_report" %}
+<p>
+  Primer reporte de la campaña. En estos {{ days_active }} días, tu sistema:
+</p>
+<table class="stat-grid" role="presentation">
+  <tr>
+    <td>
+      <span class="stat-value">{{ stress_events }}</span>
+      <span class="stat-label">Eventos de estrés</span>
+    </td>
+    <td>
+      <span class="stat-value">{{ water_saved_m3 | default('—') }} m&sup3;</span>
+      <span class="stat-label">Agua ahorrada estimada</span>
+    </td>
+  </tr>
+</table>
+
+{% if zones %}
+<div class="section-title">Detalle por zona</div>
+{% for z in zones %}
+<p style="margin: 8px 0 4px; font-size: 14px;">
+  <strong>{{ z.zone_name }}</strong> ({{ z.varietal_short }}) — {{ z.phase_display | lower }}:
+  <span style="color: #666;">{{ z.phase_stress_note }}</span>
+</p>
+{% endfor %}
+{% endif %}
+
+{% elif email_type == "peak_heat" %}
+<div class="warning-box">
+  <p>
+    <strong>Semana de condiciones extremas.</strong>
+    {% if vpd_max %}El VPD alcanzó {{ vpd_max }} kPa.{% endif %}
+    Tu sistema actuó <strong>{{ actions_this_week }} veces</strong> esta semana.
+  </p>
+</div>
+
+{% if zones %}
+<div class="section-title">Impacto por zona</div>
+{% for z in zones %}
+<div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+  <p style="margin: 0 0 4px; font-size: 14px; font-weight: 600;">{{ z.zone_name }} — {{ z.varietal_short }} ({{ z.phase_display | lower }})</p>
+  {% if z.phase_risk %}
+  <p style="margin: 0; font-size: 13px; color: #B45309;">Riesgo: {{ z.phase_risk }}</p>
+  {% endif %}
+  <p style="margin: 4px 0 0; font-size: 13px; color: #555;">{{ z.phase_stress_note }}</p>
+</div>
+{% endfor %}
+{% else %}
+<p>
+  {% if auto_irrigations > 0 %}
+  El riego automático se activó {{ auto_irrigations }} veces para proteger tu campo.
+  {% else %}
+  Las alertas te permitieron actuar antes de que el estrés alcanzara niveles críticos.
+  {% endif %}
+</p>
+{% endif %}
+
+{% elif email_type == "campaign_end" %}
+<p>Resumen de la campaña {{ campaign_year }}:</p>
+<table class="stat-grid" role="presentation">
+  <tr>
+    <td>
+      <span class="stat-value">{{ stress_events }}</span>
+      <span class="stat-label">Alertas de estrés</span>
+    </td>
+    <td>
+      <span class="stat-value">{{ water_saved_m3 | default('—') }} m&sup3;</span>
+      <span class="stat-label">Agua ahorrada</span>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <span class="stat-value">{{ auto_irrigations | default('—') }}</span>
+      <span class="stat-label">Riegos automáticos</span>
+    </td>
+    <td>
+      <span class="stat-value">USD {{ roi_usd | default('—') }}</span>
+      <span class="stat-label">Rendimiento protegido</span>
+    </td>
+  </tr>
+</table>
+
+{% if zones %}
+<div class="section-title">Cierre por zona</div>
+{% for z in zones %}
+<p style="margin: 6px 0; font-size: 14px;">
+  <strong>{{ z.zone_name }}</strong> ({{ z.varietal_short }}):
+  {% if z.crop_group == "vid" %}entra en post-cosecha — acumulando reservas antes de dormancia.
+  {% elif z.crop_group == "olivo" %}monitoreo continuo durante el reposo vegetativo.
+  {% elif z.crop_group == "cerezo" %}empieza a acumular horas de frío para la próxima temporada.
+  {% endif %}
+</p>
+{% endfor %}
+{% endif %}
+
+{% elif email_type == "offseason" %}
+<table class="stat-grid" role="presentation">
+  <tr>
+    <td>
+      <span class="stat-value">{{ frost_events | default(0) }}</span>
+      <span class="stat-label">Heladas detectadas</span>
+    </td>
+    <td>
+      <span class="stat-value">{{ chill_hours | default('—') }}</span>
+      <span class="stat-label">Horas de frío acumuladas</span>
+    </td>
+  </tr>
+</table>
+
+{% if zones %}
+<div class="section-title">Estado invernal por zona</div>
+{% for z in zones %}
+<div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+  <p style="margin: 0 0 2px; font-size: 14px; font-weight: 600;">{{ z.zone_name }} — {{ z.varietal_short }}</p>
+  <p style="margin: 0; font-size: 13px; color: #555;">
+    {{ z.phase_display }}:
+    {% if z.crop_group == "vid" %}las horas de frío predicen cuándo va a brotar tu {{ z.varietal_short }} (necesita ~300-500h).
+    {% elif z.crop_group == "olivo" %}el olivo no entra en dormancia total — sigue activo a nivel radicular. Las horas de frío estimulan la diferenciación floral.
+    {% elif z.crop_group == "cerezo" %}el cerezo necesita 800-1000 horas de frío para brotación uniforme — cada hora cuenta.
+    {% endif %}
+  </p>
+</div>
+{% endfor %}
+{% else %}
+<div class="highlight-box">
+  <p>Cada día de datos en invierno mejora las predicciones para la próxima campaña.</p>
+</div>
+{% endif %}
+
+{% elif email_type == "pre_campaign" %}
+<p>
+  Faltan semanas para la nueva campaña. Tu modelo tiene
+  <strong>{{ total_data_days | default('—') }} días de datos continuos</strong>.
+</p>
+
+{% if zones %}
+<div class="section-title">Preparación por zona</div>
+{% for z in zones %}
+<div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+  <p style="margin: 0 0 2px; font-size: 14px; font-weight: 600;">{{ z.zone_name }} — {{ z.varietal_short }}</p>
+  <p style="margin: 0; font-size: 13px; color: #555;">
+    Próxima fase: <strong style="color: #1B6B4A;">{{ z.next_phase_display }}</strong>.
+    {% if z.crop_group == "vid" %}Umbrales CWSI calibrados para tu {{ z.varietal_short }}.
+    {% elif z.crop_group == "olivo" %}Modelo calibrado para predecir intensidad de floración.
+    {% elif z.crop_group == "cerezo" %}Horas de frío determinan la uniformidad de brotación.
+    {% endif %}
+  </p>
+</div>
+{% endfor %}
+{% else %}
+<div class="highlight-box">
+  <p>
+    {% if years_active is defined and years_active > 1 %}
+    Con {{ years_active }} temporadas de historial, tu modelo predice el comportamiento
+    de tu campo con una precisión que ningún modelo genérico puede igualar.
+    {% else %}
+    Con una temporada de datos, tu modelo ya está calibrado para tu campo.
+    {% endif %}
+  </p>
+</div>
+{% endif %}
+
+{% if recommendations %}
+<div class="section-title">Sugerencias para esta campaña</div>
+<ul style="font-size: 14px; line-height: 1.8; padding-left: 20px;">
+  {% for rec in recommendations %}
+  <li>{{ rec }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% endif %}
+
+<!-- CTA -->
+<div style="text-align: center; margin: 32px 0 16px;">
+  <a href="{{ dashboard_url | default('#') }}" class="cta-btn">Ver mi dashboard</a>
+</div>
+{% endblock %}

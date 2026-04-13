@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Back-office — HydroVision AG</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    .badge-tier1 { @apply bg-blue-100 text-blue-800; }
+    .badge-tier2 { @apply bg-purple-100 text-purple-800; }
+    .badge-tier3 { @apply bg-amber-100 text-amber-800; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen" x-data="bo()" x-init="init()" x-cloak>
+
+  <!-- NAV -->
+  <nav class="bg-gray-900 text-white shadow-md">
+    <div class="max-w-full px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-lg font-bold tracking-tight">HydroVision AG</span>
+        <span class="text-xs bg-red-600 text-white px-2 py-0.5 rounded font-medium">BACK-OFFICE</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <form method="post" action="/logout">
+          <button type="submit" class="text-sm text-gray-400 hover:text-white transition-colors">Salir</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-6 py-8 space-y-8">
+
+    <!-- STATS -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <template x-if="stats">
+        <template x-for="[label, key, color] in [
+          ['Clientes', 'clientes', 'blue'],
+          ['Nodos totales', 'nodos_totales', 'green'],
+          ['Sin asignar', 'nodos_sin_asignar', 'red'],
+          ['Planes activos', 'planes_activos', 'purple'],
+          ['Ha contratadas', 'ha_contratadas', 'amber'],
+          ['ARR USD', 'arr_usd_anual', 'emerald'],
+        ]">
+          <div class="bg-white rounded-xl border border-gray-200 p-4 text-center shadow-sm">
+            <p class="text-2xl font-bold text-gray-800" x-text="key === 'arr_usd_anual' ? '$' + stats[key].toLocaleString() : stats[key]"></p>
+            <p class="text-xs text-gray-500 mt-1" x-text="label"></p>
+          </div>
+        </template>
+      </template>
+    </div>
+
+    <!-- TABS -->
+    <div class="flex gap-1 border-b border-gray-200">
+      <button @click="tab='clientes'" :class="tab==='clientes' ? 'border-b-2 border-gray-900 text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-700'"
+              class="px-4 py-2 text-sm transition-colors">Clientes</button>
+      <button @click="tab='nodos'"    :class="tab==='nodos'    ? 'border-b-2 border-gray-900 text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-700'"
+              class="px-4 py-2 text-sm transition-colors">Nodos</button>
+      <button @click="tab='audit'; loadAudit()"   :class="tab==='audit'   ? 'border-b-2 border-gray-900 text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-700'"
+              class="px-4 py-2 text-sm transition-colors">Auditoría</button>
+      <button @click="tab='emails'; loadEmailSchedule()"   :class="tab==='emails'   ? 'border-b-2 border-gray-900 text-gray-900 font-semibold' : 'text-gray-500 hover:text-gray-700'"
+              class="px-4 py-2 text-sm transition-colors">Emails</button>
+    </div>
+
+    <!-- ══ TAB CLIENTES ══ -->
+    <div x-show="tab === 'clientes'" class="space-y-6">
+
+      <!-- Toolbar -->
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-800">Clientes</h2>
+        <button @click="showNewUser = true"
+                class="bg-gray-900 text-white text-sm px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+          + Nuevo cliente
+        </button>
+      </div>
+
+      <!-- Tabla -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Usuario</th>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Rol</th>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Plan</th>
+              <th class="text-right px-4 py-3 font-medium text-gray-600">Nodos</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600">Vigencia</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <template x-for="u in users" :key="u.id">
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3 font-medium text-gray-800" x-text="u.username"></td>
+                <td class="px-4 py-3">
+                  <span :class="u.role === 'superadmin' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'"
+                        class="text-xs px-2 py-0.5 rounded font-medium" x-text="u.role"></span>
+                </td>
+                <td class="px-4 py-3">
+                  <template x-if="u.plan">
+                    <span :class="u.plan.tier === 1 ? 'bg-blue-100 text-blue-700' : u.plan.tier === 2 ? 'bg-purple-100 text-purple-700' : 'bg-amber-100 text-amber-700'"
+                          class="text-xs px-2 py-0.5 rounded font-medium" x-text="u.plan.tier_name"></span>
+                  </template>
+                  <template x-if="!u.plan">
+                    <span class="text-xs text-gray-400">Sin plan</span>
+                  </template>
+                </td>
+                <td class="px-4 py-3 text-right text-gray-700" x-text="u.nodos"></td>
+                <td class="px-4 py-3 text-center text-gray-500 text-xs" x-text="u.plan && u.plan.vence_at ? u.plan.vence_at.substring(0, 4) : '—'"></td>
+                <td class="px-4 py-3 text-center">
+                  <div class="flex items-center justify-center gap-2">
+                    <button @click="openPlan(u)"
+                            class="text-xs text-purple-600 hover:text-purple-800 font-medium">
+                      Plan
+                    </button>
+                    <button @click="openEditUser(u)"
+                            class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                      Editar
+                    </button>
+                    <button @click="deleteUser(u)"
+                            class="text-xs text-red-500 hover:text-red-700 font-medium">
+                      Eliminar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </template>
+            <template x-if="users.length === 0">
+              <tr><td colspan="8" class="px-4 py-8 text-center text-gray-400">Sin clientes registrados</td></tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ TAB NODOS ══ -->
+    <div x-show="tab === 'nodos'" class="space-y-6">
+      <h2 class="text-lg font-semibold text-gray-800">Nodos</h2>
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Node ID</th>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Cliente</th>
+              <th class="text-right px-4 py-3 font-medium text-gray-600">CWSI</th>
+              <th class="text-right px-4 py-3 font-medium text-gray-600">Hace (min)</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600">Asignar a</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <template x-for="n in nodes" :key="n.node_id">
+              <tr class="hover:bg-gray-50 transition-colors" :class="!n.owner_id ? 'bg-yellow-50' : ''">
+                <td class="px-4 py-3 font-mono text-xs text-gray-700" x-text="n.node_id"></td>
+                <td class="px-4 py-3">
+                  <template x-if="n.owner_username">
+                    <span class="text-gray-800" x-text="n.owner_username"></span>
+                  </template>
+                  <template x-if="!n.owner_username">
+                    <span class="text-xs text-amber-600 font-medium">Sin asignar</span>
+                  </template>
+                </td>
+                <td class="px-4 py-3 text-right text-gray-700" x-text="n.last_cwsi !== null ? n.last_cwsi : '—'"></td>
+                <td class="px-4 py-3 text-right text-gray-500" x-text="n.last_seen_min !== null ? n.last_seen_min + ' min' : '—'"></td>
+                <td class="px-4 py-3 text-center">
+                  <select @change="assignNode(n.node_id, $event.target.value)"
+                          class="text-xs border border-gray-200 rounded px-2 py-1 bg-white">
+                    <option value="">— Sin asignar —</option>
+                    <template x-for="u in users" :key="u.id">
+                      <option :value="u.id" :selected="n.owner_id === u.id" x-text="u.username"></option>
+                    </template>
+                  </select>
+                </td>
+              </tr>
+            </template>
+            <template x-if="nodes.length === 0">
+              <tr><td colspan="5" class="px-4 py-8 text-center text-gray-400">Sin nodos registrados</td></tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ TAB AUDITORÍA ══ -->
+    <div x-show="tab === 'audit'" class="space-y-5">
+
+      <!-- Encabezado + búsqueda -->
+      <div class="flex items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800">Actividad del sistema</h2>
+          <p class="text-xs text-gray-400 mt-0.5">Últimos 200 eventos · se actualiza manualmente</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="relative">
+            <svg class="absolute left-2.5 top-2 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input x-model="auditSearch" @input="auditFilterCategory = ''"
+                   type="text" placeholder="Buscar nodo, usuario…"
+                   class="text-xs border border-gray-200 rounded-lg pl-8 pr-3 py-2 w-44 bg-white focus:ring-1 focus:ring-gray-400 focus:outline-none">
+          </div>
+          <button @click="loadAudit()"
+                  class="flex items-center gap-1.5 text-xs bg-gray-900 text-white px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Actualizar
+          </button>
+        </div>
+      </div>
+
+      <!-- Contadores por categoría -->
+      <div class="grid grid-cols-5 gap-3">
+        <template x-for="cat in auditCategories" :key="cat.key">
+          <button @click="auditFilterCategory = (auditFilterCategory === cat.key ? '' : cat.key); auditSearch = ''"
+                  class="rounded-xl border p-3 text-left transition-all"
+                  :class="auditFilterCategory === cat.key
+                    ? cat.activeClass
+                    : 'bg-white border-gray-200 hover:border-gray-300 shadow-sm'">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-lg" x-text="cat.icon"></span>
+              <span class="text-xl font-bold" :class="auditFilterCategory === cat.key ? 'text-current' : 'text-gray-800'"
+                    x-text="auditRows.filter(a => cat.events.includes(a.event)).length"></span>
+            </div>
+            <p class="text-xs font-medium" :class="auditFilterCategory === cat.key ? 'text-current' : 'text-gray-600'" x-text="cat.label"></p>
+            <p class="text-xs mt-0.5 opacity-70" :class="auditFilterCategory === cat.key ? 'text-current' : 'text-gray-400'" x-text="cat.sublabel"></p>
+          </button>
+        </template>
+      </div>
+
+      <!-- Alerta si hay eventos de seguridad -->
+      <template x-if="auditRows.filter(a => ['hmac_fail','rate_limit'].includes(a.event)).length > 0">
+        <div class="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+          <span class="text-red-500 text-lg mt-0.5">⚠</span>
+          <div>
+            <p class="text-sm font-semibold text-red-700">
+              <span x-text="auditRows.filter(a => ['hmac_fail','rate_limit'].includes(a.event)).length"></span>
+              evento<span x-show="auditRows.filter(a => ['hmac_fail','rate_limit'].includes(a.event)).length > 1">s</span>
+              de seguridad en los últimos registros
+            </p>
+            <p class="text-xs text-red-500 mt-0.5">Revisá firmas HMAC inválidas o nodos con rate limit excedido.</p>
+          </div>
+          <button @click="auditFilterCategory = 'seguridad'; auditSearch = ''"
+                  class="ml-auto text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 transition-colors whitespace-nowrap">
+            Ver eventos
+          </button>
+        </div>
+      </template>
+
+      <!-- Feed de actividad -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+
+        <!-- Header del feed -->
+        <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs text-gray-500 font-medium">Filtrar:</span>
+            <template x-for="cat in [{key:'', label:'Todo', icon:''}].concat(auditCategories)" :key="cat.key">
+              <button @click="auditFilterCategory = cat.key; auditSearch = ''"
+                      class="text-xs px-2.5 py-1 rounded-full border transition-colors"
+                      :class="auditFilterCategory === cat.key
+                        ? 'bg-gray-900 text-white border-gray-900'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-400'">
+                <span x-show="cat.icon" x-text="cat.icon + ' '"></span><span x-text="cat.label"></span>
+              </button>
+            </template>
+          </div>
+          <span class="text-xs text-gray-400"
+                x-text="auditFiltered.length + ' evento' + (auditFiltered.length !== 1 ? 's' : '')"></span>
+        </div>
+
+        <!-- Filas del feed -->
+        <div class="divide-y divide-gray-50">
+          <template x-for="a in auditFiltered" :key="a.id">
+            <div class="px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                 :class="['hmac_fail','rate_limit','ingest_reject'].includes(a.event) ? 'border-l-2 border-red-400' : ''"
+                 @click="a._open = !a._open">
+              <div class="flex items-start gap-3">
+
+                <!-- Ícono de categoría -->
+                <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-sm"
+                     :class="{
+                       'bg-red-100':    ['hmac_fail','rate_limit','ingest_reject'].includes(a.event),
+                       'bg-green-100':  a.event === 'ingest_ok',
+                       'bg-blue-100':   ['irrigate_on','irrigate_off'].includes(a.event),
+                       'bg-amber-100':  a.event === 'irrigate_inhibit',
+                       'bg-purple-100': ['zone_create','zone_update','zone_delete','node_update','config_change'].includes(a.event),
+                       'bg-indigo-100': ['node_assign','node_unassign','user_create','user_delete','user_password_change'].includes(a.event),
+                     }"
+                     x-text="auditEventIcon(a.event)">
+                </div>
+
+                <!-- Contenido principal -->
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center justify-between gap-2">
+                    <p class="text-sm font-medium text-gray-800" x-text="auditEventLabel(a.event)"></p>
+                    <span class="text-xs text-gray-400 whitespace-nowrap flex-shrink-0"
+                          :title="a.ts ? a.ts.replace('T', ' ').substring(0,19) : ''"
+                          x-text="auditRelTime(a.ts)"></span>
+                  </div>
+                  <div class="flex items-center gap-3 mt-0.5 flex-wrap">
+                    <span x-show="a.user" class="text-xs text-gray-500 flex items-center gap-1">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                      <span x-text="a.user"></span>
+                    </span>
+                    <span x-show="a.node_id" class="text-xs text-gray-500 font-mono flex items-center gap-1">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+                      <span x-text="a.node_id"></span>
+                    </span>
+                    <span x-show="a.detail && !a._open" class="text-xs text-gray-400 truncate max-w-xs" x-text="a.detail"></span>
+                  </div>
+                </div>
+
+                <!-- Chevron expandir -->
+                <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-1 transition-transform"
+                     :class="a._open ? 'rotate-180' : ''"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </div>
+
+              <!-- Detalle expandido -->
+              <div x-show="a._open" x-transition class="mt-2 ml-10">
+                <div class="bg-gray-50 rounded-lg p-3 space-y-1.5 text-xs">
+                  <div x-show="a.detail" class="flex gap-2">
+                    <span class="text-gray-400 w-16 flex-shrink-0">Detalle</span>
+                    <span class="text-gray-700 font-medium break-all" x-text="a.detail"></span>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-gray-400 w-16 flex-shrink-0">Timestamp</span>
+                    <span class="text-gray-600 font-mono" x-text="a.ts ? a.ts.replace('T', ' ').substring(0,19) : '—'"></span>
+                  </div>
+                  <div x-show="a.ip" class="flex gap-2">
+                    <span class="text-gray-400 w-16 flex-shrink-0">IP</span>
+                    <span class="text-gray-600 font-mono" x-text="a.ip"></span>
+                  </div>
+                  <div class="flex gap-2">
+                    <span class="text-gray-400 w-16 flex-shrink-0">Código</span>
+                    <span class="text-gray-400 font-mono" x-text="a.event"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <template x-if="auditFiltered.length === 0">
+            <div class="px-4 py-12 text-center">
+              <p class="text-gray-400 text-sm">Sin eventos para mostrar</p>
+              <p class="text-gray-300 text-xs mt-1">Probá con otro filtro o actualizá los registros</p>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Glosario colapsable -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden">
+        <button @click="showGlosario = !showGlosario"
+                class="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-sm font-medium text-gray-700">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            <span>Referencia de eventos</span>
+          </div>
+          <svg class="w-4 h-4 text-gray-400 transition-transform" :class="showGlosario ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div x-show="showGlosario" x-transition>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y divide-gray-100">
+            <template x-for="e in glossary" :key="e.event">
+              <div class="flex items-start gap-3 px-4 py-3 hover:bg-gray-50">
+                <span class="text-base mt-0.5" x-text="auditEventIcon(e.event)"></span>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-semibold text-gray-800" x-text="auditEventLabel(e.event)"></span>
+                    <span class="text-xs px-1.5 py-0.5 rounded font-medium" :class="e.badgeClass" x-text="e.category"></span>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-0.5" x-text="e.description"></p>
+                  <p class="text-xs text-gray-400 font-mono mt-0.5" x-text="e.event"></p>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TAB EMAILS ══ -->
+    <div x-show="tab === 'emails'" class="space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-800">Emails lifecycle</h2>
+        <select x-model="emailCropGroup" @change="loadEmailSchedule()"
+                class="text-sm border border-gray-200 rounded-lg px-3 py-2 bg-white">
+          <option value="vid">Vid (vinífera)</option>
+          <option value="olivo">Olivo</option>
+          <option value="cerezo">Cerezo / frutales de carozo</option>
+        </select>
+      </div>
+
+      <!-- Calendario -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <h3 class="text-sm font-semibold text-gray-700">Calendario anual — <span x-text="emailCropGroup === 'vid' ? 'Vid' : emailCropGroup === 'olivo' ? 'Olivo' : 'Cerezo'" class="text-purple-700"></span></h3>
+          <p class="text-xs text-gray-500 mt-0.5">Cada cliente recibe máx. 1 email/mes con datos reales de su campo. El calendario se adapta a la fenología de su cultivo.</p>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="text-left px-4 py-3 font-medium text-gray-600 w-20">Mes</th>
+              <th class="text-left px-4 py-3 font-medium text-gray-600 w-40">Tipo</th>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Descripcion</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600 w-32">Preview</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <template x-for="e in emailSchedule" :key="e.type">
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3 font-medium text-gray-800">
+                  <span class="text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded" x-text="monthName(e.month)"></span>
+                </td>
+                <td class="px-4 py-3 text-xs font-mono text-purple-700" x-text="e.type"></td>
+                <td class="px-4 py-3 text-xs text-gray-600" x-text="e.description"></td>
+                <td class="px-4 py-3 text-center">
+                  <button @click="previewEmail(e.type)"
+                          class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+                    Ver preview
+                  </button>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Clientes con preferencias de email -->
+      <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <h3 class="text-sm font-semibold text-gray-700">Preferencias de email por cliente</h3>
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Cliente</th>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Email</th>
+              <th class="text-left px-4 py-3 font-medium text-gray-600">Agronomo</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600">Lifecycle</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600">Informes</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600">Alerta email</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600">Alerta WA</th>
+              <th class="text-center px-4 py-3 font-medium text-gray-600">Plan</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <template x-for="u in users.filter(u => u.role === 'user')" :key="u.id">
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-4 py-3">
+                  <span class="font-medium text-gray-800" x-text="u.full_name || u.username"></span>
+                  <span x-show="u.company" class="text-xs text-gray-400 ml-1" x-text="'(' + u.company + ')'"></span>
+                </td>
+                <td class="px-4 py-3 text-xs" :class="u.email ? 'text-gray-700' : 'text-red-500 font-medium'" x-text="u.email || 'Sin email'"></td>
+                <td class="px-4 py-3 text-xs text-gray-500" x-text="u.agronomist_email || '—'"></td>
+                <td class="px-4 py-3 text-center">
+                  <span :class="u.email_lifecycle ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'"
+                        class="text-xs px-2 py-0.5 rounded font-medium" x-text="u.email_lifecycle ? 'Activo' : 'Off'"></span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                  <span :class="u.email_reports ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'"
+                        class="text-xs px-2 py-0.5 rounded font-medium" x-text="u.email_reports ? 'Activo' : 'Off'"></span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                  <span :class="u.alert_email ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-600'"
+                        class="text-xs px-2 py-0.5 rounded font-medium" x-text="u.alert_email ? 'Activo' : 'Off'"></span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                  <span :class="u.alert_whatsapp ? 'bg-blue-100 text-blue-700' : 'bg-red-100 text-red-600'"
+                        class="text-xs px-2 py-0.5 rounded font-medium" x-text="u.alert_whatsapp ? 'Activo' : 'Off'"></span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                  <template x-if="u.plan">
+                    <span class="text-xs px-2 py-0.5 rounded font-medium bg-purple-100 text-purple-700" x-text="'T' + u.plan.tier"></span>
+                  </template>
+                  <template x-if="!u.plan">
+                    <span class="text-xs text-gray-400">—</span>
+                  </template>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Email Preview Modal -->
+      <div x-show="emailPreviewHtml" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+          <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+            <h3 class="text-lg font-semibold text-gray-800">Preview: <span x-text="emailPreviewType" class="text-purple-700"></span></h3>
+            <button @click="emailPreviewHtml = ''" class="text-gray-500 hover:text-gray-700 text-lg">✕</button>
+          </div>
+          <div class="flex-1 overflow-auto p-4">
+            <iframe :srcdoc="emailPreviewHtml" class="w-full border border-gray-200 rounded-lg" style="height: 100%; min-height: 500px;"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL: Nuevo usuario -->
+  <div x-show="showNewUser" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto py-8">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl space-y-4">
+      <h3 class="font-semibold text-gray-800">Nuevo cliente</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase tracking-wider pt-1">Acceso</div>
+        <input x-model="newUser.username" type="text" placeholder="Usuario *" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="newUser.password" type="password" placeholder="Contrasena *" class="border rounded-lg px-3 py-2 text-sm">
+        <div class="col-span-2">
+          <select x-model="newUser.role" class="w-full border rounded-lg px-3 py-2 text-sm">
+            <option value="user">Cliente (user)</option>
+            <option value="superadmin">Back-office (superadmin)</option>
+          </select>
+        </div>
+        <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Perfil</div>
+        <input x-model="newUser.full_name" type="text" placeholder="Nombre completo" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="newUser.email" type="email" placeholder="Email" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="newUser.phone" type="tel" placeholder="Telefono / WhatsApp" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="newUser.company" type="text" placeholder="Empresa / Bodega" class="border rounded-lg px-3 py-2 text-sm">
+        <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Agronomo</div>
+        <input x-model="newUser.agronomist_name" type="text" placeholder="Nombre agronomo" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="newUser.agronomist_email" type="email" placeholder="Email agronomo" class="border rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button @click="createUser()" class="flex-1 bg-gray-900 text-white text-sm py-2 rounded-lg hover:bg-gray-700">Crear</button>
+        <button @click="showNewUser = false; newUser = emptyNewUser()"
+                class="flex-1 border text-sm py-2 rounded-lg hover:bg-gray-50">Cancelar</button>
+      </div>
+      <p x-show="formError" class="text-red-500 text-xs" x-text="formError"></p>
+    </div>
+  </div>
+
+  <!-- MODAL: Editar usuario -->
+  <div x-show="showEditUser" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 overflow-y-auto py-8">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl space-y-4">
+      <h3 class="font-semibold text-gray-800">Editar: <span x-text="editUser.username"></span></h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase tracking-wider pt-1">Perfil</div>
+        <input x-model="editUser.full_name" type="text" placeholder="Nombre completo" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="editUser.email" type="email" placeholder="Email" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="editUser.phone" type="tel" placeholder="Telefono / WhatsApp" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="editUser.company" type="text" placeholder="Empresa / Bodega" class="border rounded-lg px-3 py-2 text-sm">
+        <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Agronomo</div>
+        <input x-model="editUser.agronomist_name" type="text" placeholder="Nombre agronomo" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="editUser.agronomist_email" type="email" placeholder="Email agronomo" class="border rounded-lg px-3 py-2 text-sm">
+        <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Comunicaciones</div>
+        <label class="flex items-center gap-2 text-sm text-gray-700">
+          <input type="checkbox" x-model="editUser.email_lifecycle" class="rounded">
+          Recibe emails lifecycle
+        </label>
+        <label class="flex items-center gap-2 text-sm text-gray-700">
+          <input type="checkbox" x-model="editUser.email_reports" class="rounded">
+          Recibe informes anuales
+        </label>
+        <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Alertas (estres, helada, riego)</div>
+        <label class="flex items-center gap-2 text-sm text-gray-700">
+          <input type="checkbox" x-model="editUser.alert_email" class="rounded">
+          Alertas por email
+        </label>
+        <label class="flex items-center gap-2 text-sm text-gray-700">
+          <input type="checkbox" x-model="editUser.alert_whatsapp" class="rounded">
+          Alertas por WhatsApp
+        </label>
+        <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase tracking-wider pt-2">Contrasena</div>
+        <input x-model="editUser.current_password" type="password" placeholder="Contrasena actual" class="border rounded-lg px-3 py-2 text-sm">
+        <input x-model="editUser.password" type="password" placeholder="Nueva (vacio = no cambiar)" class="border rounded-lg px-3 py-2 text-sm">
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button @click="saveEditUser()" class="flex-1 bg-gray-900 text-white text-sm py-2 rounded-lg hover:bg-gray-700">Guardar</button>
+        <button @click="showEditUser = false" class="flex-1 border text-sm py-2 rounded-lg hover:bg-gray-50">Cancelar</button>
+      </div>
+      <p x-show="editError" class="text-red-500 text-xs" x-text="editError"></p>
+    </div>
+  </div>
+
+  <!-- MODAL: Plan de servicio -->
+  <div x-show="showPlan" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl space-y-4">
+      <h3 class="font-semibold text-gray-800">Plan de servicio — <span x-text="planUser.username"></span></h3>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2">
+          <label class="text-xs text-gray-500">Plan</label>
+          <select x-model.number="planForm.tier"
+                  class="w-full border rounded-lg px-3 py-2 text-sm mt-1">
+            <template x-for="t in catalog.tiers" :key="t.id">
+              <option :value="t.id" x-text="t.name"></option>
+            </template>
+          </select>
+        </div>
+        <div class="col-span-2">
+          <label class="text-xs text-gray-500">Vigencia hasta</label>
+          <select x-model="planForm.vence_at" class="w-full border rounded-lg px-3 py-2 text-sm mt-1">
+            <option value="">Sin vencimiento</option>
+            <template x-for="year in [new Date().getFullYear(), new Date().getFullYear() + 1, new Date().getFullYear() + 2, new Date().getFullYear() + 3, new Date().getFullYear() + 4, new Date().getFullYear() + 5]" :key="year">
+              <option :value="year + '-12-31'" x-text="year"></option>
+            </template>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button @click="savePlan()" class="flex-1 bg-purple-700 text-white text-sm py-2 rounded-lg hover:bg-purple-800">Guardar plan</button>
+        <button @click="showPlan = false" class="flex-1 border text-sm py-2 rounded-lg hover:bg-gray-50">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+function bo() {
+  return {
+    tab: 'clientes',
+    showGlosario: false,
+    stats: null,
+    users: [],
+    nodes: [],
+    catalog: { tiers: [], add_ons: [] },
+
+    auditRows: [],
+    auditFilter: { event: '', node_id: '' },
+    auditFilterCategory: '',
+    auditSearch: '',
+
+    auditCategories: [
+      { key: 'seguridad', label: 'Seguridad',  sublabel: 'HMAC · rate limit', icon: '🔴',
+        events: ['hmac_fail','rate_limit','ingest_reject'],
+        activeClass: 'bg-red-50 border-red-300 text-red-700' },
+      { key: 'telemetria', label: 'Telemetría', sublabel: 'Transmisiones OK',  icon: '📡',
+        events: ['ingest_ok'],
+        activeClass: 'bg-green-50 border-green-300 text-green-700' },
+      { key: 'riego',     label: 'Riego',       sublabel: 'On · Off · Inhibido', icon: '💧',
+        events: ['irrigate_on','irrigate_off','irrigate_inhibit'],
+        activeClass: 'bg-blue-50 border-blue-300 text-blue-700' },
+      { key: 'campo',     label: 'Campo',        sublabel: 'Zonas · Nodos · Config', icon: '🗺️',
+        events: ['zone_create','zone_update','zone_delete','node_update','config_change'],
+        activeClass: 'bg-purple-50 border-purple-300 text-purple-700' },
+      { key: 'usuarios',  label: 'Usuarios',     sublabel: 'Admin · Nodos · Cuentas', icon: '👤',
+        events: ['node_assign','node_unassign','user_create','user_delete','user_password_change'],
+        activeClass: 'bg-indigo-50 border-indigo-300 text-indigo-700' },
+    ],
+
+    get auditFiltered() {
+      let rows = this.auditRows;
+      if (this.auditFilterCategory) {
+        const cat = this.auditCategories.find(c => c.key === this.auditFilterCategory);
+        if (cat) rows = rows.filter(a => cat.events.includes(a.event));
+      }
+      if (this.auditSearch.trim()) {
+        const q = this.auditSearch.trim().toLowerCase();
+        rows = rows.filter(a =>
+          (a.node_id || '').toLowerCase().includes(q) ||
+          (a.user || '').toLowerCase().includes(q) ||
+          (a.detail || '').toLowerCase().includes(q) ||
+          (a.ip || '').toLowerCase().includes(q)
+        );
+      }
+      return rows;
+    },
+
+    auditEventLabel(event) {
+      const labels = {
+        ingest_ok: 'Transmisión recibida', ingest_reject: 'Transmisión rechazada',
+        hmac_fail: 'Firma inválida', rate_limit: 'Rate limit excedido',
+        irrigate_on: 'Riego activado', irrigate_off: 'Riego detenido',
+        irrigate_inhibit: 'Riego inhibido (reposo)',
+        config_change: 'Configuración modificada',
+        zone_create: 'Zona creada', zone_update: 'Zona actualizada', zone_delete: 'Zona eliminada',
+        node_update: 'Nodo actualizado', node_assign: 'Nodo asignado', node_unassign: 'Nodo desasignado',
+        user_create: 'Usuario creado', user_delete: 'Usuario eliminado',
+        user_password_change: 'Contraseña cambiada',
+      };
+      return labels[event] || event;
+    },
+
+    auditEventIcon(event) {
+      const icons = {
+        ingest_ok: '✓', ingest_reject: '✕', hmac_fail: '⚠', rate_limit: '⚠',
+        irrigate_on: '💧', irrigate_off: '⏹', irrigate_inhibit: '⏸',
+        config_change: '⚙', zone_create: '＋', zone_update: '✎', zone_delete: '✕',
+        node_update: '✎', node_assign: '🔗', node_unassign: '⚬',
+        user_create: '＋', user_delete: '✕', user_password_change: '🔑',
+      };
+      return icons[event] || '·';
+    },
+
+    auditRelTime(ts) {
+      if (!ts) return '—';
+      const diff = Math.floor((Date.now() - new Date(ts)) / 1000);
+      if (diff < 60)  return 'ahora';
+      if (diff < 3600) return `hace ${Math.floor(diff/60)} min`;
+      if (diff < 86400) return `hace ${Math.floor(diff/3600)} h`;
+      if (diff < 604800) return `hace ${Math.floor(diff/86400)} d`;
+      return ts.replace('T', ' ').substring(0, 10);
+    },
+
+    glossary: [
+      // Telemetría de nodos
+      { event: 'ingest_ok',            category: 'Telemetría',  origin: 'Nodo',      badgeClass: 'bg-green-100 text-green-700',   description: 'Transmisión recibida y procesada correctamente.' },
+      { event: 'ingest_reject',        category: 'Telemetría',  origin: 'Nodo',      badgeClass: 'bg-red-100 text-red-700',       description: 'Transmisión rechazada por calidad de captura inválida.' },
+      { event: 'hmac_fail',            category: 'Seguridad',   origin: 'Nodo',      badgeClass: 'bg-red-100 text-red-700',       description: 'Firma HMAC inválida. Posible intento de suplantación.' },
+      { event: 'rate_limit',           category: 'Seguridad',   origin: 'Nodo',      badgeClass: 'bg-red-100 text-red-700',       description: 'Nodo excedió el límite de transmisiones permitidas por minuto.' },
+      // Riego
+      { event: 'irrigate_on',          category: 'Riego',       origin: 'Sistema',   badgeClass: 'bg-blue-100 text-blue-700',     description: 'Activación de solenoide de riego.' },
+      { event: 'irrigate_off',         category: 'Riego',       origin: 'Sistema',   badgeClass: 'bg-blue-100 text-blue-700',     description: 'Detención de riego.' },
+      { event: 'irrigate_inhibit',     category: 'Riego',       origin: 'Sistema',   badgeClass: 'bg-amber-100 text-amber-700',   description: 'Riego inhibido automáticamente por reposo fenológico.' },
+      // Configuración de campo
+      { event: 'config_change',        category: 'Config',      origin: 'Usuario',   badgeClass: 'bg-purple-100 text-purple-700', description: 'Cambio en la configuración general del campo.' },
+      { event: 'zone_create',          category: 'Zonas',       origin: 'Usuario',   badgeClass: 'bg-purple-100 text-purple-700', description: 'Creación de una nueva zona de riego.' },
+      { event: 'zone_update',          category: 'Zonas',       origin: 'Usuario',   badgeClass: 'bg-purple-100 text-purple-700', description: 'Modificación de una zona existente (geometría, varietal, etc.).' },
+      { event: 'zone_delete',          category: 'Zonas',       origin: 'Usuario',   badgeClass: 'bg-purple-100 text-purple-700', description: 'Eliminación de una zona de riego.' },
+      { event: 'node_update',          category: 'Nodos',       origin: 'Usuario',   badgeClass: 'bg-purple-100 text-purple-700', description: 'Cambio de nombre o zona asignada a un nodo.' },
+      // Gestión de usuarios y nodos (backoffice)
+      { event: 'node_assign',          category: 'Nodos',       origin: 'Admin',     badgeClass: 'bg-indigo-100 text-indigo-700', description: 'Nodo asignado a un cliente desde el back-office.' },
+      { event: 'node_unassign',        category: 'Nodos',       origin: 'Admin',     badgeClass: 'bg-indigo-100 text-indigo-700', description: 'Nodo desasignado (queda huérfano) desde el back-office.' },
+      { event: 'user_create',          category: 'Usuarios',    origin: 'Admin',     badgeClass: 'bg-indigo-100 text-indigo-700', description: 'Creación de un nuevo cliente o administrador.' },
+      { event: 'user_delete',          category: 'Usuarios',    origin: 'Admin',     badgeClass: 'bg-indigo-100 text-indigo-700', description: 'Eliminación de un usuario. Sus nodos y zonas quedan sin asignar.' },
+      { event: 'user_password_change', category: 'Usuarios',    origin: 'Admin',     badgeClass: 'bg-indigo-100 text-indigo-700', description: 'Cambio de contraseña de un usuario.' },
+    ],
+
+    showNewUser: false,
+    newUser: { username: '', password: '', role: 'user', full_name: '', email: '', phone: '', company: '', agronomist_name: '', agronomist_email: '' },
+    formError: '',
+
+    showEditUser: false,
+    editUser: { id: null, username: '', current_password: '', password: '', full_name: '', email: '', phone: '', company: '', agronomist_name: '', agronomist_email: '', email_lifecycle: true, email_reports: true, alert_email: true, alert_whatsapp: true },
+    editError: '',
+
+    showPlan: false,
+    planUser: { id: null, username: '' },
+    planForm: { tier: 1, vence_at: '' },
+    TIER_PRECIOS: {1: 95, 2: 150, 3: 255},
+
+    // Emails
+    emailCropGroup: 'vid',
+    emailSchedule: [],
+    emailPreviewHtml: '',
+    emailPreviewType: '',
+
+    async init() {
+      await Promise.all([this.loadStats(), this.loadUsers(), this.loadNodes(), this.loadCatalog()]);
+    },
+
+    tierPrecio(tier) {
+      return this.TIER_PRECIOS[tier] || 95;
+    },
+
+    async loadStats() {
+      const r = await fetch('/api/backoffice/stats');
+      this.stats = await r.json();
+    },
+    async loadUsers() {
+      const r = await fetch('/api/backoffice/users');
+      this.users = await r.json();
+    },
+    async loadNodes() {
+      const r = await fetch('/api/backoffice/nodes');
+      this.nodes = await r.json();
+    },
+    async loadCatalog() {
+      const r = await fetch('/api/backoffice/catalog');
+      this.catalog = await r.json();
+    },
+
+    async createUser() {
+      this.formError = '';
+      const r = await fetch('/api/backoffice/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.newUser),
+      });
+      if (!r.ok) { this.formError = (await r.json()).detail; return; }
+      this.showNewUser = false;
+      this.newUser = { username: '', password: '', role: 'user' };
+      await this.loadUsers();
+      await this.loadStats();
+    },
+
+    emptyNewUser() {
+      return { username: '', password: '', role: 'user', full_name: '', email: '', phone: '', company: '', agronomist_name: '', agronomist_email: '' };
+    },
+    openEditUser(u) {
+      this.editUser = {
+        id: u.id, username: u.username, current_password: '', password: '',
+        full_name: u.full_name || '', email: u.email || '', phone: u.phone || '',
+        company: u.company || '', agronomist_name: u.agronomist_name || '',
+        agronomist_email: u.agronomist_email || '',
+        email_lifecycle: u.email_lifecycle !== false, email_reports: u.email_reports !== false,
+        alert_email: u.alert_email !== false, alert_whatsapp: u.alert_whatsapp !== false,
+      };
+      this.editError = '';
+      this.showEditUser = true;
+    },
+    async saveEditUser() {
+      this.editError = '';
+      const body = {
+        full_name: this.editUser.full_name || null,
+        email: this.editUser.email || null,
+        phone: this.editUser.phone || null,
+        company: this.editUser.company || null,
+        agronomist_name: this.editUser.agronomist_name || null,
+        agronomist_email: this.editUser.agronomist_email || null,
+        email_lifecycle: this.editUser.email_lifecycle,
+        email_reports: this.editUser.email_reports,
+        alert_email: this.editUser.alert_email,
+        alert_whatsapp: this.editUser.alert_whatsapp,
+      };
+      if (this.editUser.password) {
+        body.password = this.editUser.password;
+        body.current_password = this.editUser.current_password;
+      }
+      const r = await fetch(`/api/backoffice/users/${this.editUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!r.ok) { this.editError = (await r.json()).detail; return; }
+      this.showEditUser = false;
+      await this.loadUsers();
+    },
+
+    async deleteUser(u) {
+      if (!confirm(`¿Eliminar cliente "${u.username}"? Sus nodos quedarán sin asignar.`)) return;
+      await fetch(`/api/backoffice/users/${u.id}`, { method: 'DELETE' });
+      await this.loadUsers();
+      await this.loadNodes();
+      await this.loadStats();
+    },
+
+    openPlan(u) {
+      this.planUser = { id: u.id, username: u.username };
+      if (u.plan) {
+        this.planForm = {
+          tier: u.plan.tier,
+          vence_at: u.plan.vence_at || '',
+        };
+      } else {
+        this.planForm = { tier: 1, vence_at: '' };
+      }
+      this.showPlan = true;
+    },
+    async savePlan() {
+      const body = { ...this.planForm, user_id: this.planUser.id };
+      if (!body.vence_at) body.vence_at = null;
+      await fetch('/api/backoffice/plans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      this.showPlan = false;
+      await this.loadUsers();
+      await this.loadStats();
+    },
+
+    async loadAudit() {
+      let url = '/api/backoffice/audit?limit=200';
+      if (this.auditFilter.event) url += '&event=' + encodeURIComponent(this.auditFilter.event);
+      if (this.auditFilter.node_id) url += '&node_id=' + encodeURIComponent(this.auditFilter.node_id);
+      const r = await fetch(url);
+      this.auditRows = await r.json();
+    },
+
+    async assignNode(node_id, owner_id) {
+      await fetch(`/api/backoffice/nodes/${node_id}/assign`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ owner_id: owner_id ? parseInt(owner_id) : null }),
+      });
+      await this.loadNodes();
+      await this.loadStats();
+    },
+
+    // ── Emails ──
+    monthName(m) {
+      return ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'][m] || m;
+    },
+    async loadEmailSchedule() {
+      const r = await fetch('/api/emails/schedule?crop_group=' + this.emailCropGroup);
+      const data = await r.json();
+      this.emailSchedule = data.schedule || [];
+    },
+    async previewEmail(type) {
+      this.emailPreviewType = type;
+      // Zonas demo según grupo seleccionado
+      const demoZones = {
+        vid: [
+          { zone_id: 1, zone_name: 'Bloque Norte', varietal: 'vid - malbec', node_ids: ['N01','N02'] },
+          { zone_id: 2, zone_name: 'Centro-Norte', varietal: 'vid - malbec', node_ids: ['N03'] },
+          { zone_id: 4, zone_name: 'Bloque Sur', varietal: 'vid - cabernet', node_ids: ['N04','N05'] },
+          { zone_id: 6, zone_name: 'Lote Oeste', varietal: 'vid - syrah', node_ids: ['N06','N07','N08'] },
+        ],
+        olivo: [
+          { zone_id: 7, zone_name: 'Casa 1', varietal: 'olivo', node_ids: ['N09'] },
+          { zone_id: 8, zone_name: 'Casa 2', varietal: 'olivo', node_ids: ['N10'] },
+        ],
+        cerezo: [
+          { zone_id: 9, zone_name: 'Casa 3', varietal: 'cerezo', node_ids: ['N11','N12'] },
+          { zone_id: 10, zone_name: 'Casa 4', varietal: 'cerezo', node_ids: ['N13'] },
+        ],
+      };
+      // Demo mixto: vid + olivo + cerezo
+      const demoZonesMix = [...(demoZones.vid || []).slice(0,2), ...(demoZones.olivo || []).slice(0,1), ...(demoZones.cerezo || []).slice(0,1)];
+      const zones = this.emailCropGroup === 'mix' ? demoZonesMix : (demoZones[this.emailCropGroup] || demoZones.vid);
+      const demoCrops = { vid: 'vid - malbec', olivo: 'olivo', cerezo: 'cerezo', mix: 'vid - malbec' };
+      const demoCrop = demoCrops[this.emailCropGroup] || 'vid - malbec';
+      const demoUser = this.users.find(u => u.email && u.role === 'user');
+      const client = demoUser ? {
+        name: demoUser.full_name || demoUser.username,
+        email: demoUser.email,
+        crop: demoCrop,
+        total_ha: demoUser.total_ha || 50,
+        tier: demoUser.plan ? demoUser.plan.tier : 2,
+        region: demoUser.region || 'Colonia Caroya, Córdoba',
+        node_ids: [],
+        zones,
+      } : {
+        name: 'Demo', email: 'demo@test.com', crop: demoCrop,
+        total_ha: 50, tier: 2, region: 'Colonia Caroya, Córdoba',
+        node_ids: [],
+        zones,
+      };
+      const r = await fetch(`/api/emails/preview/${type}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client,
+          campaign_year: new Date().getFullYear(),
+          extra: { nodes_online: 10, stress_events: 3, water_saved_m3: 1200, frost_events: 2, chill_hours: 380, actions_this_week: 5, vpd_max: 4.2, auto_irrigations: 8, total_data_days: 365, days_active: 60, years_active: 2 },
+        }),
+      });
+      if (r.ok) {
+        this.emailPreviewHtml = await r.text();
+      } else {
+        this.emailPreviewHtml = '<p style="color:red;padding:20px;">Error al generar preview</p>';
+      }
+    },
+  };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+# HydroVision AG — Librerías requeridas (Arduino Library Manager)
+# Plataforma: ESP32-S3 con arduino-esp32 ≥ 3.0.0
+#
+# Instalar desde Arduino IDE: Sketch → Include Library → Manage Libraries
+# O con arduino-cli: arduino-cli lib install "Nombre"
+
+# ── Sensores I2C ───────────────────────────────────────────
+Adafruit MLX90640 Library         # cámara térmica MLX90640
+Adafruit SHT31 Library            # temperatura + humedad aire SHT31
+Adafruit BusIO                    # dependencia de Adafruit
+
+# ── RTC ────────────────────────────────────────────────────
+RTClib                             # DS3231 — por Adafruit
+
+# ── GPS ────────────────────────────────────────────────────
+TinyGPSPlus                        # u-blox NEO-6M — por mikalhart
+
+# ── Extensómetro (OneWire) ──────────────────────────────────
+OneWire                            # bus 1-Wire
+DallasTemperature                  # DS18B20 — por Miles Burton
+
+# ── LoRa ───────────────────────────────────────────────────
+LoRa                               # SX1276 — por sandeepmistry
+
+# ── PMS5003 — sin librería externa ──────────────────────────
+# driver_pms5003.h implementa el protocolo directamente (paquete 32 bytes)
+# No requiere instalación adicional.
+
+# ── IMU ────────────────────────────────────────────────────
+SparkFun ICM-42688-P                # ICM-42688-P 6-DOF — por SparkFun (buscar "ICM42688")
+
+# ── Sin instalación adicional — driver_gdd.h usa solo math.h ─
+# driver_gdd.h: solo <Arduino.h> + math (fmaxf, fabsf) — sin librería externa
+
+# ── Sin instalación adicional (incluidas en arduino-esp32) ─
+# Wire          — I2C
+# SPI           — SPI
+# HardwareSerial — UART
+# esp_mac.h     — esp_read_mac()
+# LEDC          — driver_gimbal.h (ledcAttach / ledcWrite)

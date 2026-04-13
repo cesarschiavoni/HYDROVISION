@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HydroVision AG — Riego inteligente de precision</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            green: {
+              50:'#F0F9F4',100:'#D1F2E0',200:'#A3E4C1',300:'#6FCE9C',
+              400:'#27AE60',500:'#1E7B55',600:'#1B6B4A',700:'#155A3C',
+              800:'#1B6B4A',900:'#0F3624',
+            },
+            yellow: { 500:'#F39C12',600:'#F39C12' },
+            red:    { 500:'#E74C3C',600:'#E74C3C' },
+            blue:   { 500:'#2980B9',600:'#2980B9' },
+            gray:   { 100:'#FAFAF7' },
+          },
+          fontFamily: {
+            sans:  ['"IBM Plex Sans"','Inter','system-ui','sans-serif'],
+            title: ['Inter','system-ui','sans-serif'],
+            mono:  ['"IBM Plex Mono"','ui-monospace','monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .fade-in { animation: fadeIn .6s ease-out both; }
+    .fade-in-delay { animation: fadeIn .6s ease-out .15s both; }
+    .fade-in-delay2 { animation: fadeIn .6s ease-out .3s both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen font-sans text-gray-800">
+
+  <!-- ===== NAV ===== -->
+  <nav class="bg-green-800 text-white shadow-md">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-lg font-bold tracking-tight font-title">HydroVision AG</span>
+        <span class="bg-green-700 text-green-200 px-2 py-0.5 rounded text-xs font-mono">TRL 4</span>
+      </a>
+      <div class="flex items-center gap-1">
+        <a href="/"        class="px-3 py-1.5 rounded text-sm font-medium bg-green-700 text-white">Inicio</a>
+        <a href="/dashboard" class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Dashboard</a>
+        <a href="/informe"   class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Informe</a>
+        <a href="/admin"     class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white">
+    <div class="max-w-6xl mx-auto px-6 py-20 md:py-28 flex flex-col items-center text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold font-title leading-tight fade-in">
+        Riego inteligente<br>basado en estres hidrico real
+      </h1>
+      <p class="mt-5 text-lg md:text-xl text-green-200 max-w-2xl leading-relaxed fade-in-delay">
+        Sensores IoT + satelite Sentinel-2 + algoritmos CWSI para regar solo cuando
+        la planta lo necesita. Menos agua, mejor rendimiento, deteccion cada 15 minutos, 5-10 dias antes del sintoma visible.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4 justify-center fade-in-delay2">
+        <a href="/dashboard"
+           class="bg-white text-green-800 font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-green-50 transition-all text-sm">
+          Ver Dashboard en vivo
+        </a>
+        <a href="https://wa.me/5493525448154?text=Hola%2C%20quiero%20info%20sobre%20HydroVision%20AG"
+           target="_blank" rel="noopener"
+           class="border-2 border-white/40 text-white font-semibold px-6 py-3 rounded-lg hover:bg-white/10 transition-all text-sm flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Contactar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== METRICAS CLAVE ===== -->
+  <section class="max-w-6xl mx-auto px-6 -mt-10 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl shadow-md p-5 text-center">
+        <div class="text-3xl font-bold text-green-700">15-20%</div>
+        <div class="text-sm text-gray-500 mt-1">Ahorro de agua vs riego convencional</div>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-5 text-center">
+        <div class="text-3xl font-bold text-green-700">15 min</div>
+        <div class="text-sm text-gray-500 mt-1">Frecuencia de medicion continua</div>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-5 text-center">
+        <div class="text-3xl font-bold text-green-700">100%</div>
+        <div class="text-sm text-gray-500 mt-1">Cobertura del campo</div>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-5 text-center">
+        <div class="text-3xl font-bold text-green-700">+12%</div>
+        <div class="text-sm text-gray-500 mt-1">Rendimiento potencial del cultivo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMO FUNCIONA ===== -->
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <h2 class="text-2xl font-bold font-title text-center mb-10">Como funciona</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="w-14 h-14 bg-green-100 text-green-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">1</div>
+        <h3 class="font-semibold text-lg mb-2">Sensado continuo</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          Nodos IoT con sensores de temperatura foliar, humedad, viento y dendrometros
+          miden el estado real de la planta cada 15 minutos. Sentinel-2 complementa
+          con NDWI satelital cada 5 dias.
+        </p>
+      </div>
+      <div class="text-center">
+        <div class="w-14 h-14 bg-green-100 text-green-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">2</div>
+        <h3 class="font-semibold text-lg mb-2">Calculo de estres (CWSI)</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          El algoritmo CWSI (Jackson et al. 1981, FAO-56) calcula el indice de estres
+          hidrico real del cultivo. Fusion nodo + satelite da cobertura total,
+          incluso en zonas sin sensor fisico.
+        </p>
+      </div>
+      <div class="text-center">
+        <div class="w-14 h-14 bg-green-100 text-green-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">3</div>
+        <h3 class="font-semibold text-lg mb-2">Accion automatica</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">
+          Cuando el HSI supera el umbral, el nodo activa el solenoide directamente
+          (GPIO → rele SSR). Decision local, sin depender del servidor.
+          Auto-corte al recuperar niveles optimos (histeresis 0.30/0.20).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DENSIDAD DE NODOS ===== -->
+  <section class="bg-white py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl font-bold font-title text-center mb-3">Cuantos nodos necesita tu campo?</h2>
+      <p class="text-center text-sm text-gray-500 mb-10">
+        La densidad optima depende de la heterogeneidad del lote.
+        Sentinel-2 complementa los nodos para dar cobertura total.
+      </p>
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <div class="border-2 border-green-100 rounded-xl p-6 text-center hover:border-green-300 transition-all">
+          <div class="w-12 h-12 bg-green-100 text-green-700 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1:2</div>
+          <h3 class="font-semibold text-lg text-green-800 mb-2">Lote homogeneo</h3>
+          <div class="text-3xl font-bold text-green-700 mb-1">1 nodo / 2 ha</div>
+          <p class="text-sm text-gray-500 mt-2">
+            Variabilidad baja (CV NDWI &lt; 20%). Suelo uniforme, riego parejo.
+            Sentinel-2 interpola bien entre nodos.
+          </p>
+          <div class="mt-4 text-xs text-gray-400">Ej: vinedo llano con goteo uniforme</div>
+        </div>
+
+        <div class="border-2 border-blue-100 rounded-xl p-6 text-center hover:border-blue-300 transition-all ring-2 ring-blue-200">
+          <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1:1.5</div>
+          <h3 class="font-semibold text-lg text-blue-800 mb-2">Lote medio</h3>
+          <div class="text-3xl font-bold text-blue-700 mb-1">1 nodo / 1.5 ha</div>
+          <p class="text-sm text-gray-500 mt-2">
+            Variabilidad media (CV 20-35%). Pendiente suave o suelo con diferencias.
+            Recomendacion por defecto.
+          </p>
+          <div class="mt-4 text-xs text-blue-400 font-medium">Recomendado como punto de partida</div>
+        </div>
+
+        <div class="border-2 border-orange-100 rounded-xl p-6 text-center hover:border-orange-300 transition-all">
+          <div class="w-12 h-12 bg-orange-100 text-orange-700 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">1:1</div>
+          <h3 class="font-semibold text-lg text-orange-800 mb-2">Lote heterogeneo</h3>
+          <div class="text-3xl font-bold text-orange-700 mb-1">1 nodo / 1 ha</div>
+          <p class="text-sm text-gray-500 mt-2">
+            Variabilidad alta (CV NDWI &gt; 35%). Suelo con diferencias marcadas o pendiente.
+            Requiere mayor resolucion espacial.
+          </p>
+          <div class="mt-4 text-xs text-gray-400">Ej: olivar en ladera, frutal con zonas secas</div>
+        </div>
+
+      </div>
+
+      <div class="mt-8 bg-green-50 rounded-xl p-6">
+        <div class="flex flex-col md:flex-row items-center gap-6">
+          <div class="flex-1">
+            <h4 class="font-semibold text-green-800 mb-2">Fusion nodo + satelite = cobertura completa</h4>
+            <p class="text-sm text-gray-600">
+              Cada nodo calibra los pixeles Sentinel-2 a su alrededor. Con la fusion nodo-satelite,
+              <strong>1 nodo puede calibrar hasta ~50 ha</strong> de estimacion satelital.
+              Los nodos adicionales mejoran la precision en zonas con mayor variabilidad.
+            </p>
+          </div>
+          <div class="text-center px-6">
+            <div class="text-4xl font-bold text-green-700">~50 ha</div>
+            <div class="text-xs text-gray-500 mt-1">calibradas por nodo<br>con Sentinel-2</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-xs text-gray-400 mt-4 text-center">
+        Referencia: Santesteban et al. (2017) Agric. Water Manage. — CV > 30% entre filas de vinedo.
+        La densidad optima se calcula automaticamente en el sistema segun el analisis historico Sentinel-2 de cada lote.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== VENTAJAS ===== -->
+  <section class="py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl font-bold font-title text-center mb-10">Ventajas del sistema</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div class="border border-gray-100 rounded-xl p-6 hover:border-green-200 hover:shadow-md transition-all">
+          <div class="text-green-600 font-bold text-sm mb-2 flex items-center gap-2">
+            <span class="text-xl">💧</span> Ahorro real de agua
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Riego basado en estres real, no en calendario ni en humedad de suelo.
+            Ahorro del 15-20% en agua de riego vs sistemas convencionales
+            (RDI con control preciso; INTA ProRiego, 5.200 m3/ha/ano referencia).
+          </p>
+        </div>
+
+        <div class="border border-gray-100 rounded-xl p-6 hover:border-green-200 hover:shadow-md transition-all">
+          <div class="text-green-600 font-bold text-sm mb-2 flex items-center gap-2">
+            <span class="text-xl">⚡</span> Deteccion temprana
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            El CWSI detecta estres hidrico antes de que los sintomas sean visibles.
+            Medicion cada 15 minutos, 5-10 dias antes del sintoma visible.
+            Menos dano, mejor rendimiento final.
+          </p>
+        </div>
+
+        <div class="border border-gray-100 rounded-xl p-6 hover:border-green-200 hover:shadow-md transition-all">
+          <div class="text-green-600 font-bold text-sm mb-2 flex items-center gap-2">
+            <span class="text-xl">🛰</span> Cobertura total del campo
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Fusion nodo + Sentinel-2 permite estimar estres en zonas sin nodo fisico.
+            100% del campo monitoreado vs puntos aislados de la competencia.
+          </p>
+        </div>
+
+        <div class="border border-gray-100 rounded-xl p-6 hover:border-green-200 hover:shadow-md transition-all">
+          <div class="text-green-600 font-bold text-sm mb-2 flex items-center gap-2">
+            <span class="text-xl">📊</span> Historial y trazabilidad
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Registro continuo de condiciones ambientales, estres hidrico y riegos aplicados.
+            Datos exportables para auditorias, certificaciones y mejora continua.
+          </p>
+        </div>
+
+        <div class="border border-gray-100 rounded-xl p-6 hover:border-green-200 hover:shadow-md transition-all">
+          <div class="text-green-600 font-bold text-sm mb-2 flex items-center gap-2">
+            <span class="text-xl">📡</span> Multi-zona y multi-campo
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Arquitectura preparada para multiples campos y zonas. Agregar nodos, zonas
+            o campos no requiere cambios en el sistema — se adapta automaticamente.
+          </p>
+        </div>
+
+        <div class="border border-gray-100 rounded-xl p-6 hover:border-green-200 hover:shadow-md transition-all">
+          <div class="text-green-600 font-bold text-sm mb-2 flex items-center gap-2">
+            <span class="text-xl">💰</span> Retorno de inversion
+          </div>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            Menos agua + mejor rendimiento + menor costo operativo. El ahorro en agua
+            y la mejora en calidad del cultivo compensan la inversion desde la primera temporada.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RECUPERACION POR CULTIVO ===== -->
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <h2 class="text-2xl font-bold font-title text-center mb-3">Recuperacion estimada por cultivo</h2>
+    <p class="text-center text-sm text-gray-500 mb-8">
+      Estimacion del 12% de rendimiento recuperado mediante deteccion temprana de estres hidrico.
+      Precios verificados con fuentes de mercado 2025.
+    </p>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="bg-green-50 text-left">
+            <th class="px-4 py-3 font-semibold text-green-800 rounded-tl-lg">Cultivo</th>
+            <th class="px-4 py-3 font-semibold text-green-800 text-right">Ingreso bruto/ha</th>
+            <th class="px-4 py-3 font-semibold text-green-800 text-right">Recuperacion 12%/ha</th>
+            <th class="px-4 py-3 font-semibold text-green-800 text-right">Ha riego tecnificado</th>
+            <th class="px-4 py-3 font-semibold text-green-800 text-right">Valor recuperable</th>
+            <th class="px-4 py-3 font-semibold text-green-800 rounded-tr-lg">Factor clave</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium">Vid Premium</td>
+            <td class="px-4 py-3 text-right">USD 9.600</td>
+            <td class="px-4 py-3 text-right font-bold text-green-700">USD 1.152</td>
+            <td class="px-4 py-3 text-right">218.000 ha</td>
+            <td class="px-4 py-3 text-right font-bold text-green-800">USD 251 M</td>
+            <td class="px-4 py-3 text-gray-600">Calidad enologica (polifenoles)</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium">Olivo (AOVE)</td>
+            <td class="px-4 py-3 text-right">USD 5.500</td>
+            <td class="px-4 py-3 text-right font-bold text-green-700">USD 660</td>
+            <td class="px-4 py-3 text-right">120.000 ha</td>
+            <td class="px-4 py-3 text-right font-bold text-green-800">USD 79 M</td>
+            <td class="px-4 py-3 text-gray-600">Rendimiento graso y ahorro de bombeo</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium">Citrus (Limon)</td>
+            <td class="px-4 py-3 text-right">USD 8.500</td>
+            <td class="px-4 py-3 text-right font-bold text-green-700">USD 1.020</td>
+            <td class="px-4 py-3 text-right">40.000 ha</td>
+            <td class="px-4 py-3 text-right font-bold text-green-800">USD 41 M</td>
+            <td class="px-4 py-3 text-gray-600">Prevencion de caida de fruta joven</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium">Cereza</td>
+            <td class="px-4 py-3 text-right">USD 30.000</td>
+            <td class="px-4 py-3 text-right font-bold text-green-700">USD 3.600</td>
+            <td class="px-4 py-3 text-right">5.500 ha</td>
+            <td class="px-4 py-3 text-right font-bold text-green-800">USD 20 M</td>
+            <td class="px-4 py-3 text-gray-600">Firmeza del fruto y ventana de cosecha</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium">Pistacho</td>
+            <td class="px-4 py-3 text-right">USD 18.000</td>
+            <td class="px-4 py-3 text-right font-bold text-green-700">USD 2.160</td>
+            <td class="px-4 py-3 text-right">8.000 ha</td>
+            <td class="px-4 py-3 text-right font-bold text-green-800">USD 17 M</td>
+            <td class="px-4 py-3 text-gray-600">Reduccion de frutos vanos</td>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium">Nogal (Nuez)</td>
+            <td class="px-4 py-3 text-right">USD 10.000</td>
+            <td class="px-4 py-3 text-right font-bold text-green-700">USD 1.200</td>
+            <td class="px-4 py-3 text-right">17.300 ha</td>
+            <td class="px-4 py-3 text-right font-bold text-green-800">USD 21 M</td>
+            <td class="px-4 py-3 text-gray-600">Maximizacion de calibre y peso</td>
+          </tr>
+          <tr class="bg-green-50 font-semibold">
+            <td class="px-4 py-3">TOTAL</td>
+            <td class="px-4 py-3"></td>
+            <td class="px-4 py-3"></td>
+            <td class="px-4 py-3 text-right">408.800 ha</td>
+            <td class="px-4 py-3 text-right text-green-800">USD 429 M</td>
+            <td class="px-4 py-3 text-gray-600 text-xs font-normal">Solo Argentina — sin Chile ni Peru</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="text-xs text-gray-400 mt-4 text-center">
+      Fuentes: Federcitrus 2025, AVM Mendoza 2025, INTA 2024, USDA, Agrovalle, Selinawamucii, INV, Alimentos Argentinos.
+      Ingreso bruto de vid asume bodega integrada (vino premium exportacion). Ha de vid incluye Mendoza + San Juan + Rio Negro.
+      Ha de pistacho y nogal: INTA/Alimentos Argentinos. Valor recuperable = Recuperacion 12%/ha × Ha riego tecnificado.
+    </p>
+  </section>
+
+
+  <!-- ===== TECNOLOGIA ===== -->
+  <section class="max-w-6xl mx-auto px-6 py-16">
+    <h2 class="text-2xl font-bold font-title text-center mb-10">Stack tecnologico</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+      <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="text-2xl mb-2">🌡</div>
+        <div class="font-semibold">Sensores IoT</div>
+        <div class="text-gray-500 text-xs mt-1">T foliar, HR, viento, dendrometro, lluvia</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="text-2xl mb-2">📡</div>
+        <div class="font-semibold">LoRa + MQTT</div>
+        <div class="text-xs text-gray-500 mt-1">Comunicacion de largo alcance y bajo consumo</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="text-2xl mb-2">🛰</div>
+        <div class="font-semibold">Sentinel-2</div>
+        <div class="text-xs text-gray-500 mt-1">NDWI satelital cada 5 dias, fusion con nodos</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm">
+        <div class="text-2xl mb-2">🧠</div>
+        <div class="font-semibold">CWSI + FAO-56</div>
+        <div class="text-xs text-gray-500 mt-1">Algoritmo de estres validado cientificamente</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA + WHATSAPP ===== -->
+  <section class="bg-green-800 text-white py-16">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold font-title mb-4">Optimiza el riego de tu campo</h2>
+      <p class="text-green-200 mb-8 text-lg">
+        Contactanos para una demo personalizada o para instalar HydroVision en tu campo.
+      </p>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a href="https://wa.me/5493525448154?text=Hola%2C%20quiero%20info%20sobre%20HydroVision%20AG"
+           target="_blank" rel="noopener"
+           class="bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold px-8 py-3.5 rounded-lg shadow-lg hover:shadow-xl transition-all text-sm flex items-center gap-3">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Escribinos por WhatsApp
+        </a>
+        <a href="/dashboard"
+           class="border-2 border-white/30 text-white font-semibold px-8 py-3.5 rounded-lg hover:bg-white/10 transition-all text-sm">
+          Probar el Dashboard
+        </a>
+      </div>
+      <p class="text-green-400 text-xs mt-6">Respuesta en menos de 24 horas habiles</p>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-green-900 text-green-400 text-xs py-6">
+    <div class="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4">
+      <span class="font-medium text-green-300">HydroVision AG &middot; TRL 4 Demo</span>
+      <span>Riego de precision basado en CWSI &middot; Colonia Caroya, Cordoba</span>
+      <div class="flex items-center gap-4">
+        <a href="/dashboard" class="hover:text-white transition-colors">Dashboard</a>
+        <a href="/informe" class="hover:text-white transition-colors">Informe</a>
+        <a href="/admin" class="hover:text-white transition-colors">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

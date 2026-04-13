@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HydroVision AG — Riego inteligente de precision</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            green: {
+              50:'#F0F9F4',100:'#D1F2E0',200:'#A3E4C1',300:'#6FCE9C',
+              400:'#27AE60',500:'#1E7B55',600:'#1B6B4A',700:'#155A3C',
+              800:'#1B6B4A',900:'#0F3624',
+            },
+            yellow: { 500:'#F39C12',600:'#F39C12' },
+            red:    { 500:'#E74C3C',600:'#E74C3C' },
+            blue:   { 500:'#2980B9',600:'#2980B9' },
+            gray:   { 100:'#FAFAF7' },
+          },
+          fontFamily: {
+            sans:  ['"IBM Plex Sans"','Inter','system-ui','sans-serif'],
+            title: ['Inter','system-ui','sans-serif'],
+            mono:  ['"IBM Plex Mono"','ui-monospace','monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .fade-in { animation: fadeIn .6s ease-out both; }
+    .fade-in-delay { animation: fadeIn .6s ease-out .15s both; }
+    .fade-in-delay2 { animation: fadeIn .6s ease-out .3s both; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen font-sans text-gray-800">
+
+  <!-- ===== NAV ===== -->
+  <nav class="bg-green-800 text-white shadow-md">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <span class="text-lg font-bold tracking-tight font-title">HydroVision AG</span>
+      </a>
+      <div class="flex items-center gap-1">
+        <a href="/login" class="px-4 py-1.5 rounded text-sm font-medium bg-white text-green-800 hover:bg-green-50 transition-colors">Ingresar</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="bg-gradient-to-br from-green-800 via-green-700 to-green-900 text-white">
+    <div class="max-w-6xl mx-auto px-6 py-20 md:py-28 flex flex-col items-center text-center">
+      <h1 class="text-4xl md:text-5xl font-extrabold font-title leading-tight fade-in">
+        Protege tu rendimiento<br>antes de que el dano sea visible
+      </h1>
+      <p class="mt-5 text-lg md:text-xl text-green-200 max-w-2xl leading-relaxed fade-in-delay">
+        Un evento de estres hidrico no detectado puede costar hasta USD 340.000 en 20 ha de cultivo premium.
+        HydroVision lo detecta 5-10 dias antes del sintoma visible — cada 15 minutos, los 365 dias del ano.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-4 justify-center fade-in-delay2">
+        <a href="#planes"
+           class="bg-white text-green-800 font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-green-50 transition-all text-sm">
+          Ver planes desde USD 95/ha/ano
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== METRICAS CLAVE ===== -->
+  <section class="max-w-6xl mx-auto px-6 -mt-10 relative z-10">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="bg-white rounded-xl shadow-md p-5 text-center">
+        <div class="text-3xl font-bold text-green-700">15-20%</div>
+        <div class="text-sm text-gray-500 mt-1">Ahorro de agua vs riego convencional</div>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-5 text-center">
+        <div class="text-3xl font-bold text-green-700">15 min</div>
+        <div class="text-sm text-gray-500 mt-1">Frecuencia de medicion continua</div>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-5 text-center">
+        <div class="text-3xl font-bold text-green-700">&lt; 14 dias</div>
+        <div class="text-sm text-gray-500 mt-1">Primera alerta accionable tras instalar</div>
+      </div>
+      <div class="bg-white rounded-xl shadow-md p-5 text-center">
+        <div class="text-3xl font-bold text-green-700">365 dias</div>
+        <div class="text-sm text-gray-500 mt-1">Proteccion continua todo el ano</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COSTO DE NO ACTUAR ===== -->
+  <section class="py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl font-bold font-title text-center mb-3">Cuanto cuesta NO tener HydroVision</h2>
+      <p class="text-center text-sm text-gray-500 mb-10">
+        Un solo evento de estres hidrico no detectado puede superar el costo de anos de suscripcion.
+      </p>
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <div class="bg-red-50 border border-red-100 rounded-xl p-6">
+          <div class="text-red-600 font-bold text-sm mb-3">Cereza — desclasificacion de lote</div>
+          <div class="text-2xl font-extrabold text-red-700 mb-2">USD 340.000</div>
+          <p class="text-sm text-gray-600">
+            48 horas de deficit hidrico antes de cosecha reducen la firmeza 15-25%.
+            El lote pasa de exportacion premium a industria. Diferencial: USD 4-8/kg.
+          </p>
+          <div class="mt-3 text-xs text-gray-400">Riesgo real: 1 cada 3 temporadas sin monitoreo</div>
+          <div class="mt-2 pt-2 border-t border-red-100">
+            <span class="text-xs text-green-700 font-semibold">Suscripcion HydroVision 12 ha: USD 3.480/ano</span>
+          </div>
+        </div>
+
+        <div class="bg-red-50 border border-red-100 rounded-xl p-6">
+          <div class="text-red-600 font-bold text-sm mb-3">Vid premium — perdida de calidad enologica</div>
+          <div class="text-2xl font-extrabold text-red-700 mb-2">USD 192.000</div>
+          <p class="text-sm text-gray-600">
+            Estres prolongado reduce polifenoles y concentracion.
+            100 ha de Malbec premium pierden 12-20% de rendimiento por campana.
+          </p>
+          <div class="mt-3 text-xs text-gray-400">Equivalente al ingreso bruto de 20 ha</div>
+          <div class="mt-2 pt-2 border-t border-red-100">
+            <span class="text-xs text-green-700 font-semibold">Suscripcion HydroVision 100 ha: USD 25.000/ano</span>
+          </div>
+        </div>
+
+        <div class="bg-red-50 border border-red-100 rounded-xl p-6">
+          <div class="text-red-600 font-bold text-sm mb-3">Olivo San Juan — perdida de cupo de agua</div>
+          <div class="text-2xl font-extrabold text-red-700 mb-2">USD 27.500</div>
+          <p class="text-sm text-gray-600">
+            Sin monitoreo de planta, el riego por calendario desperdicia 18% del cupo.
+            Esa agua equivale a 9 ha mas de produccion.
+          </p>
+          <div class="mt-3 text-xs text-gray-400">San Juan perdio 40% de cupo en 10 anos</div>
+          <div class="mt-2 pt-2 border-t border-red-100">
+            <span class="text-xs text-green-700 font-semibold">Suscripcion HydroVision 50 ha: USD 7.500/ano</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-8 text-center">
+        <p class="text-sm text-gray-500 italic">
+          "El costo del sistema es menos del 2% del ingreso bruto en todos los cultivos de alto valor.
+          El costo de no tenerlo puede ser el 20%."
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA INTERMEDIO ===== -->
+  <section class="bg-green-700 text-white py-10">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <p class="text-lg font-semibold mb-4">Paquete piloto desde 20 ha — sin inversion en hardware, sin compromiso plurianual</p>
+      <a href="https://wa.me/5493525448154?text=Hola%2C%20quiero%20info%20sobre%20el%20paquete%20piloto%20de%20HydroVision%20AG"
+         target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 bg-white text-green-800 font-semibold px-6 py-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-green-50 transition-all text-sm">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Quiero saber mas
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== COMO FUNCIONA ===== -->
+  <section class="bg-white py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl font-bold font-title text-center mb-10">Como funciona</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-14 h-14 bg-green-100 text-green-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">1</div>
+          <h3 class="font-semibold text-lg mb-2">Instalamos sensores en tu campo</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            En 2 horas, un tecnico instala los nodos IoT en tu lote. Miden temperatura de la planta,
+            humedad, viento y lluvia cada 15 minutos. Satelite Sentinel-2 complementa con vision
+            completa del campo cada 5 dias.
+          </p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-green-100 text-green-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">2</div>
+          <h3 class="font-semibold text-lg mb-2">Detectamos estres antes del sintoma</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            El sistema calcula el indice de estres hidrico real de tu cultivo combinando sensores
+            de campo y datos satelitales. Te avisa 5-10 dias antes de que el dano sea visible —
+            cuando todavia podes actuar.
+          </p>
+        </div>
+        <div class="text-center">
+          <div class="w-14 h-14 bg-green-100 text-green-700 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">3</div>
+          <h3 class="font-semibold text-lg mb-2">El riego responde solo</h3>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            En los planes con automatizacion, el nodo activa el riego directamente cuando la planta
+            lo necesita y lo corta cuando se recupera. Decision en campo, sin depender de internet
+            ni del servidor. Compatible con Rain Bird, Netafim e Irritrol.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick wins timeline -->
+      <div class="mt-12 flex flex-wrap justify-center gap-3 text-sm">
+        <div class="bg-green-50 rounded-full px-4 py-2 text-green-800 font-medium">2 horas: instalacion completa</div>
+        <div class="text-green-300 flex items-center">&rarr;</div>
+        <div class="bg-green-50 rounded-full px-4 py-2 text-green-800 font-medium">&lt; 14 dias: primera alerta verificada</div>
+        <div class="text-green-300 flex items-center">&rarr;</div>
+        <div class="bg-green-50 rounded-full px-4 py-2 text-green-800 font-medium">90 dias: ROI medible con datos</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPLIANCE UE ===== -->
+  <section class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-10">
+        <div class="inline-block bg-yellow-500 text-blue-900 text-xs font-bold px-4 py-1 rounded-full mb-4">SEPTIEMBRE 2026</div>
+        <h2 class="text-2xl font-bold font-title mb-3">Exportas a Europa? Vas a necesitar datos verificados</h2>
+        <p class="text-blue-200 text-sm max-w-3xl mx-auto">
+          La Directiva ECGT de la Union Europea entra en vigor en septiembre 2026.
+          Decir "sustentable" o "uso eficiente del agua" en una etiqueta de exportacion
+          va a requerir evidencia verificada por un tercero. Sin datos, no hay claim.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <div class="text-yellow-400 font-bold text-sm mb-3">Hoy sin HydroVision</div>
+          <p class="text-sm text-blue-100">
+            La mayoria de los productores estiman su huella hidrica con modelos teoricos.
+            Error del 30-40% en eventos extremos — frecuentes en Cuyo.
+            Eso no pasa una auditoria internacional.
+          </p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <div class="text-green-400 font-bold text-sm mb-3">Con HydroVision</div>
+          <p class="text-sm text-blue-100">
+            Datos reales de estres hidrico cada 15 minutos, los 365 dias del ano.
+            Trazabilidad de cuando se rego, cuanto y por que. Reporte auditable
+            compatible con ISO 14046 y PEF europeo.
+          </p>
+        </div>
+        <div class="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
+          <div class="text-yellow-400 font-bold text-sm mb-3">El impacto en tu precio</div>
+          <p class="text-sm text-blue-100">
+            Los consumidores europeos pagan en promedio <strong>+15% mas</strong> por vino con certificacion
+            de sustentabilidad verificada. En 100.000 botellas de exportacion eso son
+            <strong>EUR 270.000 adicionales por ano</strong>.
+          </p>
+        </div>
+      </div>
+
+      <p class="text-blue-400 text-xs text-center">
+        Fuentes: Directiva UE 2024/825 (ECGT), ISO 14046:2014, AWS Standard v3.0, meta-analisis willingness-to-pay vino sustentable 2025.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== PLANES Y PRECIOS ===== -->
+  <section id="planes" class="bg-white py-16">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl font-bold font-title text-center mb-3">Planes y precios</h2>
+      <p class="text-center text-sm text-gray-500 mb-10">
+        Suscripcion anual por hectarea. Nodo en comodato incluido — sin inversion inicial en hardware.
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <!-- Tier 1 -->
+        <div class="border border-gray-200 rounded-2xl p-7 flex flex-col hover:border-green-300 hover:shadow-md transition-all">
+          <div class="text-xs font-semibold text-green-600 uppercase tracking-wider mb-2">Tier 1</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-1">Monitoreo</h3>
+          <div class="mt-2 mb-4">
+            <span class="text-3xl font-extrabold text-green-700">USD 95</span>
+            <span class="text-sm text-gray-500"> / ha / ano</span>
+          </div>
+          <p class="text-sm text-gray-500 mb-5">Ideal para productores hasta 30 ha, evaluacion inicial o cultivos con riego ya automatizado.</p>
+          <ul class="space-y-2 text-sm text-gray-600 flex-1">
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> 1 nodo en comodato cada 5 ha</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Gateway LoRa + conectividad 4G incluida</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Sensor termal + HR + viento + lluvia</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Indice de estres hidrico cada 15 min</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Dashboard web + alertas por WhatsApp / email</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Historial de telemetria e informes</li>
+            <li class="flex items-start gap-2"><span class="text-gray-300 mt-0.5">&ndash;</span> <span class="text-gray-400">Riego automatico no incluido</span></li>
+          </ul>
+          <a href="https://wa.me/5493525448154?text=Hola%2C%20quiero%20info%20sobre%20el%20plan%20Monitoreo%20de%20HydroVision%20AG"
+             target="_blank" rel="noopener"
+             class="mt-6 block text-center border-2 border-green-600 text-green-700 font-semibold px-5 py-2.5 rounded-lg hover:bg-green-50 transition-all text-sm">
+            Consultar
+          </a>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="border-2 border-green-500 rounded-2xl p-7 flex flex-col shadow-lg relative">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-600 text-white text-xs font-bold px-4 py-1 rounded-full">Mas elegido</div>
+          <div class="text-xs font-semibold text-green-600 uppercase tracking-wider mb-2">Tier 2</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-1">Automatizacion</h3>
+          <div class="mt-2 mb-4">
+            <span class="text-3xl font-extrabold text-green-700">USD 150</span>
+            <span class="text-sm text-gray-500"> / ha / ano</span>
+          </div>
+          <p class="text-sm text-gray-500 mb-5">Para productores de 30-200 ha con goteo instalado que quieren que el sistema decida y actue solo.</p>
+          <ul class="space-y-2 text-sm text-gray-600 flex-1">
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Todo lo del Tier 1</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> 1 nodo en comodato cada 3 ha</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Gateway LoRa + conectividad 4G o Starlink</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Riego autonomo — se activa y corta solo</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Decision en campo, sin depender de internet</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Compatible Rain Bird, Netafim, Irritrol</li>
+          </ul>
+          <a href="https://wa.me/5493525448154?text=Hola%2C%20quiero%20info%20sobre%20el%20plan%20Automatizacion%20de%20HydroVision%20AG"
+             target="_blank" rel="noopener"
+             class="mt-6 block text-center bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2.5 rounded-lg transition-all text-sm">
+            Consultar
+          </a>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="border border-gray-200 rounded-2xl p-7 flex flex-col hover:border-green-300 hover:shadow-md transition-all">
+          <div class="text-xs font-semibold text-green-600 uppercase tracking-wider mb-2">Tier 3</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-1">Precision + Compliance</h3>
+          <div class="mt-2 mb-4">
+            <span class="text-3xl font-extrabold text-green-700">USD 250</span>
+            <span class="text-sm text-gray-500"> / ha / ano</span>
+          </div>
+          <p class="text-sm text-gray-500 mb-5">Para bodegas premium, cereza/pistacho de exportacion y certificacion de huella hidrica UE.</p>
+          <ul class="space-y-2 text-sm text-gray-600 flex-1">
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Todo lo del Tier 2</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> 1 nodo en comodato cada 2 ha</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Gateway LoRa + Starlink incluido sin cargo</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Modelo de precision dual (R²=0.90-0.95)</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Reporte huella hidrica ISO 14046 auditable</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> Acceso API para integracion con tus sistemas</li>
+            <li class="flex items-start gap-2"><span class="text-green-500 mt-0.5">&#10003;</span> SLA y soporte prioritario</li>
+          </ul>
+          <a href="https://wa.me/5493525448154?text=Hola%2C%20quiero%20info%20sobre%20el%20plan%20Precision%20de%20HydroVision%20AG"
+             target="_blank" rel="noopener"
+             class="mt-6 block text-center border-2 border-green-600 text-green-700 font-semibold px-5 py-2.5 rounded-lg hover:bg-green-50 transition-all text-sm">
+            Consultar
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Nota comodato + conectividad -->
+      <div class="mt-6 bg-gray-50 border border-gray-200 rounded-xl p-5">
+        <p class="text-sm text-gray-600 leading-relaxed">
+          <span class="font-semibold text-gray-800">Todo el hardware en comodato:</span>
+          nodos, gateway LoRa y conectividad a internet son propiedad de HydroVision AG.
+          Vos no compras nada — solo pagas la suscripcion anual. Si cancelas, retiramos el equipo.
+        </p>
+        <div class="mt-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-xs text-gray-500">
+          <div>
+            <div class="font-semibold text-gray-700">Gateway LoRa</div>
+            <div>1 cada 10 nodos — alcance 15 km</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700">Con cobertura 4G</div>
+            <div>Router industrial 4G incluido</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700">Sin cobertura 4G</div>
+            <div>Starlink incluido en T2-T3</div>
+          </div>
+          <div>
+            <div class="font-semibold text-gray-700">Alertas</div>
+            <div>WhatsApp + email — desactivables</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROI por cultivo — reemplaza la tabla plana -->
+      <div class="mt-10 bg-green-50 rounded-xl p-6">
+        <h4 class="font-semibold text-green-800 mb-4 text-center">Tu inversion se paga sola</h4>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm">
+          <div class="bg-white rounded-lg p-4 shadow-sm">
+            <div class="font-semibold text-gray-800">Vid premium</div>
+            <div class="text-xs text-gray-500 mt-1">Invertis USD 150/ha</div>
+            <div class="text-xl font-extrabold text-green-700 mt-1">7.7x</div>
+            <div class="text-xs text-gray-400">Recuperas USD 1.152/ha</div>
+          </div>
+          <div class="bg-white rounded-lg p-4 shadow-sm">
+            <div class="font-semibold text-gray-800">Cereza</div>
+            <div class="text-xs text-gray-500 mt-1">Invertis USD 250/ha</div>
+            <div class="text-xl font-extrabold text-green-700 mt-1">14.4x</div>
+            <div class="text-xs text-gray-400">Recuperas USD 3.600/ha</div>
+          </div>
+          <div class="bg-white rounded-lg p-4 shadow-sm">
+            <div class="font-semibold text-gray-800">Olivo</div>
+            <div class="text-xs text-gray-500 mt-1">Invertis USD 95/ha</div>
+            <div class="text-xl font-extrabold text-green-700 mt-1">6.9x</div>
+            <div class="text-xs text-gray-400">Recuperas USD 660/ha</div>
+          </div>
+          <div class="bg-white rounded-lg p-4 shadow-sm">
+            <div class="font-semibold text-gray-800">Nogal</div>
+            <div class="text-xs text-gray-500 mt-1">Invertis USD 150/ha</div>
+            <div class="text-xl font-extrabold text-green-700 mt-1">8x</div>
+            <div class="text-xs text-gray-400">Recuperas USD 1.200/ha</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 mt-4 text-center">
+          Estimacion conservadora del 12% de rendimiento recuperado por deteccion temprana de estres hidrico.
+        </p>
+      </div>
+
+      <!-- Valor 12 meses -->
+      <div class="mt-6 bg-gray-50 rounded-xl p-6">
+        <h4 class="font-semibold text-gray-800 mb-3 text-center">El sistema trabaja los 12 meses — no solo en temporada de riego</h4>
+        <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-600">
+          <div>
+            <div class="font-semibold text-green-700 mb-1">Octubre – Marzo (campana de riego)</div>
+            <ul class="space-y-1">
+              <li>&#10003; Deteccion de estres antes del sintoma visible</li>
+              <li>&#10003; Riego autonomo por indice de estres (Tier 2-3)</li>
+              <li>&#10003; Alertas de VPD extremo y golpe de calor</li>
+              <li>&#10003; Mapa satelital del lote completo</li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-semibold text-green-700 mb-1">Abril – Septiembre (reposo invernal)</div>
+            <ul class="space-y-1">
+              <li>&#10003; Monitoreo de heladas tardias en tiempo real</li>
+              <li>&#10003; Acumulacion de horas de frio para planificar brotacion</li>
+              <li>&#10003; Deteccion de anegamiento por lluvias</li>
+              <li>&#10003; Historial continuo para planificar la proxima campana</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-xs text-gray-400 mt-6 text-center">
+        Nodos en comodato (propiedad de HydroVision AG) — sin inversion inicial en hardware.
+        Contratos anuales en USD. Paquete piloto desde 20 ha para validar ROI antes de escalar.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== CTA FINAL ===== -->
+  <section class="bg-green-800 text-white py-16">
+    <div class="max-w-3xl mx-auto px-6 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold font-title mb-4">Cada campana sin datos es una campana que no recuperas</h2>
+      <p class="text-green-200 mb-4 text-lg">
+        Los productores que instalan HydroVision en la primera temporada
+        tienen 2 anos de ventaja sobre los que esperan.
+      </p>
+      <p class="text-green-300 mb-8 text-sm">
+        Paquete piloto desde 20 ha — sin inversion en hardware, sin compromiso plurianual.
+        Si en una temporada no ves el ROI, devuelves los nodos y listo.
+      </p>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a href="https://wa.me/5493525448154?text=Hola%2C%20quiero%20info%20sobre%20HydroVision%20AG"
+           target="_blank" rel="noopener"
+           class="bg-[#25D366] hover:bg-[#20bd5a] text-white font-semibold px-8 py-3.5 rounded-lg shadow-lg hover:shadow-xl transition-all text-sm flex items-center gap-3">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Escribinos por WhatsApp
+        </a>
+      </div>
+      <p class="text-green-400 text-xs mt-6">Respuesta en menos de 24 horas habiles</p>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-green-900 text-green-400 text-xs py-6">
+    <div class="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4">
+      <span class="font-medium text-green-300">HydroVision AG</span>
+      <span>Riego de precision basado en CWSI &middot; Colonia Caroya, Cordoba</span>
+    </div>
+  </footer>
+
+</body>
+</html>

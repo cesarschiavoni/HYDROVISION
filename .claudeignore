@@ -1,0 +1,21 @@
+# Python virtual environments
+investigador/venv/
+
+# Datasets de imágenes (23 GB)
+investigador/data/
+
+# Logs de experimentos ML (wandb)
+investigador/02_modelo/wandb/
+
+# Material de referencia (PDFs, papers)
+referencias/
+
+# Archivos compilados Python
+**/__pycache__/
+*.pyc
+
+# Equipo (CVs, documentos personales)
+equipo/
+
+# Archivos temporales de Matías (finanzas borradores)
+matias/

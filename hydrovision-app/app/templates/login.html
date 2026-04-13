@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingresar — HydroVision AG</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center">
+
+  <div class="w-full max-w-sm">
+
+    <!-- Logo / header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center gap-2 mb-2">
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="36" height="36" rx="8" fill="#1B6B4A"/>
+          <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
+                fill="white" font-size="22" font-family="sans-serif" font-weight="bold">H</text>
+        </svg>
+        <span class="text-2xl font-bold text-green-900">HydroVision AG</span>
+      </div>
+      <p class="text-sm text-green-700">Sistema de monitoreo hídrico de precisión</p>
+    </div>
+
+    <!-- Card -->
+    <div class="bg-white rounded-2xl shadow-lg p-8">
+
+      <form method="post" action="/login" class="space-y-4">
+
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+          <input
+            id="username" name="username" type="text"
+            autocomplete="username" required autofocus
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            placeholder="admin"
+          >
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+          <input
+            id="password" name="password" type="password"
+            autocomplete="current-password" required
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            placeholder="••••••••"
+          >
+        </div>
+
+        <!--ERROR-->
+
+        <button
+          type="submit"
+          class="w-full bg-green-700 hover:bg-green-800 text-white font-medium py-2 rounded-lg
+                 text-sm transition-colors duration-150 mt-2"
+        >
+          Ingresar
+        </button>
+
+      </form>
+    </div>
+
+    <p class="text-center text-xs text-green-700 mt-6 opacity-70">
+      HydroVision AG · ANPCyT STARTUP 2025 TRL 3-4
+    </p>
+
+  </div>
+
+</body>
+</html>

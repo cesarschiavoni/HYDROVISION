@@ -1,0 +1,111 @@
+# ============================================================
+# HydroVision AG — Stack de producción
+#
+# Levantar:  docker compose -f infra/docker-compose.yml up -d
+# Detener:   docker compose -f infra/docker-compose.yml down
+# Logs:      docker compose -f infra/docker-compose.yml logs -f api
+# ============================================================
+
+services:
+
+  # ── PostgreSQL ──────────────────────────────────────────────
+  db:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: hydrovision
+      POSTGRES_USER: hydrovision
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./schema_postgresql.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hydrovision"]
+      interval: 5s
+      retries: 5
+
+  # ── MQTT Broker (Mosquitto) ─────────────────────────────────
+  mqtt:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mqttdata:/mosquitto/data
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 10s
+      retries: 3
+
+  # ── ChirpStack (LoRaWAN Network Server) ─────────────────────
+  chirpstack:
+    image: chirpstack/chirpstack:4
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      mqtt:
+        condition: service_healthy
+    environment:
+      POSTGRESQL__DSN: postgres://hydrovision:${DB_PASSWORD}@db/chirpstack?sslmode=disable
+      REDIS__URL: redis://redis:6379
+      INTEGRATION__MQTT__SERVER: tcp://mqtt:1883
+    ports:
+      - "8080:8080"
+    volumes:
+      - csdata:/etc/chirpstack
+
+  # ── Redis (requerido por ChirpStack) ────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+
+  # ── FastAPI Backend ─────────────────────────────────────────
+  api:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      mqtt:
+        condition: service_healthy
+    env_file:
+      - ../.env
+    environment:
+      DATABASE_URL: postgresql://hydrovision:${DB_PASSWORD}@db:5432/hydrovision
+      MQTT_BROKER: mqtt
+      MQTT_PORT: 1883
+      SIMULATION_MODE: "false"
+    ports:
+      - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  # ── MQTT Ingester ───────────────────────────────────────────
+  ingester:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - mqtt
+      - api
+    env_file:
+      - ../.env
+    environment:
+      MQTT_BROKER: mqtt
+      MQTT_PORT: 1883
+    command: python services/mqtt_ingester.py
+
+volumes:
+  pgdata:
+  mqttdata:
+  csdata:
+  redisdata:

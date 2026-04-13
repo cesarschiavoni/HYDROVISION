@@ -1,0 +1,11 @@
+Métrica,Valor
+r2,0.990824
+rmse,0.035737
+mae,0.025454
+slope,0.976807
+intercept,0.004988
+bias,-0.001719
+upper_loa,0.068244
+lower_loa,-0.071682
+n_muestras,1000
+regímenes,5

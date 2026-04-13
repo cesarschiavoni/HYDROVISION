@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 560" width="860" height="560" font-family="Arial, sans-serif">
+  <title>Figura 5 — Método de calibración nodo-satélite Sentinel-2</title>
+  <rect width="860" height="560" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="430" y="28" text-anchor="middle" font-size="13" font-weight="bold" fill="#111">FIGURA 5 — Método de calibración nodo-satélite Sentinel-2</text>
+  <text x="430" y="44" text-anchor="middle" font-size="10" fill="#555">HydroVision AG — Solicitud de Patente INPI Argentina — Reivindicación 9</text>
+  <line x1="20" y1="52" x2="840" y2="52" stroke="#ccc" stroke-width="0.8"/>
+
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#444"/>
+    </marker>
+    <marker id="arrB" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#2244aa"/>
+    </marker>
+    <marker id="arrG" markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
+      <path d="M0,0 L0,7 L7,3.5 Z" fill="#1a7a2a"/>
+    </marker>
+  </defs>
+
+  <!-- ═══ SATÉLITE SENTINEL-2 ═══ -->
+  <!-- Cuerpo satélite -->
+  <rect x="350" y="68" width="90" height="50" fill="#555" stroke="#333" stroke-width="2" rx="4"/>
+  <rect x="360" y="75" width="70" height="36" fill="#7a7a7a" rx="2"/>
+  <!-- Paneles solares -->
+  <rect x="260" y="78" width="88" height="30" fill="#b0c8e8" stroke="#2255aa" stroke-width="1.5" rx="2"/>
+  <line x1="278" y1="78" x2="278" y2="108" stroke="#2255aa" stroke-width="0.5"/>
+  <line x1="296" y1="78" x2="296" y2="108" stroke="#2255aa" stroke-width="0.5"/>
+  <line x1="314" y1="78" x2="314" y2="108" stroke="#2255aa" stroke-width="0.5"/>
+  <line x1="332" y1="78" x2="332" y2="108" stroke="#2255aa" stroke-width="0.5"/>
+  <rect x="442" y="78" width="88" height="30" fill="#b0c8e8" stroke="#2255aa" stroke-width="1.5" rx="2"/>
+  <line x1="460" y1="78" x2="460" y2="108" stroke="#2255aa" stroke-width="0.5"/>
+  <line x1="478" y1="78" x2="478" y2="108" stroke="#2255aa" stroke-width="0.5"/>
+  <line x1="496" y1="78" x2="496" y2="108" stroke="#2255aa" stroke-width="0.5"/>
+  <line x1="514" y1="78" x2="514" y2="108" stroke="#2255aa" stroke-width="0.5"/>
+  <text x="395" y="100" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">SENTINEL-2</text>
+  <text x="395" y="112" text-anchor="middle" font-size="8" fill="#fff">10m / 20m res.</text>
+
+  <!-- Bandas espectrales -->
+  <rect x="165" y="63" width="80" height="70" fill="#e8e8f8" stroke="#4444aa" stroke-width="1.5" rx="4"/>
+  <text x="205" y="80" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#2222aa">Bandas S2</text>
+  <text x="205" y="93" text-anchor="middle" font-size="8" fill="#333">B4 (Red)</text>
+  <text x="205" y="104" text-anchor="middle" font-size="8" fill="#333">B8 (NIR)</text>
+  <text x="205" y="115" text-anchor="middle" font-size="8" fill="#333">B8A (Red-Edge)</text>
+  <text x="205" y="126" text-anchor="middle" font-size="8" fill="#333">B11 (SWIR)</text>
+  <text x="205" y="128" text-anchor="middle" font-size="8.5" fill="#333">→ NDWI · NDVI · NDRE</text>
+  <line x1="245" y1="98" x2="260" y2="93" stroke="#4444aa" stroke-width="1.2" marker-end="url(#arrB)"/>
+
+  <!-- Haz sensor hacia suelo -->
+  <path d="M395,118 L320,235 L395,235 L470,235 Z" fill="#fff8e0" stroke="#cc8800" stroke-width="1" opacity="0.5"/>
+  <line x1="395" y1="118" x2="395" y2="235" stroke="#cc8800" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+  <!-- ═══ CAMPO LOTE ═══ -->
+  <!-- Lote completo (polígono irregular) -->
+  <polygon points="60,245 160,220 440,220 600,240 650,320 560,400 400,420 180,400 70,350"
+           fill="#d4e8c0" stroke="#3a7a1a" stroke-width="2" opacity="0.7"/>
+  <text x="360" y="310" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a5500">LOTE — ~50 ha cobertura</text>
+
+  <!-- Grid píxeles Sentinel-2 -->
+  <g opacity="0.4" stroke="#557700" stroke-width="0.6" fill="none">
+    <line x1="60" y1="245" x2="660" y2="245"/>
+    <line x1="60" y1="275" x2="660" y2="275"/>
+    <line x1="60" y1="305" x2="660" y2="305"/>
+    <line x1="60" y1="335" x2="660" y2="335"/>
+    <line x1="60" y1="365" x2="660" y2="365"/>
+    <line x1="60" y1="395" x2="660" y2="395"/>
+    <line x1="100" y1="220" x2="100" y2="430"/>
+    <line x1="160" y1="220" x2="160" y2="430"/>
+    <line x1="220" y1="220" x2="220" y2="430"/>
+    <line x1="280" y1="220" x2="280" y2="430"/>
+    <line x1="340" y1="220" x2="340" y2="430"/>
+    <line x1="400" y1="220" x2="400" y2="430"/>
+    <line x1="460" y1="220" x2="460" y2="430"/>
+    <line x1="520" y1="220" x2="520" y2="430"/>
+    <line x1="580" y1="220" x2="580" y2="430"/>
+    <line x1="640" y1="220" x2="640" y2="430"/>
+  </g>
+
+  <!-- Mapa de calor CWSI (colores) -->
+  <rect x="100" y="245" width="60" height="30" fill="#22bb44" opacity="0.6" rx="1"/>
+  <rect x="160" y="245" width="60" height="30" fill="#66cc55" opacity="0.6" rx="1"/>
+  <rect x="220" y="245" width="60" height="30" fill="#aadd33" opacity="0.6" rx="1"/>
+  <rect x="280" y="245" width="60" height="30" fill="#ffee00" opacity="0.6" rx="1"/>
+  <rect x="340" y="245" width="60" height="30" fill="#ffaa00" opacity="0.6" rx="1"/>
+  <rect x="400" y="245" width="60" height="30" fill="#ff6600" opacity="0.6" rx="1"/>
+  <rect x="100" y="275" width="60" height="30" fill="#33cc55" opacity="0.6" rx="1"/>
+  <rect x="160" y="275" width="60" height="30" fill="#88dd44" opacity="0.6" rx="1"/>
+  <rect x="220" y="275" width="60" height="30" fill="#ccee22" opacity="0.6" rx="1"/>
+  <rect x="280" y="275" width="60" height="30" fill="#ffdd00" opacity="0.6" rx="1"/>
+  <rect x="340" y="275" width="60" height="30" fill="#ff8800" opacity="0.6" rx="1"/>
+  <rect x="400" y="275" width="60" height="30" fill="#ff4400" opacity="0.6" rx="1"/>
+  <rect x="100" y="305" width="60" height="30" fill="#44cc66" opacity="0.6" rx="1"/>
+  <rect x="160" y="305" width="60" height="30" fill="#99ee44" opacity="0.6" rx="1"/>
+  <rect x="220" y="305" width="60" height="30" fill="#ddff00" opacity="0.6" rx="1"/>
+  <rect x="280" y="305" width="60" height="30" fill="#ffcc00" opacity="0.6" rx="1"/>
+  <rect x="340" y="305" width="60" height="30" fill="#ff9900" opacity="0.6" rx="1"/>
+  <rect x="400" y="305" width="60" height="30" fill="#ff5500" opacity="0.6" rx="1"/>
+  <rect x="100" y="335" width="60" height="30" fill="#22aa44" opacity="0.6" rx="1"/>
+  <rect x="160" y="335" width="60" height="30" fill="#55cc33" opacity="0.6" rx="1"/>
+  <rect x="220" y="335" width="60" height="30" fill="#aaee22" opacity="0.6" rx="1"/>
+  <rect x="280" y="335" width="60" height="30" fill="#dddd00" opacity="0.6" rx="1"/>
+  <rect x="340" y="335" width="60" height="30" fill="#ff8800" opacity="0.6" rx="1"/>
+  <rect x="100" y="365" width="60" height="30" fill="#33bb55" opacity="0.6" rx="1"/>
+  <rect x="160" y="365" width="60" height="30" fill="#77dd44" opacity="0.6" rx="1"/>
+  <rect x="220" y="365" width="60" height="30" fill="#bbee33" opacity="0.6" rx="1"/>
+  <rect x="280" y="365" width="60" height="30" fill="#eecc11" opacity="0.6" rx="1"/>
+
+  <!-- Nodo de campo (punto de calibración) -->
+  <circle cx="340" cy="335" r="14" fill="#1a5a8a" stroke="#fff" stroke-width="2.5"/>
+  <circle cx="340" cy="335" r="5" fill="#fff"/>
+  <text x="340" y="378" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a3a6a">NODO</text>
+  <text x="340" y="390" text-anchor="middle" font-size="8" fill="#1a3a6a">GPS: (lat, lon)</text>
+  <text x="340" y="402" text-anchor="middle" font-size="8" fill="#1a3a6a">CWSI_nodo medido</text>
+
+  <!-- Pixel S2 correspondiente al nodo (resaltado) -->
+  <rect x="280" y="305" width="60" height="30" fill="none" stroke="#cc2222" stroke-width="2.5" rx="1"/>
+  <text x="310" y="298" text-anchor="middle" font-size="8.5" fill="#cc2222" font-weight="bold">Pixel S2</text>
+
+  <!-- ═══ FLUJO DEL MÉTODO ═══ -->
+  <!-- Paso 1 -->
+  <rect x="680" y="68" width="160" height="60" fill="#e8f0ff" stroke="#2244aa" stroke-width="1.5" rx="4"/>
+  <text x="760" y="86" text-anchor="middle" font-size="9" font-weight="bold" fill="#1122aa">① Extraer índices S2</text>
+  <text x="760" y="99" text-anchor="middle" font-size="8" fill="#1122aa">Para pixel en (lat,lon) nodo</text>
+  <text x="760" y="111" text-anchor="middle" font-size="8" fill="#1122aa">NDWI, NDVI, NDRE</text>
+  <text x="760" y="123" text-anchor="middle" font-size="7.5" fill="#555">Nube &lt; umbral configurable</text>
+
+  <!-- Paso 2 -->
+  <rect x="680" y="148" width="160" height="60" fill="#e8f8e8" stroke="#1a7a2a" stroke-width="1.5" rx="4"/>
+  <text x="760" y="166" text-anchor="middle" font-size="9" font-weight="bold" fill="#1a4a1a">② Par calibración</text>
+  <text x="760" y="179" text-anchor="middle" font-size="8" fill="#1a4a1a">(NDWI, NDVI, NDRE)</text>
+  <text x="760" y="191" text-anchor="middle" font-size="8" fill="#1a4a1a">↕ CWSI_nodo ±3 días</text>
+  <text x="760" y="203" text-anchor="middle" font-size="7.5" fill="#555">Acumulado por temporada</text>
+
+  <!-- Paso 3 -->
+  <rect x="680" y="228" width="160" height="60" fill="#fff8e0" stroke="#cc8800" stroke-width="1.5" rx="4"/>
+  <text x="760" y="246" text-anchor="middle" font-size="9" font-weight="bold" fill="#885500">③ Modelo regresión</text>
+  <text x="760" y="259" text-anchor="middle" font-size="8" fill="#885500">CWSI = f(NDWI, NDVI, NDRE)</text>
+  <text x="760" y="271" text-anchor="middle" font-size="8" fill="#885500">Actualización incremental</text>
+  <text x="760" y="283" text-anchor="middle" font-size="7.5" fill="#555">Regresión lineal múltiple</text>
+
+  <!-- Paso 4 -->
+  <rect x="680" y="308" width="160" height="60" fill="#ffe8f8" stroke="#cc2288" stroke-width="1.5" rx="4"/>
+  <text x="760" y="326" text-anchor="middle" font-size="9" font-weight="bold" fill="#8a1166">④ Mapa CWSI lote</text>
+  <text x="760" y="339" text-anchor="middle" font-size="8" fill="#8a1166">Aplicar modelo a todos</text>
+  <text x="760" y="351" text-anchor="middle" font-size="8" fill="#8a1166">los píxeles del polígono</text>
+  <text x="760" y="363" text-anchor="middle" font-size="7.5" fill="#555">Resolución 10–20 m</text>
+
+  <!-- Paso 5 -->
+  <rect x="680" y="388" width="160" height="60" fill="#f0ffe0" stroke="#556622" stroke-width="1.5" rx="4"/>
+  <text x="760" y="406" text-anchor="middle" font-size="9" font-weight="bold" fill="#334400">⑤ Fusión IDW</text>
+  <text x="760" y="419" text-anchor="middle" font-size="8" fill="#334400">Mapa S2 + CWSI puntual</text>
+  <text x="760" y="431" text-anchor="middle" font-size="8" fill="#334400">Interpolación distancia inv.</text>
+  <text x="760" y="443" text-anchor="middle" font-size="7.5" fill="#555">→ Mapa prescripción riego</text>
+
+  <!-- Flechas flujo -->
+  <line x1="760" y1="128" x2="760" y2="148" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="760" y1="208" x2="760" y2="228" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="760" y1="288" x2="760" y2="308" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="760" y1="368" x2="760" y2="388" stroke="#444" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Flechas satélite → paso 1 -->
+  <line x1="530" y1="93" x2="680" y2="98" stroke="#2244aa" stroke-width="1.5" stroke-dasharray="5,2" marker-end="url(#arrB)"/>
+
+  <!-- Flecha nodo → paso 2 -->
+  <line x1="354" y1="335" x2="680" y2="178" stroke="#1a7a2a" stroke-width="1.5" stroke-dasharray="5,2" marker-end="url(#arrG)"/>
+  <text x="530" y="260" font-size="8" fill="#1a7a2a" transform="rotate(-28,530,260)">CWSI_nodo medido</text>
+
+  <!-- Flecha paso 4 → mapa lote -->
+  <line x1="680" y1="338" x2="590" y2="325" stroke="#cc2288" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ═══ ESCALA CWSI LEYENDA ═══ -->
+  <rect x="30" y="445" width="620" height="40" fill="#f8f8f8" stroke="#ccc" stroke-width="0.8" rx="3"/>
+  <text x="40" y="461" font-size="8.5" font-weight="bold" fill="#333">Escala CWSI:</text>
+  <rect x="110" y="451" width="30" height="14" fill="#22bb44"/>
+  <text x="145" y="462" font-size="8" fill="#333">0.0–0.15 Sin estrés</text>
+  <rect x="230" y="451" width="30" height="14" fill="#aadd33"/>
+  <text x="265" y="462" font-size="8" fill="#333">0.15–0.30 Leve</text>
+  <rect x="340" y="451" width="30" height="14" fill="#ffee00"/>
+  <text x="375" y="462" font-size="8" fill="#333">0.30–0.55 Moderado</text>
+  <rect x="460" y="451" width="30" height="14" fill="#ff6600"/>
+  <text x="495" y="462" font-size="8" fill="#333">0.55–0.75 Alto</text>
+  <rect x="555" y="451" width="30" height="14" fill="#cc0000"/>
+  <text x="590" y="462" fill="#333" font-size="8">Severo</text>
+
+  <text x="40" y="476" font-size="7.5" fill="#555" font-style="italic">
+    1 nodo calibra ~50 ha en condiciones de variabilidad espacial moderada (CV &lt; 30% — Santesteban et al. 2017).
+    Recomendación 1 nodo/ha en lotes con alta heterogeneidad.
+  </text>
+
+  <!-- Nota cobertura -->
+  <rect x="680" y="458" width="160" height="50" fill="#e8f8e8" stroke="#1a7a2a" stroke-width="1.2" rx="4"/>
+  <text x="760" y="474" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1a4a1a">Cobertura:</text>
+  <text x="760" y="487" text-anchor="middle" font-size="9" font-weight="bold" fill="#2d6a2d">~50 ha / nodo</text>
+  <text x="760" y="500" text-anchor="middle" font-size="7.5" fill="#555">densidad mínima para</text>
+  <text x="760" y="511" text-anchor="middle" font-size="7.5" fill="#555">lote completo</text>
+</svg>

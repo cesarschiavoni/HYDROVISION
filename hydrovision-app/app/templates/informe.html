@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HydroVision AG — Informe</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            green: {
+              50:'#F0F9F4',100:'#D1F2E0',200:'#A3E4C1',300:'#6FCE9C',
+              400:'#27AE60',500:'#1E7B55',600:'#1B6B4A',700:'#155A3C',
+              800:'#1B6B4A',900:'#0F3624',
+            },
+            yellow: { 500:'#F39C12',600:'#F39C12' },
+            red:    { 500:'#E74C3C',600:'#E74C3C' },
+            blue:   { 500:'#2980B9',600:'#2980B9' },
+            gray:   { 100:'#FAFAF7' },
+          },
+          fontFamily: {
+            sans:  ['"IBM Plex Sans"','Inter','system-ui','sans-serif'],
+            title: ['Inter','system-ui','sans-serif'],
+            mono:  ['"IBM Plex Mono"','ui-monospace','monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <style>
+    [x-cloak] { display: none !important; }
+    /* Tooltips siempre encima de todo */
+    .tip-wrap { position: relative; }
+    .tip-box {
+      position: absolute;
+      z-index: 9999;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      background: #2D3436;
+      color: #f9fafb;
+      font-size: 11px;
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s ease;
+      line-height: 1.5;
+    }
+    .tip-wrap:hover .tip-box { opacity: 1; }
+    .tip-box::after {
+      content: '';
+      position: absolute;
+      top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: #2D3436;
+    }
+    /* variantes de posición para bordes */
+    .tip-box.tip-right { left: auto; right: 0; transform: none; }
+    .tip-box.tip-right::after { left: auto; right: 12px; transform: none; }
+    .tip-box.tip-left  { left: 0; transform: none; }
+    .tip-box.tip-left::after  { left: 12px; transform: none; }
+    @media print {
+      header, .no-print { display: none !important; }
+      body { background: white !important; }
+      .print-break { page-break-before: always; }
+      .tip-box { display: none !important; }
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen" x-data="informe()" x-init="init()" x-cloak>
+
+  <!-- ===== HEADER ===== -->
+  <nav class="bg-green-800 text-white shadow-md no-print">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="/" class="flex items-center gap-2">
+          <span class="text-lg font-bold tracking-tight font-title">HydroVision AG</span>
+        </a>
+        <p class="text-green-300 text-sm hidden sm:block" x-text="fieldSubtitle"></p>
+      </div>
+      <div class="flex items-center gap-1">
+        <a href="/"          class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Inicio</a>
+        <a href="/dashboard"  class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Dashboard</a>
+        <a href="/informe"    class="px-3 py-1.5 rounded text-sm font-medium bg-green-700 text-white">Informe</a>
+        <a href="/admin"      class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">Admin</a>
+        <form method="post" action="/logout" class="ml-2">
+          <button type="submit"
+                  class="px-3 py-1.5 rounded text-sm font-medium text-green-300 hover:text-white hover:bg-green-700/50 transition-colors">
+            Salir
+          </button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- ===== TOOLBAR ===== -->
+    <div class="flex flex-wrap items-center justify-between gap-4 no-print">
+      <div>
+        <h2 class="text-lg font-bold text-gray-800">Informe de Rendimiento</h2>
+        <p class="text-sm text-gray-500" x-text="'Periodo: ultimos ' + days + ' dias'"></p>
+      </div>
+      <div class="flex items-center gap-2">
+        <template x-for="d in [2, 7, 14, 30]" :key="d">
+          <button @click="changePeriod(d)"
+                  :class="days === d ? 'bg-green-700 text-white' : 'bg-white text-gray-700 hover:bg-green-50'"
+                  class="px-3 py-1.5 text-xs font-medium rounded border border-gray-200 transition-colors"
+                  x-text="d + 'd'"></button>
+        </template>
+        <div class="w-px h-6 bg-gray-300 mx-1"></div>
+
+        <!-- CSV con tooltip -->
+        <div class="tip-wrap">
+          <button @click="exportCSV()"
+                  class="bg-white text-gray-700 hover:bg-gray-50 px-3 py-1.5 text-xs font-medium rounded border border-gray-200 transition-colors">
+            CSV
+          </button>
+          <div class="tip-box tip-right">Descarga todas las lecturas del periodo como archivo CSV. Incluye timestamp, nodo, CWSI, temperatura, humedad y mas.</div>
+        </div>
+
+        <!-- Informe de agua ISO 14046 — solo Tier 3 -->
+        <template x-if="userTier >= 3">
+          <div class="tip-wrap">
+            <button @click="exportTraceability()"
+                    class="bg-blue-600 text-white hover:bg-blue-700 px-3 py-1.5 text-xs font-medium rounded border border-blue-600 transition-colors flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14" />
+              </svg>
+              Trazabilidad Hídrica
+            </button>
+            <div class="tip-box tip-right">Informe de trazabilidad de riego ISO 14046 / PEF-UE. Auditable y exportable a CSV. Solo Plan Tier 3.</div>
+          </div>
+        </template>
+
+        <!-- Imprimir con tooltip -->
+        <div class="tip-wrap">
+          <button @click="window.print()"
+                  class="bg-white text-gray-700 hover:bg-gray-50 px-3 py-1.5 text-xs font-medium rounded border border-gray-200 transition-colors">
+            Imprimir PDF
+          </button>
+          <div class="tip-box tip-right">Abre el dialogo de impresion del navegador. Selecciona &ldquo;Guardar como PDF&rdquo; para exportar el informe completo.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div x-show="loading" class="text-center py-12">
+      <div class="inline-block w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-gray-500 text-sm mt-2">Cargando datos...</p>
+    </div>
+
+    <!-- Sin datos -->
+    <div x-show="!loading && (!summary || summary.total_readings === 0)" class="text-center py-16">
+      <div class="text-5xl mb-4">📡</div>
+      <p class="text-gray-500 font-medium">Sin datos para el periodo seleccionado</p>
+      <p class="text-gray-400 text-sm mt-1">Inicia la simulacion desde el <a href="/dashboard" class="text-green-600 underline">Dashboard</a> para generar lecturas de prueba.</p>
+    </div>
+
+    <template x-if="!loading && summary && summary.total_readings > 0">
+      <div class="space-y-6">
+
+        <!-- ===== RESUMEN EJECUTIVO ===== -->
+        <div class="bg-white rounded-xl shadow-sm p-5 border-l-4"
+             :class="summary.loss_pct >= 15 ? 'border-red-500' : (summary.loss_pct >= 5 ? 'border-yellow-500' : 'border-green-500')">
+          <div class="flex items-start justify-between gap-6">
+            <div>
+              <h3 class="font-bold text-gray-800 text-lg mb-1">Estado del campo</h3>
+              <p class="text-sm text-gray-600 leading-relaxed"
+                 x-text="(summary.cwsi_avg < 0.3
+                   ? 'El campo se encuentra en condiciones hidricas optimas. El estres promedio (CWSI ' + summary.cwsi_avg.toFixed(2) + ') esta por debajo del umbral de riesgo.'
+                   : summary.cwsi_avg < 0.6
+                     ? 'El campo presenta estres hidrico moderado (CWSI ' + summary.cwsi_avg.toFixed(2) + '). Se registraron ' + summary.hours_stress_any + ' horas fuera del rango optimo. Evaluar riego en zonas con mayor estres.'
+                     : 'El campo esta bajo estres hidrico severo (CWSI ' + summary.cwsi_avg.toFixed(2) + '). Se estima una perdida de produccion del ' + summary.loss_pct + '%. Se requiere accion de riego inmediata.')
+                 + (summary.trend < -0.01 ? ' La tendencia es positiva: el estres esta bajando.' : summary.trend > 0.01 ? ' Atencion: el estres esta aumentando respecto a la primera mitad del periodo.' : '')"></p>
+            </div>
+            <div class="flex-shrink-0 text-center">
+              <div class="text-4xl font-bold leading-none"
+                   :class="summary.cwsi_avg < 0.3 ? 'text-green-600' : summary.cwsi_avg < 0.6 ? 'text-yellow-600' : 'text-red-600'"
+                   x-text="summary.cwsi_avg.toFixed(2)"></div>
+              <div class="text-xs text-gray-400 mt-1">CWSI promedio</div>
+              <div class="text-xs mt-0.5"
+                   :class="summary.trend > 0 ? 'text-red-500' : (summary.trend < 0 ? 'text-green-600' : 'text-gray-400')">
+                <span x-text="summary.trend > 0 ? '▲' : (summary.trend < 0 ? '▼' : '—')"></span>
+                <span x-text="Math.abs(summary.trend).toFixed(3)"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== KPIs: 2 filas tematicas ===== -->
+        <!-- Fila 1: Estado hidrico -->
+        <div>
+          <div class="text-xs text-gray-400 uppercase tracking-wide font-medium mb-2 px-1">Estado hidrico</div>
+          <div class="grid grid-cols-4 gap-3">
+
+            <div class="bg-white rounded-xl shadow-sm p-4 tip-wrap">
+              <div class="text-xs text-gray-500 cursor-help">Estres alto</div>
+              <div class="text-2xl font-bold text-red-600 mt-1" x-text="summary.hours_stress_high + ' h'"></div>
+              <div class="text-xs text-gray-400 mt-1" x-text="summary.hours_stress_any + ' h total fuera de rango'"></div>
+              <div class="tip-box tip-left">
+                Horas con CWSI &ge; 0.60 (critico). Total fuera de rango incluye estres medio (0.30–0.60).<br>
+                Cada hora de estres alto genera perdida irreversible de rendimiento.
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-4 tip-wrap">
+              <div class="text-xs text-gray-500 cursor-help">Perdida estimada</div>
+              <div class="text-2xl font-bold mt-1"
+                   :class="summary.loss_pct >= 15 ? 'text-red-700' : (summary.loss_pct >= 5 ? 'text-yellow-700' : 'text-green-700')"
+                   x-text="summary.loss_pct + '%'"></div>
+              <div class="text-xs text-gray-400 mt-1" x-text="summary.loss_kg_ha.toLocaleString() + ' kg/ha'"></div>
+              <div class="tip-box">Reduccion de rendimiento estimada (FAO-56). Basada en la integral del estres por encima del umbral optimo.</div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-4 tip-wrap">
+              <div class="text-xs text-gray-500 cursor-help">Contexto climatico</div>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="text-lg font-bold text-gray-700" x-text="(summary.temp_avg || '--') + '°'"></span>
+                <span class="text-sm text-gray-500" x-text="(summary.rh_avg || '--') + '% HR'"></span>
+              </div>
+              <div class="text-xs text-gray-400 mt-1" x-text="summary.rain_total_mm + ' mm lluvia'"></div>
+              <div class="tip-box">Temperatura, humedad relativa y precipitacion promedio del periodo. Determinan la demanda evapotranspirativa del cultivo.</div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-4 tip-wrap">
+              <div class="text-xs text-gray-500 cursor-help">Cobertura</div>
+              <div class="text-2xl font-bold mt-1" x-text="summary.coverage_pct + '%'"></div>
+              <div class="text-xs text-gray-400 mt-1" x-text="summary.active_nodes + ' nodo' + (summary.active_nodes !== 1 ? 's' : '') + ' · ' + summary.n_zones + ' zonas'"></div>
+              <div class="tip-box tip-right">Porcentaje de horas con al menos una lectura. Valores bajos indican desconexion o periodos sin monitoreo.</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Fila 2: Uso de agua -->
+        <div>
+          <div class="text-xs text-gray-400 uppercase tracking-wide font-medium mb-2 px-1">Uso de agua</div>
+          <div class="grid grid-cols-4 gap-3">
+
+            <div class="bg-white rounded-xl shadow-sm p-4 tip-wrap">
+              <div class="text-xs text-gray-500 cursor-help">Riegos activados</div>
+              <div class="text-2xl font-bold text-blue-600 mt-1" x-text="summary.total_irrig_events"></div>
+              <div class="text-xs text-gray-400 mt-1" x-text="summary.total_irrig_min + ' min totales'"></div>
+              <div class="tip-box tip-left">Activaciones de riego en el periodo. Cada evento dura 30 min por defecto.</div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-4 tip-wrap">
+              <div class="text-xs text-gray-500 cursor-help">Agua aplicada</div>
+              <div class="text-2xl font-bold mt-1" x-text="summary.water_m3 + ' m³'"></div>
+              <div class="text-xs text-gray-400 mt-1" x-text="'Calendario fijo: ' + summary.baseline_m3 + ' m³'"></div>
+              <div class="tip-box">Volumen estimado a 10 m³/h. El baseline es lo que se usaria con riego fijo diario sin datos de planta.</div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-4 tip-wrap">
+              <div class="text-xs text-gray-500 cursor-help">Ahorro vs calendario</div>
+              <div class="text-2xl font-bold text-emerald-600 mt-1" x-text="summary.savings_pct + '%'"></div>
+              <div class="text-xs text-gray-400 mt-1">menos agua que riego fijo</div>
+              <div class="tip-box">Diferencia entre agua aplicada con HydroVision vs riego calendario (30 min/zona/dia sin CWSI).</div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-4 tip-wrap">
+              <div class="text-xs text-gray-500 cursor-help">Lecturas procesadas</div>
+              <div class="text-2xl font-bold text-gray-700 mt-1" x-text="summary.total_readings.toLocaleString()"></div>
+              <div class="text-xs text-gray-400 mt-1" x-text="'en ' + summary.days + ' dias'"></div>
+              <div class="tip-box tip-right">Total de lecturas de telemetria procesadas en el periodo analizado.</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ===== SECTION 1b: ESTRES HIDRICO Y PERDIDA DE PRODUCCION ===== -->
+        <div class="bg-white rounded-xl shadow-sm p-5 border-t-4"
+             :class="summary.loss_pct >= 15 ? 'border-red-500' : (summary.loss_pct >= 5 ? 'border-yellow-500' : 'border-green-500')">
+          <div class="flex items-center gap-2 mb-4">
+            <h3 class="font-bold text-gray-800">Impacto del estres hidrico en el cultivo</h3>
+            <div class="tip-wrap">
+              <span class="text-gray-400 text-xs cursor-help border border-gray-200 rounded-full w-4 h-4 flex items-center justify-center">?</span>
+              <div class="tip-box tip-left">
+                Calculo basado en el modelo FAO-56 (Stewart &amp; Hagan 1973, adaptado por Jackson 1981):<br><br>
+                <strong>Reduccion rendimiento = Ky &times; integral(CWSI - 0.30) / periodo</strong><br><br>
+                Ky y rendimiento potencial son especificos de cada zona (variedad + etapa fenologica por GDD).
+              </div>
+            </div>
+          </div>
+
+          <!-- Cards por zona -->
+          <div class="space-y-3">
+            <template x-for="z in zonePerf" :key="z.id">
+              <div class="border rounded-lg p-3"
+                   :class="z.loss_pct >= 15 ? 'border-red-200 bg-red-50/30' : (z.loss_pct >= 5 ? 'border-yellow-200 bg-yellow-50/30' : 'border-green-200 bg-green-50/20')">
+
+                <!-- Encabezado zona -->
+                <div class="flex items-center justify-between mb-2">
+                  <div>
+                    <span class="font-semibold text-gray-800 text-sm" x-text="z.name"></span>
+                    <span class="text-xs text-gray-400 ml-2" x-text="z.varietal || 'sin variedad'"></span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs text-gray-500">
+                    <span x-text="z.fenologia?.etapa ? z.fenologia.etapa.replace(/_/g,' ') : '—'"></span>
+                    <span class="text-gray-300">|</span>
+                    <span x-text="'Ky ' + (z.crop_ky != null ? z.crop_ky.toFixed(2) : '—')"></span>
+                    <span class="text-gray-300">|</span>
+                    <span x-text="z.fenologia?.metodo === 'gdd' ? z.fenologia.gdd + ' GDD' : 'por mes'"></span>
+                  </div>
+                </div>
+
+                <!-- Metricas de la zona: 4 columnas -->
+                <div class="grid grid-cols-4 gap-2">
+
+                  <!-- Sin hidratacion optima -->
+                  <div class="text-center p-2 rounded-lg bg-white/70">
+                    <div class="text-xl font-bold"
+                         :class="z.stress_pct >= 50 ? 'text-red-600' : (z.stress_pct >= 25 ? 'text-yellow-600' : 'text-green-600')"
+                         x-text="z.hours_stress_any + ' h'"></div>
+                    <div class="text-xs text-gray-500 mt-0.5">Sin hidratacion optima</div>
+                    <div class="text-xs text-gray-400" x-text="z.stress_pct + '% del periodo'"></div>
+                  </div>
+
+                  <!-- En estres critico -->
+                  <div class="text-center p-2 rounded-lg bg-white/70">
+                    <div class="text-xl font-bold text-red-600" x-text="z.hours_stress_high + ' h'"></div>
+                    <div class="text-xs text-gray-500 mt-0.5">En estres critico</div>
+                    <div class="text-xs text-gray-400">CWSI &ge; 0.60</div>
+                  </div>
+
+                  <!-- Perdida % -->
+                  <div class="text-center p-2 rounded-lg bg-white/70">
+                    <div class="text-xl font-bold"
+                         :class="z.loss_pct >= 15 ? 'text-red-700' : (z.loss_pct >= 5 ? 'text-yellow-700' : 'text-green-700')"
+                         x-text="(z.loss_pct ?? 0) + '%'"></div>
+                    <div class="text-xs text-gray-500 mt-0.5">Perdida estimada</div>
+                    <div class="text-xs text-gray-400">de produccion</div>
+                  </div>
+
+                  <!-- Perdida kg/ha -->
+                  <div class="text-center p-2 rounded-lg bg-white/70">
+                    <div class="text-xl font-bold"
+                         :class="z.loss_pct >= 15 ? 'text-red-700' : (z.loss_pct >= 5 ? 'text-yellow-700' : 'text-green-700')"
+                         x-text="z.loss_kg_ha ? z.loss_kg_ha.toLocaleString() + ' kg/ha' : '—'"></div>
+                    <div class="text-xs text-gray-500 mt-0.5">Perdida en rendimiento</div>
+                    <div class="text-xs text-gray-400" x-text="'pot. ' + (z.crop_yield_kg_ha ? z.crop_yield_kg_ha.toLocaleString() : '—') + ' kg/ha'"></div>
+                  </div>
+
+                </div>
+
+                <!-- Barra de distribucion hidrica de la zona -->
+                <div class="mt-2" x-show="z.hours_total > 0">
+                  <div class="flex h-2 rounded-full overflow-hidden gap-px">
+                    <div class="bg-green-400 transition-all"
+                         :style="'width:' + (z.hours_total > 0 ? (z.hours_optimal / z.hours_total * 100).toFixed(1) : 0) + '%'"></div>
+                    <div class="bg-yellow-400 transition-all"
+                         :style="'width:' + (z.hours_total > 0 ? ((z.hours_stress_any - z.hours_stress_high) / z.hours_total * 100).toFixed(1) : 0) + '%'"></div>
+                    <div class="bg-red-500 transition-all"
+                         :style="'width:' + (z.hours_total > 0 ? (z.hours_stress_high / z.hours_total * 100).toFixed(1) : 0) + '%'"></div>
+                  </div>
+                </div>
+                <div x-show="z.hours_total === 0" class="mt-1 text-xs text-gray-400 italic">Sin datos de telemetria para este periodo</div>
+
+              </div>
+            </template>
+          </div>
+
+          <!-- Resumen global del campo -->
+          <div class="mt-4 pt-4 border-t border-gray-200">
+            <div class="text-xs text-gray-500 uppercase tracking-wide mb-2 font-medium">Resumen campo</div>
+            <div class="grid grid-cols-4 gap-3">
+              <div class="text-center p-3 rounded-lg bg-gray-50">
+                <div class="text-2xl font-bold"
+                     :class="summary.stress_pct >= 50 ? 'text-red-600' : (summary.stress_pct >= 25 ? 'text-yellow-600' : 'text-green-600')"
+                     x-text="summary.hours_stress_any + ' h'"></div>
+                <div class="text-xs text-gray-500 mt-1">Sin hidratacion optima</div>
+                <div class="text-xs text-gray-400" x-text="summary.stress_pct + '% del periodo'"></div>
+              </div>
+              <div class="text-center p-3 rounded-lg bg-gray-50">
+                <div class="text-2xl font-bold text-red-600" x-text="summary.hours_stress_high + ' h'"></div>
+                <div class="text-xs text-gray-500 mt-1">En estres critico</div>
+                <div class="text-xs text-gray-400">CWSI &ge; 0.60</div>
+              </div>
+              <div class="text-center p-3 rounded-lg"
+                   :class="summary.loss_pct >= 15 ? 'bg-red-50' : (summary.loss_pct >= 5 ? 'bg-yellow-50' : 'bg-green-50')">
+                <div class="text-2xl font-bold"
+                     :class="summary.loss_pct >= 15 ? 'text-red-700' : (summary.loss_pct >= 5 ? 'text-yellow-700' : 'text-green-700')"
+                     x-text="summary.loss_pct + '%'"></div>
+                <div class="text-xs text-gray-500 mt-1">Perdida promedio</div>
+                <div class="text-xs text-gray-400">campo completo</div>
+              </div>
+              <div class="text-center p-3 rounded-lg"
+                   :class="summary.loss_pct >= 15 ? 'bg-red-50' : (summary.loss_pct >= 5 ? 'bg-yellow-50' : 'bg-green-50')">
+                <div class="text-2xl font-bold"
+                     :class="summary.loss_pct >= 15 ? 'text-red-700' : (summary.loss_pct >= 5 ? 'text-yellow-700' : 'text-green-700')"
+                     x-text="summary.loss_kg_total.toLocaleString() + ' kg'"></div>
+                <div class="text-xs text-gray-500 mt-1">Perdida total campo</div>
+                <div class="text-xs text-gray-400" x-text="summary.loss_kg_ha.toLocaleString() + ' kg/ha · ' + summary.area_ha + ' ha'"></div>
+              </div>
+            </div>
+            <!-- Barra global -->
+            <div class="mt-3">
+              <div class="flex h-2.5 rounded-full overflow-hidden gap-px">
+                <div class="bg-green-400 transition-all"
+                     :style="'width:' + (summary.hours_total > 0 ? (summary.hours_optimal / summary.hours_total * 100).toFixed(1) : 0) + '%'"
+                     :title="'Optimo: ' + summary.hours_optimal + 'h'"></div>
+                <div class="bg-yellow-400 transition-all"
+                     :style="'width:' + (summary.hours_total > 0 ? ((summary.hours_stress_any - summary.hours_stress_high) / summary.hours_total * 100).toFixed(1) : 0) + '%'"
+                     :title="'Estres medio: ' + (summary.hours_stress_any - summary.hours_stress_high) + 'h'"></div>
+                <div class="bg-red-500 transition-all"
+                     :style="'width:' + (summary.hours_total > 0 ? (summary.hours_stress_high / summary.hours_total * 100).toFixed(1) : 0) + '%'"
+                     :title="'Estres alto: ' + summary.hours_stress_high + 'h'"></div>
+              </div>
+              <div class="flex gap-4 text-xs text-gray-400 mt-1.5">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-400 inline-block"></span> Optimo (CWSI &lt; 0.30)</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span> Estres medio (0.30–0.60)</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> Estres alto (&gt; 0.60)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clima integrado en KPIs arriba -->
+
+        <!-- ===== SECTION 3: CWSI + RIEGO + LLUVIA POR ZONA ===== -->
+        <div class="bg-white rounded-xl shadow-sm p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold text-gray-800">Evolucion CWSI, riego y lluvia por zona</h3>
+              <div class="tip-wrap">
+                <span class="text-gray-400 text-xs cursor-help border border-gray-200 rounded-full w-4 h-4 flex items-center justify-center">?</span>
+                <div class="tip-box tip-left">
+                  Cada zona muestra la evolucion temporal del CWSI (linea), los eventos de riego (barras azules) y la lluvia (barras celestes).<br>
+                  <br>Las lineas punteadas indican los umbrales de estres medio (0.30) y alto (0.60). Cuando el riego se activa, el CWSI deberia descender.
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-1 no-print">
+              <button @click="resolution='hourly'; loadAll()"
+                      :class="resolution==='hourly' ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-600'"
+                      class="px-2 py-1 text-xs rounded transition-colors">Por hora</button>
+              <button @click="resolution='daily'; loadAll()"
+                      :class="resolution==='daily' ? 'bg-green-700 text-white' : 'bg-gray-100 text-gray-600'"
+                      class="px-2 py-1 text-xs rounded transition-colors">Por dia</button>
+            </div>
+          </div>
+
+          <!-- Fallback -->
+          <div x-show="!zoneHistory || !zoneHistory.labels || zoneHistory.labels.length === 0"
+               class="flex flex-col items-center justify-center h-48 text-gray-400">
+            <div class="text-4xl mb-2">📈</div>
+            <p class="text-sm font-medium text-gray-500">Sin historial disponible</p>
+            <p class="text-xs mt-1">Los datos aparecen despues de tener lecturas en el periodo seleccionado</p>
+          </div>
+
+          <!-- Un gráfico por zona -->
+          <template x-if="zoneHistory && zoneHistory.zones && zoneHistory.zones.length > 0">
+            <div class="space-y-6">
+              <template x-for="(zone, zi) in zoneHistory.zones" :key="zone.zone_id">
+                <div>
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="w-3 h-3 rounded-full" :style="'background:' + COLORS[zi % COLORS.length]"></span>
+                    <span class="text-sm font-semibold text-gray-700" x-text="'Zona ' + zone.zone_id + ' — ' + zone.name"></span>
+                  </div>
+                  <div :id="'zoneChartBox_' + zone.zone_id" style="position:relative;height:220px"></div>
+                </div>
+              </template>
+            </div>
+          </template>
+        </div>
+
+        <!-- Tabla eliminada: datos ya incluidos en "Impacto del estres hidrico" -->
+
+        <!-- ===== SECTION 6: COMPARATIVA ===== -->
+        <div class="bg-white rounded-xl shadow-sm p-5 print-break">
+          <div class="flex items-center gap-2 mb-1">
+            <h3 class="font-bold text-gray-800">Comparativa de metodos de riego</h3>
+            <div class="tip-wrap">
+              <span class="text-gray-400 text-xs cursor-help border border-gray-200 rounded-full w-4 h-4 flex items-center justify-center">?</span>
+              <div class="tip-box tip-left">
+                Comparacion entre HydroVision y los metodos mas usados en la region.<br>
+                Los valores de <em>Tradicional</em> y <em>Competencia</em> son referencias bibliograficas (FAO-56, INTA ProRiego).<br>
+                Los valores de HydroVision se calculan a partir de los datos reales del sistema.
+              </div>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mb-4">Proyeccion anual basada en los ultimos 30 dias de operacion. Baselines: FAO-56, INTA ProRiego.</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            <!-- TRADICIONAL -->
+            <div class="rounded-xl border border-gray-200 p-4">
+              <div class="text-xs text-gray-500 uppercase tracking-wide mb-2">Tradicional</div>
+              <div class="text-sm font-medium text-gray-700 mb-3" x-text="comparison.traditional?.method || ''"></div>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-gray-500 cursor-help border-b border-dotted border-gray-400">Agua/ha/año</span>
+                    <div class="tip-box tip-left">Consumo anual de agua por hectarea en riego calendario sin datos de planta. Fuente: FAO-56, region semiarida.</div>
+                  </div>
+                  <span class="font-bold text-red-600" x-text="(comparison.traditional?.water_m3_ha_year || 0).toLocaleString() + ' m³'"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-gray-500 cursor-help border-b border-dotted border-gray-400">Riegos/semana</span>
+                    <div class="tip-box tip-left">Frecuencia tipica de riego en programacion calendario sin informacion de CWSI.</div>
+                  </div>
+                  <span class="font-medium" x-text="comparison.traditional?.irrigations_week"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-gray-500 cursor-help border-b border-dotted border-gray-400">Deteccion estres</span>
+                    <div class="tip-box tip-left">Tiempo tipico hasta que el productor detecta visualmente estres hidrico en la planta. El dano ya ocurrio.</div>
+                  </div>
+                  <span class="font-medium text-red-600" x-text="comparison.traditional?.stress_detect_h + ' h'"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500">Cobertura espacial</span>
+                  <span class="font-medium" x-text="comparison.traditional?.coverage_pct + '%'"></span>
+                </div>
+                <div class="text-xs text-gray-400 mt-2 italic" x-text="comparison.traditional?.precision"></div>
+              </div>
+            </div>
+
+            <!-- COMPETENCIA -->
+            <div class="rounded-xl border border-gray-200 p-4">
+              <div class="text-xs text-gray-500 uppercase tracking-wide mb-2">Competencia (sonda suelo)</div>
+              <div class="text-sm font-medium text-gray-700 mb-3" x-text="comparison.competition?.method || ''"></div>
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-gray-500 cursor-help border-b border-dotted border-gray-400">Agua/ha/año</span>
+                    <div class="tip-box tip-left">Consumo con sondas de humedad de suelo. Mejora vs calendario pero no mide el estado real de la planta. Fuente: INTA ProRiego.</div>
+                  </div>
+                  <span class="font-bold text-yellow-600" x-text="(comparison.competition?.water_m3_ha_year || 0).toLocaleString() + ' m³'"></span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500">Riegos/semana</span>
+                  <span class="font-medium" x-text="comparison.competition?.irrigations_week"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-gray-500 cursor-help border-b border-dotted border-gray-400">Deteccion estres</span>
+                    <div class="tip-box tip-left">Las sondas de suelo detectan deficit hidrico antes que la inspeccion visual, pero no el estres fisiologico de la planta que ya ocurrio.</div>
+                  </div>
+                  <span class="font-medium text-yellow-600" x-text="comparison.competition?.stress_detect_h + ' h'"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-gray-500 cursor-help border-b border-dotted border-gray-400">Cobertura espacial</span>
+                    <div class="tip-box tip-left">Las sondas solo miden en su punto de instalacion. El resto del campo queda sin monitoreo.</div>
+                  </div>
+                  <span class="font-medium" x-text="comparison.competition?.coverage_pct + '%'"></span>
+                </div>
+                <div class="text-xs text-gray-400 mt-2 italic" x-text="comparison.competition?.precision"></div>
+              </div>
+            </div>
+
+            <!-- HYDROVISION -->
+            <div class="rounded-xl border-2 border-green-500 bg-green-50 p-4 relative">
+              <div class="absolute -top-3 left-4 bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded">TU SISTEMA</div>
+              <div class="text-xs text-green-700 uppercase tracking-wide mb-2 mt-1">HydroVision AG</div>
+              <div class="text-sm font-medium text-gray-700 mb-2" x-text="comparison.hydrovision?.method || ''"></div>
+
+              <!-- Nota estimacion -->
+              <div x-show="comparison.hydrovision?.estimated"
+                   class="tip-wrap mb-2">
+                <div class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1.5 cursor-help">
+                  Proyeccion estimada desde CWSI *
+                </div>
+                <div class="tip-box tip-left">
+                  Sin eventos de riego registrados aun, los valores se estiman a partir de la frecuencia con que el CWSI supero el umbral de estres alto.<br>
+                  <br>Activa riegos manualmente desde el Dashboard para obtener datos reales de consumo.
+                </div>
+              </div>
+
+              <div class="space-y-2 text-sm">
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-green-800 cursor-help border-b border-dotted border-green-400">Agua/ha/año</span>
+                    <div class="tip-box tip-left">Estimado a partir de los riegos reales registrados (o proyectado desde CWSI si no hay riegos aun).</div>
+                  </div>
+                  <span class="font-bold text-green-700">
+                    <span x-text="(comparison.hydrovision?.water_m3_ha_year || 0).toLocaleString() + ' m³'"></span>
+                    <span x-show="comparison.hydrovision?.estimated" class="text-xs text-amber-500">*</span>
+                  </span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-green-800">Riegos/semana</span>
+                  <span class="font-medium">
+                    <span x-text="comparison.hydrovision?.irrigations_week || '0'"></span>
+                    <span x-show="comparison.hydrovision?.estimated" class="text-xs text-amber-500">*</span>
+                  </span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-green-800 cursor-help border-b border-dotted border-green-400">Deteccion estres</span>
+                    <div class="tip-box tip-left">El CWSI se actualiza cada 30 minutos. Ante un pico de estres el sistema puede activar riego automaticamente.</div>
+                  </div>
+                  <span class="font-bold text-green-700" x-text="comparison.hydrovision?.stress_detect_h + ' h'"></span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <div class="tip-wrap">
+                    <span class="text-green-800 cursor-help border-b border-dotted border-green-400">Cobertura espacial</span>
+                    <div class="tip-box tip-left">La fusion nodo + Sentinel-2 permite estimar el CWSI en todas las zonas, incluso las que no tienen nodo sensor.</div>
+                  </div>
+                  <span class="font-bold text-green-700" x-text="comparison.hydrovision?.coverage_pct + '%'"></span>
+                </div>
+                <div class="text-xs text-green-600 mt-1 font-medium" x-text="comparison.hydrovision?.precision"></div>
+              </div>
+
+              <!-- Ahorro badges -->
+              <div class="mt-4 pt-3 border-t border-green-200 space-y-1.5">
+                <div class="flex items-center gap-2 text-xs tip-wrap">
+                  <span class="bg-green-600 text-white px-2 py-0.5 rounded font-bold"
+                        x-text="comparison.savings_vs_trad + '% menos'"></span>
+                  <span class="text-gray-600">agua vs riego tradicional</span>
+                  <div class="tip-box">
+                    Ahorro estimado comparando el consumo de HydroVision con el riego calendario tradicional de la region (6.500 m³/ha/año segun FAO-56).
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 text-xs tip-wrap">
+                  <span class="bg-green-600 text-white px-2 py-0.5 rounded font-bold"
+                        x-text="comparison.savings_vs_comp + '% menos'"></span>
+                  <span class="text-gray-600">agua vs sonda de suelo</span>
+                  <div class="tip-box">
+                    Ahorro estimado vs sistemas de riego con sondas de humedad de suelo (5.200 m³/ha/año segun INTA ProRiego).
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== FOOTER COMPACTO ===== -->
+        <div class="bg-gray-50 rounded-xl p-4 text-xs text-gray-400">
+          <div class="flex items-center justify-between flex-wrap gap-x-6 gap-y-1">
+            <span class="font-medium text-gray-500">HydroVision AG</span>
+            <span x-text="'Periodo: ' + summary.days + ' dias'"></span>
+            <span x-text="summary.total_readings.toLocaleString() + ' lecturas'"></span>
+            <span x-text="summary.active_nodes + ' nodos · ' + summary.n_zones + ' zonas · ' + summary.area_ha + ' ha'"></span>
+            <span x-text="'Generado: ' + new Date().toLocaleString('es-AR')"></span>
+          </div>
+        </div>
+
+      </div>
+    </template>
+  </main>
+
+  <script>
+    const COLORS = [
+      '#1B6B4A', '#2980B9', '#E74C3C', '#9333ea', '#F39C12',
+      '#27AE60', '#4f46e5', '#be123c', '#155A3C', '#b45309',
+    ];
+
+    function informe() {
+      return {
+        days: 7,
+        resolution: 'hourly',
+        loading: true,
+        summary: null,
+        zoneHistory: null,
+        zonePerf: [],
+        comparison: {},
+        fieldCfg: {},
+        zoneCharts: {},
+        userTier: 0,
+
+        get fieldSubtitle() {
+          const parts = [
+            this.fieldCfg.field_name,
+            this.fieldCfg.field_varietal,
+            this.fieldCfg.field_location,
+          ].filter(Boolean);
+          return parts.join(' · ') || 'HydroVision AG';
+        },
+
+        async init() {
+          await this.fetchConfig();
+          await this.loadAll();
+          try {
+            const r = await fetch('/api/user/plan');
+            if (r.ok) { const d = await r.json(); this.userTier = d.tier || 0; }
+          } catch (e) { /* sin plan */ }
+        },
+
+        async fetchConfig() {
+          try {
+            const r = await fetch('/api/admin/config');
+            this.fieldCfg = await r.json();
+          } catch (e) { console.error('config error', e); }
+        },
+
+        async loadAll() {
+          this.loading = true;
+          try {
+            const [s, zh, zp, cmp] = await Promise.all([
+              fetch(`/api/report/summary?days=${this.days}`).then(r => r.json()),
+              fetch(`/api/report/zone-history?days=${this.days}&resolution=${this.resolution}`).then(r => r.json()),
+              fetch(`/api/report/zone-performance?days=${this.days}`).then(r => r.json()),
+              fetch('/api/report/comparison').then(r => r.json()),
+            ]);
+            this.summary = s;
+            this.zoneHistory = zh;
+            this.zonePerf = zp;
+            this.comparison = cmp;
+          } catch (e) {
+            console.error('load error', e.message, e.stack);
+          }
+          this.loading = false;
+          setTimeout(() => setTimeout(() => {
+            this.renderZoneCharts();
+          }, 200), 0);
+        },
+
+        async changePeriod(d) {
+          this.days = d;
+          await this.loadAll();
+        },
+
+        exportCSV() {
+          window.open(`/api/report/export/csv?days=${this.days}`, '_blank');
+        },
+
+        exportTraceability() {
+          window.location.href = '/trazabilidad';
+        },
+
+        renderZoneCharts() {
+          if (!this.zoneHistory || !this.zoneHistory.labels || !this.zoneHistory.labels.length) return;
+          const labels = this.zoneHistory.labels;
+          const rain   = this.zoneHistory.rain_mm;
+
+          // Destruir charts anteriores
+          Object.values(this.zoneCharts).forEach(c => c.destroy());
+          this.zoneCharts = {};
+
+          this.zoneHistory.zones.forEach((zone, zi) => {
+            const box = document.getElementById('zoneChartBox_' + zone.zone_id);
+            if (!box || box.clientWidth === 0) {
+              setTimeout(() => this.renderZoneCharts(), 150);
+              return;
+            }
+            box.innerHTML = '';
+            const canvas = document.createElement('canvas');
+            canvas.width = box.clientWidth;
+            canvas.height = 220;
+            box.appendChild(canvas);
+
+            const color = COLORS[zi % COLORS.length];
+            const datasets = [
+              // CWSI line (eje izquierdo)
+              {
+                type: 'line',
+                label: 'CWSI',
+                data: zone.cwsi,
+                borderColor: color,
+                backgroundColor: color + '18',
+                borderWidth: 2,
+                pointRadius: this.resolution === 'daily' ? 3 : 1,
+                tension: 0.3,
+                fill: false,
+                spanGaps: true,
+                yAxisID: 'y',
+                order: 1,
+              },
+              // Umbrales
+              {
+                type: 'line',
+                label: 'Umbral medio',
+                data: labels.map(() => 0.30),
+                borderColor: '#F39C12',
+                borderWidth: 1,
+                borderDash: [5, 5],
+                pointRadius: 0,
+                fill: false,
+                yAxisID: 'y',
+                order: 2,
+              },
+              {
+                type: 'line',
+                label: 'Umbral alto',
+                data: labels.map(() => 0.60),
+                borderColor: '#E74C3C',
+                borderWidth: 1,
+                borderDash: [5, 5],
+                pointRadius: 0,
+                fill: false,
+                yAxisID: 'y',
+                order: 3,
+              },
+              // Riego (eje derecho)
+              {
+                type: 'bar',
+                label: 'Riego (min)',
+                data: zone.irrigation_min,
+                backgroundColor: '#2980B9AA',
+                borderColor: '#2980B9',
+                borderWidth: 1,
+                yAxisID: 'y1',
+                order: 4,
+              },
+              // Lluvia (eje derecho)
+              {
+                type: 'bar',
+                label: 'Lluvia (mm)',
+                data: rain,
+                backgroundColor: '#85C1E9AA',
+                borderColor: '#85C1E9',
+                borderWidth: 1,
+                yAxisID: 'y1',
+                order: 5,
+              },
+            ];
+
+            this.zoneCharts[zone.zone_id] = new Chart(canvas.getContext('2d'), {
+              type: 'line',
+              data: { labels, datasets },
+              options: {
+                responsive: false,
+                animation: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                  y: {
+                    min: 0, max: 1,
+                    title: { display: true, text: 'CWSI', font: { size: 11 } },
+                    position: 'left',
+                  },
+                  y1: {
+                    min: 0,
+                    title: { display: true, text: 'Riego (min) / Lluvia (mm)', font: { size: 10 } },
+                    position: 'right',
+                    grid: { drawOnChartArea: false },
+                  },
+                  x: {
+                    ticks: { maxTicksLimit: 10, maxRotation: 40, font: { size: 9 } },
+                  },
+                },
+                plugins: {
+                  legend: { position: 'top', labels: { boxWidth: 10, font: { size: 10 } } },
+                },
+              },
+            });
+          });
+        },
+      };
+    }
+  </script>
+</body>
+</html>
