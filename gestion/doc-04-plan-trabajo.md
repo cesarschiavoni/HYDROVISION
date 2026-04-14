@@ -44,14 +44,14 @@ Pre-entrenamiento del backbone en 50.000 imágenes públicas (transfer learning)
 Accuracy > 85% en set de validación independiente (120 frames reales no vistos). Latencia < 200ms en ESP32-S3. Modelo INT8 deployado.
 Fase 3Integración
 Mes 10–12
-Integración completa del nodo. Pruebas LoRaWAN. Validación del control de riego autónomo integrado en nodo Tier 2: el nodo decide localmente cuándo regar según HSI (histéresis 0.30/0.20), activa solenoide Rain Bird vía GPIO → SSR en viñedo Colonia Caroya (fila 1, 0% ETc — activación automática de control de riego). El servidor recibe estado vía payload `/ingest`. Override manual disponible vía API REST. Conectividad dual validada en campo (viñedo Colonia Caroya): router 4G Teltonika RUT241 como opción principal + Starlink Mini X como prueba de integración del dispositivo (TRL 4). Prueba de autonomía 72h. Validación de campo en Bodega Estancia Las Cañitas (Gabriel Campana) con al menos 2 variedades distintas. Ximena Crespo: presentación solicitud de patente INPI. Documentación TRL 4 completa.
+Integración completa del nodo. Pruebas LoRaWAN. Validación del control de riego autónomo integrado en nodo Tier 2: el nodo decide localmente cuándo regar según HSI (histéresis 0.30/0.20), activa solenoide Rain Bird vía GPIO → SSR en viñedo Colonia Caroya (fila 1, 0% ETc — activación automática de control de riego). El servidor recibe estado vía payload `/ingest`. Override manual disponible vía API REST. Conectividad dual validada en campo (viñedo Colonia Caroya): router 4G Teltonika RUT241 como opción principal + Starlink Mini X como prueba de integración del dispositivo (TRL 4). Prueba de autonomía 72h. Ximena Crespo: presentación solicitud de patente INPI. Documentación TRL 4 completa.
 Sistema integrado 72h. Control riego autónomo demostrado (nodo Tier 2). Dashboard web con mapa de estrés georreferenciado. Conectividad dual (4G + Starlink) validada. Patente presentada. Nota: app móvil y onboarding QR son entregables de TRL 5.
 
 
 ### 6A. Gate Reviews — Métricas de Avance por Fase
 
 
-Cada fase culmina en un Gate Review con métricas objetivas que determinan el avance al siguiente bloque. César Schiavoni (Project Leader) preside cada revisión. Participan según su área: Lucas Bergon (hardware), Inv. Art. 32 (validación datos/señales), Matías Tregnaghi (finanzas), Dra. Monteoliva (validación agronómica), Ximena Crespo (PI en Gate 3), Gabriel Campana (validación de campo en Gate 3).
+Cada fase culmina en un Gate Review con métricas objetivas que determinan el avance al siguiente bloque. César Schiavoni (Project Leader) preside cada revisión. Participan según su área: Lucas Bergon (hardware), Inv. Art. 32 (validación datos/señales), Matías Tregnaghi (finanzas), Dra. Monteoliva (validación agronómica), Ximena Crespo (PI en Gate 3).
 
 Gate
 Fecha aprox.

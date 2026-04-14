@@ -1,7 +1,7 @@
 # R10 -- Template de Entrevistas con Productores
 ## HydroVision AG -- Validacion Comercial TRL 4
 **Entrevistadores:** Cesar Schiavoni + Lucas Bergon
-**Periodo:** Mes 10-12 | Campanas externas (Mendoza x2, San Juan x1, Las Canitas x1)
+**Periodo:** TRL 5+ | Campanas externas (Las Canitas, Mendoza, San Juan). Template listo en TRL 4 — ejecucion en TRL 5.
 **Objetivo:** Documentar disposicion a pagar, objeciones, requisitos de usabilidad y sugerencias. Input directo para plan comercial TRL 5-6.
 
 ---

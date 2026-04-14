@@ -100,8 +100,8 @@
 |   Validacion simulador vs. datos Scholander reales      |    |    |    |    |    |    | XX | XX | XX |    |    |    |
 |   Co-autoria publicacion cientifica                     |    |    |    |    |    |    |    |    |    | XX | XX | XX |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
-| **CAMPANAS EXTERNAS (César + Lucas)                    ** |     |     |     |     |     |     |     |     |     |     |     |     |
-|   Campaña Bodega Las Canitas (Gabriel Campana)          |     |     |     |     |     |     |     |     |     |     |  V1  |     |
+| **CAMPANAS EXTERNAS — TRL 5+                           ** |     |     |     |     |     |     |     |     |     |     |     |     |
+|   Campaña Bodega Las Canitas (TRL 5)                    |     |     |     |     |     |     |     |     |     |     |     |     |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
 | **PROPIEDAD INTELECTUAL (Ximena Crespo)                ** |     |     |     |     |     |     |     |     |     |     |     |     |
 |   Busqueda formal anterioridad INPI+EPO+USPTO           | XX | XX | XX |    |    |    |    |    |    |    |    |    |

@@ -137,7 +137,7 @@ Sí. La demanda está validada en dos dimensiones:
 
 **Cuantitativa:** ~447.700 ha de cultivos de alto valor con riego tecnificado en Argentina (vid 200.000 ha · citrus 130.000 ha · olivo 70.000 ha · pistacho 25.000 ha · nogal 15.000 ha · otros 7.700 ha), más ~307.000 ha en Chile. Ninguna cuenta con monitoreo hídrico foliar autónomo. El valor de producción en riesgo supera USD 498 millones anuales. La solución israelí más avanzada (Phytech/Netafim) no penetró el mercado latinoamericano por precio prohibitivo, barreras de importación, dependencia de internet en zonas rurales y ausencia de soporte local — dejando el segmento mediano (20–200 ha) sin cobertura.
 
-**Cualitativa:** entrevistas preliminares con productores de vid en Colonia Caroya confirman disposición a pagar por detección de estrés antes del síntoma visible. El principal freno identificado es el costo de implementación — que el modelo de fusión satelital con densidad híbrida reduce sustancialmente. En TRL 4 se ejecuta un contacto inicial en campaña Bodega Las Cañitas (R10 — template de entrevistas listo). Las entrevistas formales con ≥5 productores en Mendoza y San Juan y el motor R15 son TRL 5.
+**Cualitativa:** entrevistas preliminares con productores de vid en Colonia Caroya confirman disposición a pagar por detección de estrés antes del síntoma visible. El principal freno identificado es el costo de implementación — que el modelo de fusión satelital con densidad híbrida reduce sustancialmente. En TRL 4 se prepara el template de entrevistas (R10) y el plan comercial. Las entrevistas formales con ≥5 productores (Las Cañitas, Mendoza, San Juan) y el motor R15 se ejecutan en TRL 5.
 
 ---
 
@@ -210,7 +210,7 @@ Inversores objetivo post-TRL 4: The Yield Lab LATAM (fondo AgTech LAC), Innventu
 - Validación del índice HSI en campo: coherencia entre CWSI medido y MDS dendrométrico en las 10 filas (5 de calibración + 5 de producción). Protocolo de desacuerdo de señales verificado con eventos de viento Zonda simulado.
 
 **Validación comercial (TRL 4 — paralela a la técnica):**
-- Contacto inicial con productores en campaña Bodega Las Cañitas (Resultado R10 — template de entrevistas estructuradas listo, primeras conversaciones). Las entrevistas formales con ≥5 productores en Mendoza y San Juan son TRL 5.
+- Template de entrevistas comerciales estructuradas listo (Resultado R10 — 17 preguntas, plan de ejecución). Las entrevistas formales con ≥5 productores (Las Cañitas, Mendoza, San Juan) son TRL 5.
 - Motor de propuesta automatizada (R15 — TRL 5): análisis multi-satélite histórico de ≥3 campos de productores candidatos — Landsat 8/9 (10 años de variabilidad NDVI) + Sentinel-2 (últimas 3 temporadas) para estratificar homogeneidad del lote por zonas, calcular densidad híbrida recomendada y estimar ROI personalizado. Generación de mapa de nodos + propuesta en PDF en < 5 minutos.
 - Instalación del sistema en el viñedo propio como caso de demostración para visitas de potenciales clientes. Objetivo: 2 visitas de productores documentadas antes del Mes 12.
 
@@ -355,8 +355,8 @@ El proyecto tiene una duración de 12 meses (Octubre 2026 – Septiembre 2027). 
 | Sesión 4 — Pre-cosecha final \| validación | | | | | S4 | | | | | | | |
 | Validación simulador vs. datos Scholander reales | | | | | | | XX | XX | XX | | | |
 | Co-autoría publicación científica | | | | | | | | | | XX | XX | XX |
-| **CAMPAÑAS EXTERNAS (César + Lucas)** | | | | | | | | | | | | |
-| Campaña Bodega Las Cañitas (Gabriel Campana) | | | | | | | | | | | V1 | |
+| **CAMPAÑAS EXTERNAS — TRL 5+** | | | | | | | | | | | | |
+| Campaña Bodega Las Cañitas (TRL 5) | | | | | | | | | | | | |
 | **PROPIEDAD INTELECTUAL (Ximena Crespo)** | | | | | | | | | | | | |
 | Búsqueda formal anterioridad INPI+EPO+USPTO | XX | XX | XX | | | | | | | | | |
 | Redacción reivindicaciones + descripción técnica | | | | | | | | | XX | XX | XX | |
