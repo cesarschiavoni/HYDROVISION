@@ -22,7 +22,7 @@ El sistema está construido e instrumentado. Lo que define si funciona es valida
 
 *¿El CWSI calculado por el nodo a partir de la temperatura del dosel predice con precisión el potencial hídrico foliar real de la planta (medido con bomba de Scholander)?*
 
-La validación combina tres señales: temperatura del dosel (cámara térmica), variación de diámetro de tronco (dendrómetro, señal ADC continua) y Ψstem (bomba de Scholander, ejecutada por la Dra. Mariela Monteoliva de INTA-CONICET). El trabajo estadístico involucra calibración por regresión individual de 6 sensores dendrómetro (con corrección de deriva térmica e histéresis), diseño óptimo de experimentos (OED), análisis de correlaciones cruzadas y validación de métricas TRL 4 con plots Bland-Altman. Es exactamente el tipo de problema de adquisición y procesamiento de señales en el que G.In.T.E.A tiene trayectoria.
+La validación combina tres señales: temperatura del dosel (cámara térmica), variación de diámetro de tronco (dendrómetro, señal ADC continua) y Ψstem (bomba de Scholander, ejecutada por la Dra. Mariela Monteoliva de INTA-CONICET). El trabajo estadístico involucra calibración por regresión individual de 5 sensores dendrómetro (con corrección de deriva térmica e histéresis), diseño óptimo de experimentos (OED), análisis de correlaciones cruzadas y validación de métricas TRL 4 con plots Bland-Altman. Es exactamente el tipo de problema de adquisición y procesamiento de señales en el que G.In.T.E.A tiene trayectoria.
 
 **Lo que ofrecemos**
 

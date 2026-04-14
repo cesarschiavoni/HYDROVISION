@@ -74,10 +74,10 @@ Donde:
 
 **Mecanismo de confianza dinamica con mitigacion multinivel (novedad):** El sistema implementa 9 capas de defensa contra el artefacto de viento: (1) orientacion a sotavento — camara apunta al lado opuesto al viento dominante, plantas como barrera (~60-70% reduccion); (2) shelter anti-viento SHT31; (3) tubo colimador IR (PVC 110mm x 250mm); (4) termopar foliar Type T 0.1mm — ground truth por contacto, correccion IR en tiempo real; (5) buffer termico con filtro de calma (5 muestras, mediana con viento <2 m/s). Los pesos w_cwsi y w_mds se ajustan automaticamente con rampa gradual:
 - Viento ≤ 4 m/s: w_cwsi = 0.35, w_mds = 0.65 (pesos nominales — las capas fisicas mantienen error CWSI en ±0.03)
-- Viento 4-12 m/s (14-43 km/h): w_cwsi se reduce linealmente de 0.35 a 0 (rampa gradual)
-- Viento ≥ 12 m/s (43 km/h): w_cwsi = 0, w_mds = 1.0 (conmutacion total a dendrometria)
+- Viento 4-18 m/s (14-65 km/h): w_cwsi se reduce linealmente de 0.35 a 0 (rampa gradual, extendida por mitigaciones v2)
+- Viento ≥ 18 m/s (65 km/h): w_cwsi = 0, w_mds = 1.0 (conmutacion total a dendrometria)
 
-Esto resuelve el principal artefacto del CWSI termico: el enfriamiento convectivo artificial de la hoja por viento, que produce subestimacion del estres (Jones 2004). El rango util del CWSI se extiende de 0-4 m/s a 0-8 m/s gracias a las mitigaciones fisicas.
+Esto resuelve el principal artefacto del CWSI termico: el enfriamiento convectivo artificial de la hoja por viento, que produce subestimacion del estres (Jones 2004). El rango util del CWSI se extiende de 0-4 m/s a 0-18 m/s gracias a las mitigaciones fisicas y algoritmicas v2.
 
 **Reivindicacion sugerida 2:** Un metodo para estimar el estado hidrico de un cultivo que comprende: (a) calcular un indice termico (CWSI) a partir de imagenes infrarrojas de la hoja, (b) calcular un indice dendrometrico (MDS) a partir de micro-contracciones del tronco, y (c) fusionar ambos indices con pesos que se ajustan automaticamente segun la velocidad del viento medida en tiempo real, de modo que cuando el viento supera un umbral predeterminado, el peso del indice termico se reduce a cero y la estimacion se basa exclusivamente en la dendrometria.
 

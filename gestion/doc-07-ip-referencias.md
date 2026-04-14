@@ -31,7 +31,7 @@ Las reivindicaciones centrales de la solicitud INPI cubren cinco elementos indep
 | 2 | **Arquitectura PINN embebida** | PINN con ecuación CWSI (Jackson 1981) en función de pérdida · inferencia edge sin conectividad | Primer PINN de CWSI con termografía embebida en campo documentado — sin anterioridad en INPI, USPTO ni EPO |
 | 3 | **Motor fenológico autónomo** | GDD con detección brotación por convergencia térmica+GDD · cambio automático coeficientes CWSI · modo hibernación | Fenología automática integrada en nodo edge sin configuración ni intervención humana |
 | 4 | **Red nodo-satélite calibrada** | Fusión CWSI↔NDWI: nodo terrestre calibra píxeles Sentinel-2 en todo el lote | 1 nodo calibra ~50 ha — densidad mínima de hardware para mapa de campo completo |
-| 5 | **HSI con confianza dinámica y mitigación multinivel** | Fusión CWSI + MDS ponderada por R²(ψ_stem) · 9 capas de mitigación de viento (sotavento, shelter, tubo colimador IR, termopar foliar, buffer calma, rampa gradual 4-12 m/s / 14-43 km/h) · ≥12 m/s → 100% MDS automático | Primer sistema termografía + dendrometría + mitigación física multinivel + confianza contextual por viento en nodo autónomo — sin anterioridad |
+| 5 | **HSI con confianza dinámica y mitigación multinivel** | Fusión CWSI + MDS ponderada por R²(ψ_stem) · 9 capas de mitigación de viento (sotavento, shelter, tubo colimador IR, termopar foliar, buffer calma, rampa gradual 4-18 m/s / 14-65 km/h) · ≥18 m/s → 100% MDS automático | Primer sistema termografía + dendrometría + mitigación física multinivel + confianza contextual por viento en nodo autónomo — sin anterioridad |
 
 ### 9B. Secreto Comercial — Activos No Patentables
 

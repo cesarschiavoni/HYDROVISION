@@ -171,7 +171,7 @@ def generate_large_dataset(
         hf.attrs["seed"] = seed
         hf.attrs["regimes"] = json.dumps(ETC_REGIMES)
         hf.attrs["hours"] = json.dumps(list(HOURS))
-        hf.attrs["sensor"] = "FLIR Lepton 3.5 (160×120 px, NETD 50mK)"
+        hf.attrs["sensor"] = "FLIR Lepton 3.5 (160×120 px, NETD 50mK) — synthetic pre-training (campo: MLX90640 32×24)"
         hf.attrs["cultivar"] = "Malbec (Colonia Caroya, Córdoba)"
         hf.attrs["protocol"] = "ANPCyT Startup 2025 TRL 3-4"
 

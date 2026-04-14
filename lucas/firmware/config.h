@@ -145,10 +145,16 @@
 // TC_BLEND_K = factor de corrección (0.0 = solo IR, 1.0 = solo termopar)
 // Valor inicial 0.6 — calibrar en campo con Scholander por varietal.
 // ─────────────────────────────────────────
+// Termopar 1 (principal) — MAX31855 SPI
 #define PIN_TC_CS               25      // GPIO chip select MAX31855 (SPI compartido)
 #define TC_BLEND_K              0.6f    // factor de corrección IR↔termopar (calibrar en campo)
 #define TC_MIN_VALID_C          5.0f    // °C mín para considerar lectura válida (descarta fallas)
 #define TC_MAX_VALID_C          60.0f   // °C máx para considerar lectura válida
+// Termopar 2 (redundancia + promediado)  [A3]
+// Segundo termopar en hoja separada del mismo canopeo. Si ambos válidos,
+// se promedian antes del blending con IR → reduce error contacto ÷√2.
+#define PIN_TC2_CS              26      // GPIO chip select MAX31855 #2 (SPI compartido)
+#define TC2_ENABLED             true    // false si no hay segundo termopar instalado
 
 // ─────────────────────────────────────────
 // Alertas físicas — REMOVIDO
@@ -203,25 +209,32 @@
 //   WIND_RAMP_LO < v < WIND_RAMP_HI → rampa lineal (0.35 → 0.00)
 //   viento >= WIND_RAMP_HI → w_cwsi = 0.00 (backup 100% MDS)
 //
-// Con orientación a sotavento (60-70%), tubo colimador y termopar, el viento
-// efectivo en la hoja medida es ~30-40% del medido en el anemómetro.
-// 12 m/s medido ≈ 3.6-4.8 m/s en hoja → límite útil del CWSI con mitigaciones.
+// Con orientación a sotavento (60-70%), tubo colimador, termopar con Kalman [B5],
+// Muller gbh [C4], buffer Hampel [B2] y segundo termopar [A3], el viento efectivo
+// en la hoja medida es ~30-40% del medido en el anemómetro y la medición se corrige
+// dinámicamente. 18 m/s medido ≈ 5.4-7.2 m/s en hoja → límite útil del CWSI con
+// mitigaciones v2 firmware. Backend extiende a 21-22 m/s con ML (C1, C2, C6).
 #define WIND_RAMP_LO            4.0f        // m/s (14 km/h) — inicio de reducción peso CWSI
-#define WIND_RAMP_HI           12.0f        // m/s (43 km/h) — override total a 100% MDS
+#define WIND_RAMP_HI           18.0f        // m/s (65 km/h) — override total a 100% MDS
 #define HSI_ALERT_THRESHOLD     0.70f       // HSI >= esto → topic /alert
 #define LLUVIA_MIN_MM           5.0f        // umbral para auto-calibración Tc_wet
 #define MDS_CAL_MAX_MM          0.05f       // MDS < esto = planta bien hidratada
 
 // ─────────────────────────────────────────
-// Buffer térmico con filtro por calma
-// El nodo toma múltiples lecturas térmicas durante el ciclo de captura
-// y solo usa las que coinciden con viento < WIND_CALM_MS.
-// Si ninguna lectura cumple el filtro, se usa la mediana de todas.
-// Esto reduce el ruido por movimiento de hoja y convección forzada.
+// Buffer térmico adaptativo con filtro Hampel + calma  [B1+B2]
+// El nodo toma hasta THERMAL_BUFFER_MAX lecturas térmicas por ciclo.
+// Si alcanza THERMAL_BUFFER_MIN lecturas en calma antes, para (ahorra tiempo).
+// Selección: filtro Hampel (MAD) sobre lecturas en calma, o todas si no hay calma.
+// Hampel reemplaza outliers con la mediana antes de promediar → más preciso que
+// mediana sola y más robusto que promedio (reduce NETD efectivo ~40%).
 // ─────────────────────────────────────────
-#define THERMAL_BUFFER_SIZE     5           // lecturas térmicas por ciclo de captura
-#define THERMAL_SAMPLE_DELAY_MS 2000        // ms entre lecturas (total: 5 × 2s = 10s)
+#define THERMAL_BUFFER_MIN      5           // mín lecturas antes de evaluar parada temprana
+#define THERMAL_BUFFER_MAX     15           // máx lecturas por ciclo (total: 15 × 1s = 15s)
+#define THERMAL_SAMPLE_DELAY_MS 1000        // ms entre lecturas (1s para capturar micro-calmas)
 #define WIND_CALM_MS            2.0f        // m/s — umbral de calma para filtro térmico
+#define HAMPEL_K                3.0f        // factor MAD para detección de outliers Hampel
+// Backward compat alias
+#define THERMAL_BUFFER_SIZE     THERMAL_BUFFER_MAX
 
 // ─────────────────────────────────────────
 // HW-02 — Activación adaptativa del MLX90640
@@ -271,6 +284,78 @@
 #endif
 // NOTA firmware: driver_mlx90640.h usa SENSOR_TERM_W/H/ADDR en lugar de 32/24/0x33.
 // Pendiente: validar protocolo HMS-C11L contra datasheet (API I2C ligeramente distinta).
+
+// ─────────────────────────────────────────
+// Referencia dual Muller (gbh desde ΔT aluminio)  [C4]
+// Dos placas de aluminio (5×5 cm) en bracket: una negra (ε=0.95), una blanca (ε=0.15).
+// Misma masa térmica, distinta absorción solar → ΔT entre ellas permite derivar
+// conductancia de boundary layer (gbh) sin anemómetro, en el micro-sitio exacto.
+// Corrección T_leaf: T_corr = T_leaf - (T_leaf - T_air) × (1 - gbh_local/gbh_ref)
+// Referencia: Muller et al. (2021) New Phytologist 232:2535-2546.
+// ─────────────────────────────────────────
+#define PIN_MULLER_ENABLED      true        // false si no hay placas Muller instaladas
+// Posición en frame MLX90640 (píxeles fijos, calibrar en instalación)
+#define MULLER_BLACK_ROW_INI    20          // fila inicio placa negra
+#define MULLER_BLACK_ROW_FIN    22          // fila fin
+#define MULLER_BLACK_COL_INI    2           // col inicio
+#define MULLER_BLACK_COL_FIN    5           // col fin
+#define MULLER_WHITE_ROW_INI    20          // fila inicio placa blanca
+#define MULLER_WHITE_ROW_FIN    22
+#define MULLER_WHITE_COL_INI    27
+#define MULLER_WHITE_COL_FIN    30
+#define MULLER_GBH_REF          0.05f       // gbh de referencia [m/s] (calma, ~0.5 m/s viento)
+// Propiedades térmicas del aluminio (para cálculo de gbh)
+#define MULLER_RHO_CP           2400000.0f  // ρ×Cp aluminio [J/m³/K]
+#define MULLER_THICKNESS_M      0.002f      // espesor placa [m] (2mm)
+#define MULLER_ALPHA_BLACK      0.95f       // absortividad placa negra
+#define MULLER_ALPHA_WHITE      0.15f       // absortividad placa blanca
+
+// ─────────────────────────────────────────
+// Anemómetro ultrasónico 2D (alternativa al mecánico)  [A1]
+// Mismo bus RS485, cambio de registros Modbus. Detección automática por ID.
+// Ventajas: sin partes móviles, 10-20 Hz, detección de ráfagas <1s,
+// mide dirección (valida que sotavento funciona en ese instante).
+// ─────────────────────────────────────────
+#define ANEMO_TYPE_MECHANICAL   0
+#define ANEMO_TYPE_ULTRASONIC   1
+#define ANEMO_TYPE              ANEMO_TYPE_MECHANICAL  // ← cambiar si se instala ultrasónico
+#define ANEMO_ULTRA_REG_SPEED   0x0000      // registro velocidad (m/s × 10)
+#define ANEMO_ULTRA_REG_DIR     0x0001      // registro dirección (grados 0-359)
+#define ANEMO_ULTRA_SCALE       0.1f
+
+// ─────────────────────────────────────────
+// Quality score continuo  [B6]
+// Score 0-100 que pondera la confianza de cada lectura CWSI según condiciones.
+// El backend puede hacer promedios ponderados por calidad.
+// ─────────────────────────────────────────
+#define QS_WIND_PENALTY_PER_MS  5.0f        // puntos por cada m/s sobre 4
+#define QS_CALM_BONUS           10.0f       // bonus si >50% muestras en calma
+#define QS_NO_TC_PENALTY        15.0f       // penalización sin termopar
+#define QS_LOW_RAD_PENALTY      20.0f       // penalización rad < 400 W/m²
+#define QS_LOW_VPD_PENALTY      15.0f       // penalización VPD < 0.5 kPa
+#define QS_MULLER_BONUS         5.0f        // bonus si corrección Muller disponible
+
+// ─────────────────────────────────────────
+// Captura oportunista en calma  [B3]
+// Si el viento promedio del último minuto baja de WIND_CALM_MS entre ciclos
+// normales (15 min), hacer captura extra adelantada.
+// Máximo OPORT_MAX_PER_HOUR capturas extra por hora para no agotar batería.
+// ─────────────────────────────────────────
+#define OPORT_ENABLED           true
+#define OPORT_MAX_PER_HOUR      2           // máx capturas oportunistas por hora
+#define OPORT_WIND_AVG_WINDOW   60          // segundos de promedio para evaluar calma
+
+// ─────────────────────────────────────────
+// Filtro Kalman para fusión IR-termopar  [B5]
+// Ajusta el peso IR↔termopar dinámicamente según la confianza de cada sensor.
+// Viento bajo → IR y termopar coinciden → más peso a IR (más píxeles).
+// Viento alto → divergen → más peso al termopar (inmune a convección).
+// ─────────────────────────────────────────
+#define KALMAN_ENABLED          true
+#define KALMAN_Q                0.01f       // process noise (varianza predicción)
+#define KALMAN_R_IR_BASE        0.04f       // measurement noise IR base (varianza)
+#define KALMAN_R_IR_WIND_SCALE  0.02f       // incremento R_IR por m/s de viento
+#define KALMAN_R_TC             0.01f       // measurement noise termopar (fijo, bajo)
 
 // ─────────────────────────────────────────
 // MDS — normalización (sacar de nodo_main.ino → centralizar aquí)

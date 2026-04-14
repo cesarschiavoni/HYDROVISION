@@ -1,6 +1,6 @@
 
 # AVAL CIENTÍFICO Y CARTA DE PARTICIPACIÓN
-## Dra. Mariela Inés Monteoliva — INTA EEA Córdoba / CONICET
+## Dra. Mariela Inés Monteoliva — IFRGV-UDEA, INTA-CONICET, CCT Córdoba
 ## Proyecto HydroVision AG — Convocatoria STARTUP 2025 TRL 3-4 — ANPCyT/FONARSEC
 
 ---
@@ -13,7 +13,7 @@ Córdoba, Abril de 2026
 
 ---
 
-Por medio de la presente, la suscripta **Dra. Mariela Inés Monteoliva**, Investigadora Adjunta del INTA EEA Córdoba con lugar de trabajo en el CONICET, DNI [N°], CUIT [N°], declara su participación voluntaria y confirma su aval científico al proyecto **"Plataforma Autónoma de Inteligencia Agronómica para Cultivos de Alto Valor mediante Termografía LWIR, Motor Fenológico Automático y Fusión Satelital con IA Edge"**, presentado por HydroVision AG ante ANPCyT en el marco de la convocatoria STARTUP 2025 TRL 3-4.
+Por medio de la presente, la suscripta **Dra. Mariela Inés Monteoliva**, Investigadora Adjunta del CONICET con lugar de trabajo en el IFRGV-UDEA, INTA CIAP, CCT Córdoba, DNI [N°], CUIT [N°], declara su participación voluntaria y confirma su aval científico al proyecto **"Plataforma Autónoma de Inteligencia Agronómica para Cultivos de Alto Valor mediante Termografía LWIR, Motor Fenológico Automático y Fusión Satelital con IA Edge"**, presentado por HydroVision AG ante ANPCyT en el marco de la convocatoria STARTUP 2025 TRL 3-4.
 
 ---
 
@@ -51,7 +51,7 @@ Me comprometo a capacitar a los técnicos de campo del proyecto (Javier y Franco
 
 1. Participo voluntariamente como **asesora científica** del proyecto HydroVision AG en el marco de la convocatoria STARTUP 2025 TRL 3-4 de ANPCyT.
 
-2. Mi participación es **compatible con mis obligaciones institucionales** en INTA EEA Córdoba y CONICET. La asesoría científica se realiza en el marco de mis funciones de investigación y transferencia tecnológica, sin incompatibilidad con el régimen de dedicación exclusiva.
+2. Mi participación es **compatible con mis obligaciones institucionales** en INTA CIAP (IFRGV-UDEA) y CONICET. La asesoría científica se realiza en el marco de mis funciones de investigación y transferencia tecnológica, sin incompatibilidad con el régimen de dedicación exclusiva.
 
 3. **No tengo participación accionaria** en HydroVision AG SAS ni relación comercial con la empresa.
 
@@ -81,8 +81,8 @@ Sin otro particular, quedo a disposición para ampliar cualquier información t�
 
 **Dra. Mariela Inés Monteoliva**  
 Investigadora Adjunta  
-INTA EEA Córdoba  
-CONICET — Centro de Investigaciones Agropecuarias (CIAP)  
+IFRGV-UDEA, INTA CIAP, CCT Córdoba  
+CONICET — Investigadora Adjunta  
 Camino 60 Cuadras Km 5.5 — X5020ICA Córdoba, Argentina  
 Tel.: [N°]  
 Email: [email institucional]  

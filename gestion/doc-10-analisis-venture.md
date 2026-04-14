@@ -439,8 +439,8 @@ cliente pagante, no el quinto. CAC es mínimo porque el dolor es máximo.
 hoja que reduce su temperatura 1-2°C. El CWSI calculado sub-estima el estrés real.
 En San Juan, el Zonda ocurre 15-30 días/temporada. El sistema implementa 9 capas de
 mitigación (orientación sotavento, shelter SHT31, tubo colimador IR, termopar foliar,
-buffer térmico con filtro de calma, rampa gradual 4-12 m/s / 14-43 km/h que reduce
-progresivamente el peso del CWSI, y backup 100% MDS a partir de 12 m/s / 43 km/h).
+buffer térmico con filtro de calma, rampa gradual 4-18 m/s / 14-65 km/h que reduce
+progresivamente el peso del CWSI, y backup 100% MDS a partir de 18 m/s / 65 km/h).
 
 **🔴 WTP = 3 — ADVERTENCIA:**
 El productor no sabe que este problema existe. Nunca recibió un CWSI corregido por viento

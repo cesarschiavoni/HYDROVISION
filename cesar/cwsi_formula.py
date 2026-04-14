@@ -136,25 +136,43 @@ class MeteoConditions:
     def is_valid_capture_window(self) -> bool:
         """
         Verifica condiciones optimas para captura CWSI (protocolo Monteoliva).
-        Requiere: radiacion >= 400 W/m2, VPD >= 0.5 kPa, viento <= 8 m/s.
-        Nota: con sotavento+tubo+termopar, 12 m/s en anemometro ≈ 3.6-4.8 m/s en hoja.
+        Requiere: radiacion >= 400 W/m2, VPD >= 0.5 kPa, viento <= 18 m/s.
+        Nota: con mitigaciones v2 firmware (sotavento+tubo+termopar Kalman+Muller gbh+
+        Hampel+2do termopar), 18 m/s en anemometro ≈ 5.4-7.2 m/s en hoja.
         """
         return (
             self.solar_rad >= 400        # W/m2 — sol suficiente para diferencial termico
             and self.VPD >= 0.5          # kPa  — diferencial foliar medible
-            and self.wind_speed <= 12.0  # m/s (43 km/h) — limite con mitigacion fisica
+            and self.wind_speed <= 18.0  # m/s (65 km/h) — limite con mitigacion v2 firmware
+        )
+
+    @property
+    def aerodynamic_resistance(self) -> float:
+        """
+        Resistencia aerodinamica [s/m] — FAO-56 simplificado para vid.
+        ra = 208 / u  (Allen et al. 1998)
+        Consistente con investigador/01_simulador/weather.py.
+        """
+        return max(208.0 / max(self.wind_speed, 0.5), 20.0)
+
+    @property
+    def delta_sat(self) -> float:
+        """Pendiente de la curva de presion de vapor de saturacion [kPa/K]."""
+        return (
+            4098.0 * 0.6108 * np.exp(17.27 * self.T_air / (self.T_air + 237.3))
+            / (self.T_air + 237.3) ** 2
         )
 
     @property
     def wind_cwsi_weight(self) -> float:
         """
         Peso del CWSI en el HSI segun viento (transicion gradual).
-        Consistente con firmware: rampa lineal 4-12 m/s.
+        Consistente con firmware: rampa lineal 4-18 m/s (v2 con Kalman+Muller+Hampel).
           <= 4 m/s (14 km/h)  → 0.35 (normal)
-          4-12 m/s (14-43 km/h) → rampa lineal 0.35 → 0.00
-          >= 12 m/s (43 km/h) → 0.00 (backup 100% MDS)
+          4-18 m/s (14-65 km/h) → rampa lineal 0.35 → 0.00
+          >= 18 m/s (65 km/h) → 0.00 (backup 100% MDS)
         """
-        RAMP_LO, RAMP_HI = 4.0, 12.0
+        RAMP_LO, RAMP_HI = 4.0, 18.0
         if self.wind_speed <= RAMP_LO:
             return 0.35
         if self.wind_speed >= RAMP_HI:
@@ -265,6 +283,73 @@ class CWSICalculator:
         else:
             return "ESTRES_CRITICO"
 
+    # ── CWSI teorico (Jackson 1981 con ra)  [C1] ─────────────────────────────
+
+    def cwsi_theoretical(self, T_leaf: float, meteo: MeteoConditions) -> dict:
+        """
+        CWSI teorico basado en balance energetico (Jackson et al. 1981).
+
+        A diferencia del CWSI empirico (baselines fijos por varietal), el teorico
+        calcula baselines dinamicos que se adaptan a viento y radiacion:
+
+          dT_LL = (ra·Rn / (rho·Cp)) × (gamma / (delta+gamma)) − (VPD / (delta+gamma))
+          dT_UL = ra·Rn / (rho·Cp)   (estomas completamente cerrados, sin transpiracion)
+
+        Donde:
+          ra    = resistencia aerodinamica [s/m] = 208/u (FAO-56)
+          Rn    = radiacion neta [W/m2]
+          delta = pendiente curva saturacion [kPa/K]
+          gamma = constante psicrométrica [kPa/K] ≈ 0.066
+          rho·Cp = 1200 [J/m3/K] (aire a 20°C)
+
+        Ventaja sobre empirico: baselines se ajustan por viento (+2 m/s de tolerancia).
+        Referencia: Jackson et al. (1981) WRR 17(4):1133-1138.
+        """
+        # Constantes atmosfericas
+        GAMMA = 0.066       # constante psicrometrica [kPa/K]
+        RHO_CP = 1200.0     # rho_air × Cp [J/m3/K]
+
+        ra = meteo.aerodynamic_resistance    # [s/m]
+        delta = meteo.delta_sat              # [kPa/K]
+        vpd = meteo.VPD                      # [kPa]
+        Rn = meteo.solar_rad * 0.75          # Rn ≈ 75% de radiacion global (aprox.)
+
+        # Termino de radiacion disponible
+        A = ra * Rn / RHO_CP   # [K] — calentamiento maximo posible
+
+        # Baseline inferior (planta bien hidratada, transpiracion maxima)
+        dT_ll_theo = A * GAMMA / (delta + GAMMA) - vpd / (delta + GAMMA)
+
+        # Baseline superior (estomas completamente cerrados)
+        dT_ul_theo = A  # sin transpiracion, toda la energia va a calentamiento
+
+        dT_measured = T_leaf - meteo.T_air
+        denominator = dT_ul_theo - dT_ll_theo
+
+        if denominator <= 0.1:
+            return {
+                "cwsi_theoretical": float('nan'),
+                "dT_LL_theo": float(dT_ll_theo),
+                "dT_UL_theo": float(dT_ul_theo),
+                "ra_sm": float(ra),
+                "status": "denominador_insuficiente",
+            }
+
+        cwsi_theo = float(np.clip(
+            (dT_measured - dT_ll_theo) / denominator, 0.0, 1.5
+        ))
+
+        return {
+            "cwsi_theoretical": cwsi_theo,
+            "dT_measured": float(dT_measured),
+            "dT_LL_theo": float(dT_ll_theo),
+            "dT_UL_theo": float(dT_ul_theo),
+            "ra_sm": float(ra),
+            "Rn_est": float(Rn),
+            "stress_level": self._classify(cwsi_theo),
+            "status": "ok",
+        }
+
     # ── Indice Jones (Ig) ───────────────────────────────────────────────────
 
     def jones_index(self, T_leaf: float, T_dry: float, T_wet: float) -> dict:
@@ -357,7 +442,7 @@ class CWSICalculator:
     def cwsi_batch(self, T_leaf_array: np.ndarray, meteo: MeteoConditions) -> np.ndarray:
         """
         Calcula CWSI para un array de temperaturas foliares (mapa de pixeles).
-        Usado para procesar frames termicos completos del FLIR Lepton 3.5.
+        Usado para procesar frames termicos completos del MLX90640 32×24.
         """
         dT = T_leaf_array - meteo.T_air
         dT_ll = self.delta_T_LL(meteo.VPD)

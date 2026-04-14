@@ -273,7 +273,7 @@ def validate_quantization_error(
 # CLI
 # ---------------------------------------------------------------------------
 _HERE = Path(__file__).resolve().parent      # 02_modelo/
-_REPO_ALEXIS = _HERE.parent                  # investigador/
+_INVESTIGADOR = _HERE.parent                  # investigador/
 
 
 def main():
@@ -282,10 +282,10 @@ def main():
     )
     parser.add_argument("--checkpoint", required=True,
                         help="Checkpoint PyTorch (.pt) — ej: ../models/checkpoints/best_finetune.pt")
-    parser.add_argument("--output", default=str(_REPO_ALEXIS / "models" / "edge"),
+    parser.add_argument("--output", default=str(_INVESTIGADOR / "models" / "edge"),
                         help="Directorio de salida (default: ../models/edge/)")
     parser.add_argument("--calibration-data",
-                        default=str(_REPO_ALEXIS / "data" / "dataset_sintetico_1M.h5"),
+                        default=str(_INVESTIGADOR / "data" / "dataset_sintetico_1M.h5"),
                         help="HDF5 para calibración INT8 (default: ../data/dataset_sintetico_1M.h5)")
     parser.add_argument("--skip-tflite", action="store_true",
                         help="No convertir a TFLite (solo ONNX)")

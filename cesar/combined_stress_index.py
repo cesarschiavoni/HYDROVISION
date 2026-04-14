@@ -10,7 +10,7 @@ El HSI (HydroVision Stress Index) es un indice compuesto que combina dos
 fuentes de informacion sobre el estado hidrico de la planta:
 
   1. CWSI termico (cwsi_formula.py):
-     - Fuente: temperatura foliar FLIR Lepton 3.5 + meteo
+     - Fuente: temperatura foliar MLX90640 32×24 + meteo
      - Ventaja: cobertura espacial, 50+ plantas por sesion
      - Limitacion: requiere ventana solar (11h-16h), R2=0.62-0.67 vs psi_stem
 
@@ -124,7 +124,7 @@ HSI_DISAGREEMENT_THRESHOLD_MPa = 0.35
 # Entre RAMP_LO y RAMP_HI: w_cwsi se reduce linealmente de 100% a 0%
 # Por encima de RAMP_HI: override total → 100% MDS dendrometrico
 WIND_RAMP_LO_MS = 4.0   # m/s — inicio de reduccion
-WIND_RAMP_HI_MS = 12.0  # m/s (43 km/h) — override completo con mitigaciones fisicas
+WIND_RAMP_HI_MS = 18.0  # m/s (65 km/h) — override completo con mitigaciones v2 firmware
 WIND_OVERRIDE_THRESHOLD_MS = WIND_RAMP_HI_MS  # backward compat
 
 # Umbral de rescate hidrico — Protocolo HydroVision AG
@@ -285,16 +285,16 @@ class CombinedStressEngine:
         T_leaf_c      : temperatura foliar [degC] (None si no disponible)
         meteo         : condiciones meteorologicas (None si no disponible)
         dendro_result : resultado diario del motor dendrometrico (None si no disponible)
-        wind_speed_ms : velocidad del viento [m/s]. Rampa gradual 4-12 m/s:
-                        entre 4 y 8 m/s el peso del CWSI se reduce linealmente.
-                        >= 8 m/s: override total → 100% MDS dendrometrico.
+        wind_speed_ms : velocidad del viento [m/s]. Rampa gradual 4-18 m/s:
+                        entre 4 y 18 m/s el peso del CWSI se reduce linealmente.
+                        >= 18 m/s: override total → 100% MDS dendrometrico.
         sensor_id     : identificador del nodo en campo
 
         Retorna HydroVisionStressIndex con psi_HSI fusionado.
         """
-        # Wind override: viento >= 8 m/s invalida completamente la señal termica
+        # Wind override: viento >= 18 m/s invalida completamente la señal termica
         wind_override = wind_speed_ms >= WIND_RAMP_HI_MS
-        # Factor de rampa gradual: 1.0 si <=4, 0.0 si >=8, lineal entre ambos
+        # Factor de rampa gradual: 1.0 si <=4, 0.0 si >=18, lineal entre ambos
         if wind_speed_ms <= WIND_RAMP_LO_MS:
             wind_cwsi_factor = 1.0
         elif wind_speed_ms >= WIND_RAMP_HI_MS:
@@ -497,7 +497,7 @@ if __name__ == "__main__":
 
     # ── Escenario wind override ───────────────────────────────────────────────
     print(f"\n{SEP}")
-    print("  Wind override — viento = 12 m/s -> 100% MDS dendrometrico (rampa gradual 4-12 m/s)")
+    print("  Wind override — viento = 18 m/s -> 100% MDS dendrometrico (rampa gradual 4-18 m/s)")
     print(SEP)
 
     hsi_wind = engine.fuse(T_leaf_c=37.0, meteo=meteo_stress,

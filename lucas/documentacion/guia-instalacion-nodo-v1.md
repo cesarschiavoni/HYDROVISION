@@ -117,7 +117,7 @@ Las secciones siguientes (0-9) describen la instalacion fisica de los nodos.
 
 El vinedo tiene **10 filas de 136m** (136 plantas por fila, espaciado 1m entre plantas, 3m entre filas).
 Cada fila recibe un **unico regimen hidrico** (la fila completa se riega igual). Las filas de
-tratamiento (75%, 50%, 25%, 0%) se intercalan con filas de control (100% ETc) que actuan como
+tratamiento (65%, 40%, 15%, 0%) se intercalan con filas de control (100% ETc) que actuan como
 **buffer hidrico** — evitan que el movimiento lateral de agua en el suelo entre filas contiguas
 contamine los tratamientos.
 
@@ -128,11 +128,11 @@ contamine los tratamientos.
 | 1 | 100% ETc | Buffer | — | — |
 | 2 | 100% ETc | **Control** | **Nodo 1** | Planta 68 (centro) |
 | 3 | 100% ETc | Buffer | — | — |
-| 4 | 75% ETc | **Tratamiento** | **Nodo 2** | Planta 68 (centro) |
+| 4 | 65% ETc | **Tratamiento** | **Nodo 2** | Planta 68 (centro) |
 | 5 | 100% ETc | Buffer | — | — |
-| 6 | 50% ETc | **Tratamiento** | **Nodo 3** | Planta 68 (centro) |
+| 6 | 40% ETc | **Tratamiento** | **Nodo 3** | Planta 68 (centro) |
 | 7 | 100% ETc | Buffer | — | — |
-| 8 | 25% ETc | **Tratamiento** | **Nodo 4** | Planta 68 (centro) |
+| 8 | 15% ETc | **Tratamiento** | **Nodo 4** | Planta 68 (centro) |
 | 9 | 100% ETc | Buffer | — | — |
 | 10 | 0% (secano) | **Tratamiento** | **Nodo 5** | Planta 68 (centro) |
 
@@ -190,10 +190,10 @@ Cada fila tiene su propia **valvula solenoide Rain Bird 24VAC** controlada por u
 
 | Fila | Tratamiento | Tiempo de riego | Ejemplo (si 100% = 60 min/dia) |
 |------|-------------|-----------------|-------------------------------|
-| 1, 2, 4, 5, 7, 9 | 100% ETc | T_100 = ETc / caudal_gotero | 60 min/dia |
-| 3 | 75% ETc | T_100 × 0.75 | 45 min/dia |
-| 6 | 50% ETc | T_100 × 0.50 | 30 min/dia |
-| 8 | 25% ETc | T_100 × 0.25 | 15 min/dia |
+| 1, 2, 3, 5, 7, 9 | 100% ETc | T_100 = ETc / caudal_gotero | 60 min/dia |
+| 4 | 65% ETc | T_100 × 0.65 | 39 min/dia |
+| 6 | 40% ETc | T_100 × 0.40 | 24 min/dia |
+| 8 | 15% ETc | T_100 × 0.15 | 9 min/dia |
 | 10 | 0% (secano) | Solenoide cerrado permanente | 0 min/dia |
 
 **Calculo del tiempo base T_100:**
@@ -467,15 +467,24 @@ Esperar 2-3 minutos. Verificar en el MVC del backend que:
 
 ---
 
-## 9. DESINSTALACION (fin de temporada)
+## 9. MANTENIMIENTO ENTRE-TEMPORADAS (post-cosecha / dormancia)
 
-1. Desconectar bateria (abrir carcasa, desenchufar JST)
-2. Desmontar carcasa del bracket (4 tornillos)
-3. Retirar extensometro: aflojar tornillo de la abrazadera, retirar con cuidado sin danar la corteza
-4. Retirar sensores externos (anemometro, pluviometro)
-5. Vaciar reservorio Wet Ref
-6. Guardar todo en caja con identificacion del nodo (etiqueta con node_id)
-7. **NO retirar la estaca ni el bracket** -- se reusan la temporada siguiente
+El nodo **permanece instalado todo el año**. Durante dormancia el firmware entra automaticamente en modo ahorro (1 frame cada 6h en lugar de cada 15 min) y el consumo cae a ~1 µA — la bateria LiFePO4 + panel solar mantienen autonomia indefinida. El motor GDD sigue acumulando grados-dia para detectar correctamente la brotacion siguiente, y el MDS registra la recuperacion invernal del tronco.
+
+**Tareas de entre-temporada (una sola vez, post-cosecha):**
+
+1. Vaciar y enjuagar reservorio Wet Ref (evitar algas/obstruccion). Dejar vacio hasta pre-brotacion
+2. Desconectar manguera de la micro-bomba peristaltica (la bomba no opera en dormancia — preservar membrana)
+3. Verificar abrazadera del extensometro — ajustar si el tronco crecio durante la temporada
+4. Limpiar lente MLX90640 con pano de microfibra seco (aprovechando que no hay follaje)
+5. Limpiar interior del tubo colimador IR (polvo, insectos, telaranas)
+6. Inspeccionar panel solar — limpiar si tiene polvo/depositos
+7. Verificar que el termopar foliar se retiro de la hoja caduca. En dormancia no hay hoja — el termopar queda suelto (no afecta al firmware, que usa solo MDS en este estadio)
+8. Revisar integridad del cableado exterior (UV, roedores) — reemplazar si hay dano visible
+
+**NO desinstalar:** el nodo, la estaca, el bracket, el anemometro, el pluviometro ni el extensometro permanecen en campo todo el año.
+
+**Pre-brotacion (agosto-septiembre):** rellenar reservorio Wet Ref, reconectar manguera de la bomba, instalar termopar en hoja nueva cuando aparezcan las primeras hojas expandidas
 
 ---
 

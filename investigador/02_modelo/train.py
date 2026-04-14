@@ -74,7 +74,11 @@ CONFIG = {
         "lr": 5e-5,         # LR bajo para no destruir features aprendidas
         "lr_min": 1e-6,
         "weight_decay": 1e-5,
-        "loss_weights": PINNLossWeights(mse=1.0, physics=0.3, monotone=0.05),
+        # [C6] ra_wind=0.2: activa restricción de resistencia aerodinámica
+        # dinámica (ra=208/u) en finetune, donde wind_ms y rad_wm2 están
+        # disponibles desde los datos de campo.
+        "loss_weights": PINNLossWeights(mse=1.0, physics=0.3, monotone=0.05,
+                                        ra_wind=0.2),
         "workers": 2,
         "val_split": 0.15,  # ~102 frames de validación interna
     },
@@ -83,9 +87,9 @@ CONFIG = {
 # Rutas relativas al directorio del repo — funcionan en cualquier máquina.
 # Estructura: investigador/models/checkpoints/, investigador/models/logs/
 _HERE = Path(__file__).resolve().parent          # 02_modelo/
-_REPO_ALEXIS = _HERE.parent                      # investigador/
-CHECKPOINT_DIR = _REPO_ALEXIS / "models" / "checkpoints"
-LOG_DIR        = _REPO_ALEXIS / "models" / "logs"
+_INVESTIGADOR = _HERE.parent                      # investigador/
+CHECKPOINT_DIR = _INVESTIGADOR / "models" / "checkpoints"
+LOG_DIR        = _INVESTIGADOR / "models" / "logs"
 
 
 # ---------------------------------------------------------------------------
@@ -269,12 +273,19 @@ class ScholanderDataset(torch.utils.data.Dataset):
         cwsi = np.float32(entry["cwsi"])
         vpd = np.float32(entry.get("vpd", 2.0))
         etc = np.float32(entry.get("etc_fraction", 0.5))
+        # [C6] Datos meteorológicos para restricción ra(wind)
+        wind_ms = np.float32(entry.get("wind_ms", 0.0))
+        rad_wm2 = np.float32(entry.get("rad_wm2", 0.0))
+        t_air = np.float32(entry.get("t_air", 25.0))
 
         return (
             torch.from_numpy(image),
             torch.tensor([cwsi]),
             torch.tensor([vpd]),
             torch.tensor(etc),
+            torch.tensor([wind_ms]),
+            torch.tensor([rad_wm2]),
+            torch.tensor([t_air]),
         )
 
     @staticmethod
@@ -390,7 +401,17 @@ class Trainer:
         total_loss = 0.0
         n_batches = 0
 
-        for images, cwsi_real, vpd, etc in loader:
+        for batch in loader:
+            # [C6] Soportar tanto formato viejo (4 campos) como nuevo (7 campos)
+            if len(batch) == 7:
+                images, cwsi_real, vpd, etc, wind_ms, rad_wm2, t_air = batch
+                wind_ms = wind_ms.to(DEVICE)
+                rad_wm2 = rad_wm2.to(DEVICE)
+                t_air = t_air.to(DEVICE)
+            else:
+                images, cwsi_real, vpd, etc = batch
+                wind_ms = rad_wm2 = t_air = None
+
             images = images.to(DEVICE)
             cwsi_real = cwsi_real.to(DEVICE)
             vpd = vpd.to(DEVICE)
@@ -398,7 +419,10 @@ class Trainer:
 
             self.optimizer.zero_grad()
             cwsi_pred, delta_t_pred = self.model(images)
-            loss, comps = self.criterion(cwsi_pred, delta_t_pred, cwsi_real, vpd, etc)
+            loss, comps = self.criterion(
+                cwsi_pred, delta_t_pred, cwsi_real, vpd, etc,
+                wind_ms=wind_ms, rad_wm2=rad_wm2, t_air=t_air,
+            )
             loss.backward()
 
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=0.5)
@@ -420,7 +444,8 @@ class Trainer:
                 images, cwsi_real = batch
                 images = images.to(DEVICE)
             else:
-                images, cwsi_real, _, _ = batch
+                # Funciona con 4 campos (viejo) y 7 campos ([C6])
+                images, cwsi_real = batch[0], batch[1]
                 images = images.to(DEVICE)
 
             cwsi_pred, _ = self.model(images)
@@ -560,7 +585,7 @@ def main():
 
     if args.stage == "synthetic":
         # Dataset sintético HDF5 — leer por slices completos de chunk (no por índice individual)
-        h5_path = args.dataset or str(_REPO_ALEXIS / "data" / "dataset_sintetico_1M.h5")
+        h5_path = args.dataset or str(_INVESTIGADOR / "data" / "dataset_sintetico_1M.h5")
         if not os.path.exists(h5_path):
             print(f"ERROR: No se encontró el dataset en {h5_path}")
             print("Ejecutá primero: python ../01_simulador/generate_large_dataset.py")
@@ -591,7 +616,7 @@ def main():
                                   num_workers=0)
 
     elif args.stage in ("finetune", "eval"):
-        data_dir = args.real_data or str(_REPO_ALEXIS / "data" / "scholander")
+        data_dir = args.real_data or str(_INVESTIGADOR / "data" / "scholander")
         train_ds = ScholanderDataset(data_dir, augment=(args.stage == "finetune"))
         val_n = int(len(train_ds) * cfg["val_split"])
         train_n = len(train_ds) - val_n

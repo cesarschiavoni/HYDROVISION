@@ -78,8 +78,8 @@ Results: HSI achieved R^2 = [X.XX] (RMSE = [X.XX] MPa) against Scholander psi_st
 
 - Ubicacion: Colonia Caroya, Cordoba, Argentina (31.20 S, 64.09 W, 520 m a.s.l.)
 - Cultivo: Vitis vinifera cv. Malbec sobre pie americano
-- Diseno: 4 filas x 136 m = 544 vides
-- 5 zonas hidricas por fila (27 m cada una): 100% ETc, 75% ETc, 50% ETc, 25% ETc, sin riego
+- Diseno: 10 filas x 136 m = 1.360 vides (5 filas experimentales + 5 buffer intercalados)
+- 5 regimenes hidricos (1 por fila experimental): 100% ETc, 65% ETc, 40% ETc, 15% ETc, sin riego
 - Sistema de riego: goteo con solenoides Rain Bird 24VAC controlados por nodo HydroVision
 - Temporada: [MES INICIO] a [MES FIN] 2026/2027
 
@@ -139,7 +139,7 @@ f(dT, VPD) = (dT - dT_LL(VPD)) / (dT_UL - dT_LL(VPD))
 ```
 HSI = w_cwsi * CWSI + w_mds * MDS_norm
 ```
-Rampa gradual 4-12 m/s (14-43 km/h): w_cwsi se reduce linealmente de 0.35 a 0. Si viento ≥ 12 m/s (43 km/h): w_cwsi = 0, w_mds = 1 (conmutacion automatica)
+Rampa gradual 4-18 m/s (14-65 km/h): w_cwsi se reduce linealmente de 0.35 a 0 (extendida por mitigaciones v2: Kalman IR↔termopar, Muller gbh, Hampel filter). Si viento ≥ 18 m/s (65 km/h): w_cwsi = 0, w_mds = 1 (conmutacion automatica)
 
 ### 2.5 Analisis estadistico
 
@@ -173,8 +173,8 @@ Rampa gradual 4-12 m/s (14-43 km/h): w_cwsi se reduce linealmente de 0.35 a 0. S
 
 - R^2 CWSI con viento < 2 m/s: [X.XX]
 - R^2 CWSI con viento 2-4 m/s: [X.XX]
-- R^2 CWSI con viento 4-12 m/s (rampa gradual): [X.XX]
-- R^2 CWSI con viento > 12 m/s: [X.XX] (degradado — backup 100% MDS)
+- R^2 CWSI con viento 4-18 m/s (rampa gradual): [X.XX]
+- R^2 CWSI con viento > 18 m/s: [X.XX] (degradado — backup 100% MDS)
 - R^2 HSI con conmutacion automatica a MDS: [X.XX] (recuperado)
 
 ### 3.4 Performance por regimen hidrico

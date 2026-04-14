@@ -118,11 +118,11 @@
 | `value` | float | HSI = w_cwsi × CWSI + w_mds × MDS_norm |
 | `w_cwsi` | float | Peso CWSI (0.35 en condiciones normales) |
 | `w_mds` | float | Peso MDS (0.65 en condiciones normales) |
-| `wind_override` | bool | true si viento ≥12 m/s (43 km/h) → w_cwsi=0, w_mds=1 (CWSI no confiable). Entre 4-12 m/s (14-43 km/h) el peso se reduce gradualmente (rampa lineal) |
+| `wind_override` | bool | true si viento ≥18 m/s (65 km/h) → w_cwsi=0, w_mds=1 (CWSI no confiable). Entre 4-18 m/s (14-65 km/h) el peso se reduce gradualmente (rampa lineal) |
 
 **Detalle de la rampa gradual de pesos (campo `w_cwsi` / `w_mds`):**
 
-El sistema NO usa un cutoff binario. El peso del CWSI se reduce linealmente entre 4-12 m/s gracias a las mitigaciones físicas del nodo (orientación sotavento, tubo colimador IR, shelter SHT31, termopar foliar) que extienden el rango útil del CWSI:
+El sistema NO usa un cutoff binario. El peso del CWSI se reduce linealmente entre 4-18 m/s gracias a las mitigaciones físicas del nodo (orientación sotavento, tubo colimador IR, shelter SHT31, termopar foliar) y mejoras algorítmicas v2 (Kalman IR↔termopar, Muller gbh, Hampel filter) que extienden el rango útil del CWSI:
 
 | Viento (anemómetro) | km/h | w_cwsi | w_mds | wind_override |
 |---|---|---|---|---|
@@ -130,11 +130,13 @@ El sistema NO usa un cutoff binario. El peso del CWSI se reduce linealmente entr
 | 6 m/s | 22 | 0.26 | 0.74 | false |
 | 8 m/s | 29 | 0.18 | 0.82 | false |
 | 10 m/s | 36 | 0.09 | 0.91 | false |
-| ≥12 m/s | ≥43 | 0.00 | 1.00 | true |
+| 12 m/s | 43 | 0.15 | 0.85 | false |
+| 15 m/s | 54 | 0.08 | 0.92 | false |
+| ≥18 m/s | ≥65 | 0.00 | 1.00 | true |
 
-Fórmula: `w_cwsi = 0.35 × (12.0 - wind_ms) / (12.0 - 4.0)` clampeado a [0.0, 0.35]. `w_mds = 1.0 - w_cwsi`.
+Fórmula: `w_cwsi = 0.35 × (18.0 - wind_ms) / (18.0 - 4.0)` clampeado a [0.0, 0.35]. `w_mds = 1.0 - w_cwsi`.
 
-El campo `wind_override` solo es `true` cuando w_cwsi = 0.00 (backup total MDS). En la zona de transición (4-12 m/s), `wind_override` es `false` pero los pesos reflejan la reducción gradual.
+El campo `wind_override` solo es `true` cuando w_cwsi = 0.00 (backup total MDS). En la zona de transición (4-18 m/s), `wind_override` es `false` pero los pesos reflejan la reducción gradual.
 
 ### gdd — Motor fenológico
 

@@ -60,7 +60,7 @@ lucas/
 | Ciclo principal: deep sleep, wakeup, RTC memory | `firmware/nodo_main.ino` |
 | Node ID automático desde MAC ESP32 (`esp_read_mac`) | `firmware/nodo_main.ino` |
 | Cálculo CWSI (Jackson 1981) con Tc_wet / Tc_dry | `firmware/nodo_main.ino` |
-| Cálculo HSI con pesos adaptativos + rampa gradual viento 4-12 m/s + termopar | `firmware/nodo_main.ino` |
+| Cálculo HSI con pesos adaptativos + rampa gradual viento 4-18 m/s + termopar | `firmware/nodo_main.ino` |
 | Normalización MDS + corrección térmica | `firmware/nodo_main.ino` |
 | Auto-calibración Tc_wet (lluvia + MDS≈0, EMA learning_rate=0.25) | `firmware/nodo_main.ino` |
 | Serialización JSON payload v1 completa (todos los campos) | `firmware/nodo_main.ino` |

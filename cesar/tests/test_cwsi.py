@@ -70,12 +70,12 @@ class TestMeteoConditions:
         assert not m.is_valid_capture_window
 
     def test_invalid_high_wind(self):
-        """Viento >= 12 m/s (43 km/h) → no válido para captura (override completo)."""
-        m = MeteoConditions(T_air=32, RH=35, solar_rad=900, wind_speed=13.0)
+        """Viento >= 18 m/s (65 km/h) → no válido para captura (override completo)."""
+        m = MeteoConditions(T_air=32, RH=35, solar_rad=900, wind_speed=19.0)
         assert not m.is_valid_capture_window
 
     def test_wind_in_ramp_still_valid(self):
-        """Viento 8 m/s (en rampa 4-12) → sigue válido para captura con peso reducido."""
+        """Viento 8 m/s (en rampa 4-18) → sigue válido para captura con peso reducido."""
         m = MeteoConditions(T_air=32, RH=35, solar_rad=900, wind_speed=8.0)
         assert m.is_valid_capture_window
 
@@ -224,14 +224,34 @@ class TestCWSIBatchAndSensitivity:
 
     def test_netd_50mk_error_below_005(self, calc_malbec, meteo_std):
         """
-        El NETD de 50mK del FLIR Lepton 3.5 debe producir error CWSI < ±0.05.
-        Esto valida que el sensor es suficientemente preciso para el CWSI.
+        NETD 50mK (FLIR Lepton 3.5, datos sintéticos pre-training): error CWSI < ±0.05.
         Referencia: Araújo-Paredes et al. (2022) — error < ±0.07 aceptable.
         """
         sens = calc_malbec.sensitivity_analysis(meteo_std)
         netd_error = sens["NETD_50mK_cwsi_error"]
         assert netd_error < 0.05, \
             f"Error CWSI por NETD 50mK = {netd_error:.4f} — excede ±0.05 umbral"
+
+    def test_netd_100mk_mlx90640_pixel_unico(self, calc_malbec, meteo_std):
+        """
+        NETD 100mK (MLX90640, sensor de campo): error CWSI por píxel < ±0.07.
+        Umbral Araújo-Paredes et al. (2022). Pixel único — sin promediar.
+        """
+        sens = calc_malbec.sensitivity_analysis(meteo_std)
+        netd_error = sens["NETD_100mK_cwsi_error"]
+        assert netd_error < 0.07, \
+            f"Error CWSI por NETD 100mK (MLX90640 pixel único) = {netd_error:.4f} — excede ±0.07"
+
+    def test_netd_efectivo_28px_below_001(self, calc_malbec, meteo_std):
+        """
+        NETD efectivo con 28 píxeles foliares promediados (MLX90640 campo):
+        error CWSI < ±0.01. Es el error real del sistema completo.
+        100mK / sqrt(28) ≈ 19mK → error CWSI ~±0.008.
+        """
+        sens = calc_malbec.sensitivity_analysis(meteo_std)
+        netd_error = sens["NETD_efectivo_cwsi_error"]
+        assert netd_error < 0.01, \
+            f"Error CWSI efectivo (28 px promediados) = {netd_error:.4f} — excede ±0.01"
 
     def test_sensitivity_monotone(self, calc_malbec, meteo_std):
         """Sensibilidad (dCWSI/dT) debe ser positiva y acotada."""

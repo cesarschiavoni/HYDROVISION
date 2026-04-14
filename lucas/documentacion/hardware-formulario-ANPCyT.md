@@ -20,7 +20,7 @@ El nodo HydroVision AG es un sistema embebido autónomo diseñado para operar en
 | 2 | Cámara LWIR | **MLX90640 breakout integrado** (Adafruit 4407 / SparkFun SEN-14844, sensor BAB 110°×75° FOV, NETD ~100 mK, conector I2C Stemma QT) | 45–55 | Temperatura foliar radiométrica → cálculo CWSI. Error CWSI por NETD: **±0.038** (dentro del umbral ±0.07 de Araújo-Paredes 2022). Módulo plug & play I2C. |
 | 3 | Módulo LoRa | SX1276 / SX1262, 915 MHz | 4–6 | Transmisión nodo → gateway LoRaWAN. Sin cobertura celular requerida |
 | 4 | Extensómetro tronco | Strain gauge + **ADS1231 24-bit ADC** (resolución 1 µm) + **DS18B20** (corrección térmica ±0.5°C) + abrazadera aluminio anodizado | 40–80 | MDS = D_max − D_min. R²=0.80–0.92 vs. ψ_stem (Fernández & Cuevas 2010). Inmune a viento. Opera 24/7 |
-| 5 | Anemómetro | RS485 Modbus RTU, 0.1 m/s resolución, 0–60 m/s, carcasa ABS UV | 25–50 | Rampa gradual 4-12 m/s (14-43 km/h): peso CWSI se reduce linealmente de 35% a 0%. ≥12 m/s (43 km/h) → 100% MDS (Jones 2004). MAX485 en PCB |
+| 5 | Anemómetro | RS485 Modbus RTU, 0.1 m/s resolución, 0–60 m/s, carcasa ABS UV | 25–50 | Rampa gradual 4-18 m/s (14-65 km/h): peso CWSI se reduce linealmente de 35% a 0% (extendida por mitigaciones v2). ≥18 m/s (65 km/h) → 100% MDS (Jones 2004). MAX485 en PCB |
 | 6 | Pluviómetro | Báscula de balancín, pulso digital GPIO | 12–20 | Interrupción GPIO. Trigger auto-calibración Tc_wet cuando lluvia ≥ 5 mm y MDS ≈ 0 |
 | 7 | Sensor T/HR | **SHT31** (±0.3°C, ±2% RH, I2C) + **shelter anti-viento** (6 placas, Gill-type) | 3.5–8 | Temperatura y HR para VPD, coeficientes CWSI, motor GDD. Shelter reduce error T_air por viento de ±0.5°C a ±0.1°C |
 | 7b | Piranómetro | Sensor radiación solar (BPW34 + ADC o equivalente) | 15–20 | Radiación solar para cálculo físico de Tc_dry (balance energético). Fuente primaria: Dry Ref panel. Piranómetro: backup y validación científica en TRL 4 |
@@ -210,13 +210,14 @@ El promediado sobre múltiples píxeles foliares y la calibración física por p
 | Riego | Canal → goteo con 5 zonas independientes (Mes 3–4, contrapartida equipo) |
 
 **Diseño experimental:**
-- 4 filas de 136m con 5 zonas hídricas (100% ETc → sin riego).
-- 32 brackets fijos en espaldera + gimbal multi-angular.
-- Protocolo Scholander: 10 plantas/zona × 50 plantas/sesión, 2×/semana en período crítico (Mes 4–9).
+- 10 filas de 136m: 5 filas experimentales (filas 2, 4, 6, 8, 10) + 5 filas buffer a 100% ETc (filas 1, 3, 5, 7, 9).
+- 1 régimen hídrico uniforme por fila experimental (100% ETc → sin riego).
+- 5 nodos permanentes (1 por fila experimental, planta central) + 32 brackets fijos en espaldera para posiciones complementarias.
+- Protocolo Scholander: ≥5 plantas/fila experimental × 4 sesiones OED (Mes 4–9).
 - 800 frames térmicos etiquetados con ψ_stem verificado por Scholander.
 
-**Posicionamiento de nodos dentro de cada zona hídrica:**
-Cada nodo se instala en la **planta central de su zona** (~planta 14 desde el inicio de la zona de 27m, con espaciado 1m entre plantas). Se evitan las 3 plantas más cercanas a cada frontera de zona por dos razones: (1) en los extremos existe gradiente hídrico por movimiento lateral de agua entre tratamientos — la planta no representa el régimen de riego puro de la zona; (2) el píxel Sentinel-2 de calibración (10m × 10m) que contiene al nodo debe caer íntegramente dentro de la zona, garantizando que el valor espectral utilizado para calibrar la extrapolación satelital corresponde al tratamiento de esa zona y no a una mezcla de dos tratamientos adyacentes. El extensómetro de tronco se instala en la misma planta central que el nodo.
+**Posicionamiento de nodos:**
+Cada nodo se instala en la **planta central de su fila experimental** (planta 68 de 136, espaciado 1m entre plantas). Se evitan las 5 plantas de cada extremo de la fila por dos razones: (1) en los extremos existe efecto borde por exposición diferencial al viento y la radiación; (2) el píxel Sentinel-2 de calibración (10m × 10m) que contiene al nodo debe caer íntegramente dentro de la fila, garantizando que el valor espectral utilizado para calibrar la extrapolación satelital corresponde al tratamiento de esa fila y no a una mezcla con la cabecera o el pasillo. El extensómetro de tronco se instala en la misma planta central que el nodo.
 
 **Criterios de éxito TRL 4:**
 

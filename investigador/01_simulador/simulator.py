@@ -3,7 +3,12 @@ Simulador físico de imágenes térmicas — HydroVision AG
 ======================================================
 Genera imágenes sintéticas de canopia de vid Malbec bajo diferentes
 niveles de estrés hídrico, replicando las características del sensor
-FLIR Lepton 3.5 (160×120 px, NETD ~50mK).
+FLIR Lepton 3.5 (160×120 px, NETD ~50mK) para PRE-ENTRENAMIENTO.
+
+NOTA: El sensor de campo real es MLX90640 32×24 px (NETD ~100 mK).
+La resolución mayor (160×120) en datos sintéticos es intencional:
+el modelo aprende patrones térmicos transferibles a menor resolución
+durante fine-tuning con 680 frames reales del MLX90640.
 
 Física:
 - Balance energético de hoja (Penman-Monteith simplificado)
@@ -75,11 +80,12 @@ class MalbecParams:
 
 
 # ---------------------------------------------------------------------------
-# Sensor FLIR Lepton 3.5
+# Sensor FLIR Lepton 3.5 (specs para datos sintéticos — sensor real: MLX90640 32×24)
 # ---------------------------------------------------------------------------
 @dataclass
 class FLIRLepton35:
-    """Especificaciones del sensor térmico embebido en el nodo HydroVision."""
+    """Specs FLIR Lepton 3.5 para generación de datos sintéticos de pre-entrenamiento.
+    Sensor real de campo: MLX90640 32×24 (ver lucas/hardware/BOM-nodo-v1.md)."""
     width: int = 160
     height: int = 120
     netd: float = 0.05        # °C — Noise Equivalent Temperature Difference
@@ -185,7 +191,7 @@ def compute_cwsi(tc: float, tc_wet: float, tc_dry: float) -> float:
 # ---------------------------------------------------------------------------
 class ThermalSimulator:
     """
-    Simulador de imágenes térmicas FLIR Lepton 3.5 para canopia de Malbec.
+    Simulador de imágenes térmicas a specs FLIR Lepton 3.5 para pre-entrenamiento.
 
     Genera imágenes (120, 160) float32 en °C con:
     - Variabilidad espacial de temperatura en la canopia

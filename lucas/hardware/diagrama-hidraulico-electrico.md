@@ -43,24 +43,17 @@
                               |
               P2 [REG PRESIÓN cabezal 2"] + [FI: FILTRO MALLA 2"]
                               |
-          .----.----.----.----+
-          |    |    |    |
-       [XV1] [XV2] [XV3] [XV4]    <- M1 M2 M3 M4: válvulas esfera bronce 1"
-       [FE1] [FE2] [FE3] [FE4]    <- R1 R2 R3 R4: reguladores caudal inline 16mm
-          |    |    |    |
-       FILA1 FILA2 FILA3 FILA4    <- PE 32mm PN4 ramales por fila
-          |
-          | (detalle por fila — igual para F1 F2 F3 F4)
-          |
-     [XV-A]--zona A 27m-- cinta drip 16mm 1.5L/h@1bar -- 27 emisores
-     [XV-B]--zona B 27m-- cinta drip 16mm 1.5L/h@1bar -- 27 emisores
-     [XV-C]--zona C 27m-- cinta drip 16mm 1.5L/h@1bar -- 27 emisores
-     [XV-D]--zona D 27m-- cinta drip 16mm 1.5L/h@1bar -- 27 emisores
-     [XV-E]--zona E 8m --- cinta drip 16mm 1.5L/h@1bar -- 8 emisores
-          |
-     solenoides Rain Bird 24VAC 1"
-     canal Rain Bird:  1=A  2=B  3=C  4=D  5=E
-     wiring en paralelo por zona (4 solenoides por canal)
+          .----.----.----.----.----.----.----.----.----.----+
+          |    |    |    |    |    |    |    |    |    |
+         F1   F2   F3   F4   F5   F6   F7   F8   F9  F10
+        BUF  CTRL  BUF  65%  BUF  40%  BUF  15%  BUF  0%
+         |   [SV1]  |  [SV2]  |  [SV3]  |  [SV4]  |  [SV5]
+         |    |     |    |    |    |     |    |    |    |
+        136m drip por fila — cinta 16mm 1.5L/h@1bar — 136 emisores/fila
+
+     Filas buffer (1,3,5,7,9): sin solenoide, riego directo 100% ETc
+     Filas experimentales (2,4,6,8,10): solenoide Rain Bird 24VAC 1" cada una
+     canal Rain Bird: 1=F2(100%) 2=F4(65%) 3=F6(40%) 4=F8(15%) 5=F10(0%,cerrado)
 ```
 
 ---
@@ -76,13 +69,13 @@ MEDIDOR EPEC (220V / 50Hz)
                                 |                       |
                     [Q2 TERMOMAG 10A]         [TRAFO 24VAC 40VA]
                                 |                       |
-                    [PS PRESOSTATO]           [CTRL RAIN BIRD ESP-ME3]
+                    [PS PRESOSTATO]           [CTRL RAIN BIRD 6 ZONAS]
                      set: 1.5 bar ON                    |
-                          3.0 bar OFF          canal 1 --+-- SV-A (F1+F2+F3+F4 paralelo)
-                                |              canal 2 --+-- SV-B
-                    [MOTOR BOMBA 1HP]          canal 3 --+-- SV-C
-                     220V / 4.5A FLA          canal 4 --+-- SV-D
-                     cos φ ≈ 0.85             canal 5 --+-- SV-E (programado: t=0, cerrado)
+                          3.0 bar OFF          canal 1 --+-- SV-F2  (100% ETc, control)
+                                |              canal 2 --+-- SV-F4  (65% ETc)
+                    [MOTOR BOMBA 1HP]          canal 3 --+-- SV-F6  (40% ETc)
+                     220V / 4.5A FLA          canal 4 --+-- SV-F8  (15% ETc)
+                     cos φ ≈ 0.85             canal 5 --+-- SV-F10 (0%, cerrado permanente)
                      I arranque ≈ 25A (1s)    canal 6     reserva
                      IP54 — exterior
 ```
@@ -95,14 +88,15 @@ MEDIDOR EPEC (220V / 50Hz)
 
 | Parámetro | Valor | Fuente |
 |-----------|-------|--------|
-| Caudal máximo simultáneo | 13.6 L/min (4 filas × zona A) | 136 emit × 1.5 L/h ÷ 60 |
-| Caudal operación normal (1 zona por fila) | 2.7 L/min | 27 emit × 4 filas × 1.5 L/h ÷ 60 |
+| Caudal por fila (136 emisores) | 3.4 L/min | 136 × 1.5 L/h ÷ 60 |
+| Caudal buffer permanente (5 filas) | 17.0 L/min | 5 filas sin solenoide, riego directo |
+| Caudal máximo simultáneo (9 filas) | 30.6 L/min | 9 filas activas (F10 = 0%, cerrada) |
 | Presión de trabajo en header | 1.5–2.0 bar | presostato set point |
 | Presión mínima extremo de fila | ≥ 0.8 bar | verificar con manómetro portátil |
 | Pérdida de carga cinta drip 16mm / 136m | ~0.15 bar | cálculo Hazen-Williams |
 | Tiempo llenado tanque 20.000 L | ~5.5 hs | 60 L/min bomba caudal libre |
-| Autonomía tanque (riego normal 1 zona/fila) | ~123 hs | 20.000 L ÷ 2.7 L/min |
-| Autonomía tanque (máx 4 zonas simultáneas) | ~24 hs | 20.000 L ÷ 13.6 L/min |
+| Autonomía tanque (solo buffer 5 filas) | ~19.6 hs | 20.000 L ÷ 17.0 L/min |
+| Autonomía tanque (máx 9 filas) | ~10.9 hs | 20.000 L ÷ 30.6 L/min |
 
 ### Eléctrica
 
@@ -116,7 +110,7 @@ MEDIDOR EPEC (220V / 50Hz)
 | Protección destino (bomba) | Termomagnético 10A | Q2 |
 | Corriente arranque motor | ~25A por ~1 segundo | Q1 y Q2 deben ser curva C o D |
 | Tensión solenoides Rain Bird | 24VAC | transformador en tablero Rain Bird |
-| Corriente por solenoide | ~250 mA | 4 en paralelo = 1A por canal Rain Bird |
+| Corriente por solenoide | ~250 mA | 1 solenoide por canal Rain Bird |
 
 ---
 

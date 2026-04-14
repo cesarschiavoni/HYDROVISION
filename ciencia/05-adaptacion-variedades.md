@@ -171,4 +171,4 @@ Para que los coeficientes CWSI de una variedad sean considerados "validados" por
 
 ---
 
-*Dra. Mariela Inés Monteoliva — INTA EEA Córdoba / CONICET — Abril 2026*
+*Dra. Mariela Inés Monteoliva — IFRGV-UDEA, INTA-CONICET, CCT Córdoba — Abril 2026*

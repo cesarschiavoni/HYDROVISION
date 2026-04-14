@@ -1056,7 +1056,7 @@ El modelo se entrena y valida durante el período de máxima demanda hídrica (d
 Si el modelo muestra drift estacional, se recalibra con datos de cada estación usando el simulador para generar condiciones observadas. En TRL 5 se amplía el dataset real a múltiples estadios.
 Representatividad geográfica — Colonia Caroya tiene condiciones climáticas diferentes a los mercados objetivo (Valle de Uco, San Juan). Altitud, HR y amplitud térmica difieren.
 Media
-El proyecto concentra la validación primaria en el viñedo experimental de Colonia Caroya (4 filas × 136m con drip diferencial) complementada con 3 campañas de validación cruzada en Mendoza y 2 en San Juan. Estas campañas capturan datos meteorológicos y térmicos en condiciones reales de Cuyo para verificar la transferibilidad del modelo.
+El proyecto concentra la validación primaria en el viñedo experimental de Colonia Caroya (5 filas experimentales × 136m con drip diferencial + 5 filas buffer) complementada con 3 campañas de validación cruzada en Mendoza y 2 en San Juan. Estas campañas capturan datos meteorológicos y térmicos en condiciones reales de Cuyo para verificar la transferibilidad del modelo.
 Si los datos de Colonia Caroya resultan no representativos, las 3 campañas a Mendoza (Valle de Uco) proporcionan datos de recalibración. El simulador permite interpolar entre condiciones de ambas regiones.
 Disponibilidad de tiempo del Inv. Art. 32 — ~5 hs/semana promedio (~177 hs totales), con obligaciones paralelas en su institución de investigación.
 Baja

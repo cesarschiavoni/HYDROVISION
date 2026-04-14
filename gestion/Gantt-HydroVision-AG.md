@@ -37,8 +37,8 @@
 |   Brackets acero x32 + paneles emisividad x32           | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
 | **INSTALACION VINEDO EXPERIMENTAL (Tecnico + Lucas)    ** |     |     |     |     |     |     |     |     |     |     |     |     |
-|   Tendido cinta drip 4 filas x 136m                     | XX | XX |    |    |    |    |    |    |    |    |    |    |
-|   Instalacion 20 solenoides + controlador Rain Bird     | XX | XX |    |    |    |    |    |    |    |    |    |    |
+|   Tendido cinta drip 10 filas x 136m                    | XX | XX |    |    |    |    |    |    |    |    |    |    |
+|   Instalacion 5 solenoides + controlador Rain Bird      | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |   Prueba caudales 5 regimenes hidricos (0-100% ETc)     |    | XX |    |    |    |    |    |    |    |    |    |    |
 |   Instalacion 32 brackets en postes espaldera           |    | XX |    |    |    |    |    |    |    |    |    |    |
 |   Tuneles exclusion lluvia zonas C y D                  |    | XX |    |    |    |    |    |    |    |    |    |    |

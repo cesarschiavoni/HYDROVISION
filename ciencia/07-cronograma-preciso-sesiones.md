@@ -257,4 +257,4 @@ Dentro de las **6 horas** de cerrada cada sesión Scholander:
 
 ---
 
-*Dra. Mariela Inés Monteoliva — INTA EEA Córdoba / CONICET — Abril 2026*
+*Dra. Mariela Inés Monteoliva — IFRGV-UDEA, INTA-CONICET, CCT Córdoba — Abril 2026*

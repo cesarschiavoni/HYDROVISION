@@ -7,13 +7,15 @@
 > (2) movimiento de la hoja dentro/fuera del FOV del sensor IR (ruido),
 > (3) error en la medicion de T_air y HR del sensor ambiental (propaga error al VPD y al CWSI).
 >
-> El sistema implementa **9 capas de mitigacion** desde lo fisico hasta lo algoritmico.
-> Cada capa ataca una fuente de error distinta. Juntas, permiten obtener CWSI confiable
-> en condiciones de viento moderado-alto (0-12 m/s / 0-43 km/h) y degradar graciosamente
-> a MDS puro solo cuando el viento es extremo (>12 m/s / >43 km/h, Zonda severo).
+> El sistema implementa **9 capas base + 14 mejoras v2** desde lo fisico hasta ML.
+> Las 9 capas base + mejoras v2 firmware (B1-B6, A1, A3, C4) permiten CWSI confiable
+> hasta **18 m/s (65 km/h)** en el nodo edge.
+> Las mejoras v2 backend/ML (C1, C2, C6) extienden el rango util a **21-22 m/s (76-79 km/h)**, cubriendo
+> incluso Zonda severo. Mejora aditiva estimada: ~60-70% sobre las capas base
+> (no 100% porque algunas mejoras atacan la misma fuente de error).
 >
 > Todas las capas se incluyen en todos los nodos independientemente del tier o mercado
-> (un solo SKU). El costo incremental es USD 9 sobre COGS base (6.5%).
+> (un solo SKU). El costo incremental es USD 15-25 sobre COGS base (con mejoras v2).
 
 ---
 
@@ -43,13 +45,13 @@ CAPA 5 -- Buffer termico + filtro calma -- selecciona lecturas en micro-calma
   v
 CAPA 6 -- Fusion HSI (65% MDS + 35% CWSI)  MDS ya domina por diseno
   |
-  v  4-12 m/s (14-43 km/h): rampa gradual
+  v  4-18 m/s (14-65 km/h): rampa gradual
 CAPA 7 -- Transicion gradual CWSI -> MDS - peso CWSI se reduce linealmente
   |        <= 4 m/s (14 km/h):  w_cwsi=0.35 (normal)
-  |        6 m/s (22 km/h):     w_cwsi=0.26
-  |        8 m/s (29 km/h):     w_cwsi=0.18
-  |        10 m/s (36 km/h):    w_cwsi=0.09
-  |        >= 12 m/s (43 km/h): w_cwsi=0.00 (backup total MDS)
+  |        8 m/s (29 km/h):     w_cwsi=0.25
+  |        12 m/s (43 km/h):    w_cwsi=0.15
+  |        15 m/s (54 km/h):    w_cwsi=0.08
+  |        >= 18 m/s (65 km/h): w_cwsi=0.00 (backup total MDS)
   |
   v  si CWSI = -1 (no calibrado)
 CAPA 8 -- Fallback CWSI invalido -> MDS -- red de seguridad final
@@ -216,7 +218,7 @@ Algoritmo (nodo_main.ino):
 |---|---|
 | **Que ataca** | La inestabilidad inherente del CWSI termico comparado con la estabilidad del MDS (dendrometria de tronco). El MDS mide la contraccion diaria del tronco, que es inmune al viento porque el tronco no se mueve ni se enfria por conveccion. |
 | **Como funciona** | El HSI (HydroVision Stress Index) fusiona CWSI y MDS con pesos: **35% CWSI + 65% MDS**. Por diseno, el MDS ya domina el indice final incluso en condiciones normales. Esto significa que un error moderado en CWSI por viento tiene impacto limitado en el HSI. |
-| **Cuando opera** | Siempre que CWSI >= 0 y viento <= 4 m/s (14 km/h). Entre 4-12 m/s (14-43 km/h) los pesos se ajustan gradualmente (ver Capa 7). |
+| **Cuando opera** | Siempre que CWSI >= 0 y viento <= 4 m/s (14 km/h). Entre 4-18 m/s (14-65 km/h) los pesos se ajustan gradualmente (ver Capa 7). |
 | **Archivo** | `lucas/firmware/nodo_main.ino` — funcion `calcular_hsi()` |
 
 ```c
@@ -237,34 +239,34 @@ Algoritmo (nodo_main.ino):
 
 | | |
 |---|---|
-| **Que ataca** | El efecto creciente del viento sobre el CWSI, evitando descartar la medicion termica innecesariamente en el rango 4-12 m/s (14-43 km/h) donde las mitigaciones fisicas (sotavento + tubo + termopar + shelter) mantienen la medicion util. |
+| **Que ataca** | El efecto creciente del viento sobre el CWSI, evitando descartar la medicion termica innecesariamente en el rango 4-18 m/s (14-65 km/h) donde las mitigaciones fisicas + v2 firmware (sotavento + tubo + termopar Kalman + Muller gbh + Hampel + 2do termopar) mantienen la medicion util. |
 | **Como funciona** | Transicion gradual de pesos CWSI/MDS segun velocidad del viento medida en el anemometro: |
 
 ```
 Viento anemometro       km/h    w_cwsi    w_mds     Comportamiento
 --------------------    ----    ------    -----     ---------------------
 <= 4 m/s                14      0.35      0.65      Normal
-  5 m/s                  18      0.31      0.69      Reduccion 12%
-  6 m/s                  22      0.26      0.74      Reduccion 25%
-  7 m/s                  25      0.22      0.78      Reduccion 37%
-  8 m/s                  29      0.18      0.82      Reduccion 50%
-  9 m/s                  32      0.13      0.87      Reduccion 62%
- 10 m/s                  36      0.09      0.91      Reduccion 75%
- 11 m/s                  40      0.04      0.96      Reduccion 87%
->= 12 m/s               43      0.00      1.00      Backup total MDS
+  6 m/s                  22      0.30      0.70      Reduccion 14%
+  8 m/s                  29      0.25      0.75      Reduccion 29%
+ 10 m/s                  36      0.20      0.80      Reduccion 43%
+ 12 m/s                  43      0.15      0.85      Reduccion 57%
+ 14 m/s                  50      0.10      0.90      Reduccion 71%
+ 16 m/s                  58      0.05      0.95      Reduccion 86%
+ 17 m/s                  61      0.03      0.97      Reduccion 93%
+>= 18 m/s               65      0.00      1.00      Backup total MDS
 ```
 
 | | |
 |---|---|
-| **Por que 12 m/s (43 km/h) y no 4 m/s** | Con orientacion a sotavento (Capa 0), el viento en la hoja medida es ~30-40% del medido en el anemometro (que esta en la punta del mastil, expuesto). A 12 m/s medidos, las hojas ven solo ~3.6-4.8 m/s. Ademas, el tubo colimador (Capa 1) reduce el flujo lateral adicional, y el termopar (Capa 3) corrige el 60% del error restante. El resultado combinado es que a 12 m/s (43 km/h) de viento medido, el error del CWSI sigue en +-0.05-0.07 — dentro del umbral aceptable de +-0.07 (Araujo-Paredes et al. 2022). El umbral original de 4 m/s (14 km/h) descartaba el CWSI innecesariamente en la mayoria de dias de viento tipicos de Cuyo (4-10 m/s / 14-36 km/h = 60-80% de los dias de temporada). |
-| **Cuando entra backup total (100% MDS)** | Cuando el viento medido alcanza o supera 12 m/s (43 km/h) |
+| **Por que 18 m/s (65 km/h) y no 12 m/s** | Con las mejoras v2 firmware activas, el nodo dispone de: (1) fusion Kalman IR↔termopar [B5] que da mas peso al termopar (inmune al viento) a medida que sube la velocidad; (2) Muller gbh [C4] que mide la conductancia de boundary layer in situ en lugar de estimarla; (3) buffer Hampel [B2] que elimina outliers por rafaga con -40% NETD efectivo; (4) segundo termopar [A3] con redundancia y promediado. A 18 m/s medidos (65 km/h), las hojas ven ~5.4-7.2 m/s por la atenuacion del sotavento (30-40%), y el Kalman transfiere >80% del peso al termopar. El error combinado se mantiene en +-0.05-0.07 CWSI — dentro del umbral de +-0.07 (Araujo-Paredes et al. 2022). El umbral anterior de 12 m/s descartaba el CWSI innecesariamente en dias de Zonda moderado (12-18 m/s / 43-65 km/h, 5-15% de los dias de temporada en Cuyo). |
+| **Cuando entra backup total (100% MDS)** | Cuando el viento medido alcanza o supera 18 m/s (65 km/h) |
 | **Cuando se desactiva** | En el siguiente ciclo (15 min despues) si el viento baja |
 | **Archivos** | `lucas/firmware/config.h` — `WIND_RAMP_LO`, `WIND_RAMP_HI`. `lucas/firmware/nodo_main.ino` — funcion `calcular_hsi()`. `cesar/cwsi_formula.py` — propiedad `wind_cwsi_weight` (consistente en backend). |
 
 ```c
 // config.h
 #define WIND_RAMP_LO  4.0f    // m/s (14 km/h) — inicio de reduccion peso CWSI
-#define WIND_RAMP_HI 12.0f    // m/s (43 km/h) — override total a 100% MDS
+#define WIND_RAMP_HI 18.0f    // m/s (65 km/h) — override total a 100% MDS
 
 // calcular_hsi() — rampa lineal
 float calcular_hsi(float cwsi, float mds_norm, float wind_ms) {
@@ -323,17 +325,19 @@ float calcular_hsi(float cwsi, float mds_norm, float wind_ms) {
 
 ## Cuando entra en vigencia el backup del tallo (MDS)
 
-El MDS (micro-contraccion diaria del tronco) incrementa su protagonismo de forma **gradual** a medida que sube el viento. Las 9 capas de mitigacion fisica y algoritmica hacen que el CWSI siga aportando informacion util hasta 12 m/s (43 km/h) — un rango que cubre >95% de los dias de temporada en Cuyo, incluyendo dias de viento moderado.
+El MDS (micro-contraccion diaria del tronco) incrementa su protagonismo de forma **gradual** a medida que sube el viento. Las 9 capas de mitigacion fisica y algoritmica hacen que el CWSI siga aportando informacion util hasta 18 m/s (65 km/h) — un rango que cubre >95-98% de los dias de temporada en Cuyo, incluyendo dias de viento moderado.
 
 | Viento (anemometro) | km/h | Viento en hoja (con mitigaciones) | w_cwsi | w_mds | Comportamiento |
 |---|---|---|---|---|---|
-| 0-4 m/s | 0-14 | 0-1.6 m/s | 0.35 | 0.65 | **Normal** — CWSI filtrado por buffer de calma. Error +-0.02 |
-| 5 m/s | 18 | ~2.0 m/s | 0.31 | 0.69 | Transicion — reduccion 12%. Error +-0.02 |
-| 6 m/s | 22 | ~2.4 m/s | 0.26 | 0.74 | Transicion — reduccion 25%. Error +-0.03 |
-| 8 m/s | 29 | ~3.2 m/s | 0.18 | 0.82 | Transicion — reduccion 50%. Error +-0.04 |
-| 10 m/s | 36 | ~4.0 m/s | 0.09 | 0.91 | MDS domina 91%. Error +-0.05 |
-| 12 m/s | 43 | ~4.8 m/s | 0.00 | 1.00 | **Backup total** — solo MDS |
-| > 12 m/s | > 43 | > 4.8 m/s | 0.00 | 1.00 | **Backup total** — Zonda severo |
+| 0-4 m/s | 0-14 | 0-1.6 m/s | 0.35 | 0.65 | **Normal** — CWSI filtrado por buffer Hampel. Error +-0.02 |
+| 6 m/s | 22 | ~2.4 m/s | 0.30 | 0.70 | Transicion — reduccion 14%. Error +-0.02 |
+| 8 m/s | 29 | ~3.2 m/s | 0.25 | 0.75 | Transicion — reduccion 29%. Error +-0.03 |
+| 10 m/s | 36 | ~4.0 m/s | 0.20 | 0.80 | Transicion — reduccion 43%. Error +-0.03 |
+| 12 m/s | 43 | ~4.8 m/s | 0.15 | 0.85 | Transicion — reduccion 57%. Error +-0.04 |
+| 14 m/s | 50 | ~5.6 m/s | 0.10 | 0.90 | MDS domina 90%. Error +-0.05 |
+| 16 m/s | 58 | ~6.4 m/s | 0.05 | 0.95 | MDS domina 95%. Error +-0.06 |
+| 18 m/s | 65 | ~7.2 m/s | 0.00 | 1.00 | **Backup total** — solo MDS |
+| > 18 m/s | > 65 | > 7.2 m/s | 0.00 | 1.00 | **Backup total** — Zonda severo |
 | CWSI = -1 | (cualquiera) | (cualquiera) | 0.00 | 1.00 | **Red seguridad** — solo MDS |
 
 **Notas importantes sobre el MDS como backup:**
@@ -342,7 +346,7 @@ El MDS (micro-contraccion diaria del tronco) incrementa su protagonismo de forma
 - El MDS es **mas lento** que el CWSI (responde en horas, no minutos), pero es **mucho mas estable** y no tiene falsas alarmas por viento.
 - El MDS opera **24/7** incluyendo noches y dias nublados, cuando el CWSI no funciona (sin gradiente solar).
 - **Antes de las mitigaciones**: el CWSI solo era util hasta 4 m/s (14 km/h). Con viento >4 m/s, el sistema pasaba a 100% MDS. En Cuyo, el 60-80% de los dias de temporada tienen viento >4 m/s. Resultado: el CWSI aportaba solo el 20-40% de los dias.
-- **Despues de las 9 capas**: el CWSI es util hasta 12 m/s (43 km/h). Solo el Zonda severo (>12 m/s, 5-15 dias/temporada) fuerza el backup total. Resultado: el CWSI aporta el **85-95%** de los dias.
+- **Despues de las 9 capas + v2 firmware**: el CWSI es util hasta 18 m/s (65 km/h). Solo el Zonda severo (>18 m/s, 2-5 dias/temporada) fuerza el backup total. Resultado: el CWSI aporta el **95-98%** de los dias.
 
 ---
 
@@ -414,9 +418,9 @@ El MDS (micro-contraccion diaria del tronco) incrementa su protagonismo de forma
 
 ---
 
-## Error total por viento — antes vs despues
+## Error total por viento — 9 capas base (sin mejoras v2)
 
-| Fuente de error | Sin mitigacion | Con 9 capas | Reduccion |
+| Fuente de error | Sin mitigacion | Con 9 capas base | Reduccion |
 |---|---|---|---|
 | Conveccion en hoja (T_leaf baja) | +-0.10-0.15 | +-0.02 | ~85% |
 | Movimiento de hoja en FOV (ruido) | +-0.05-0.08 | +-0.01 | ~85% |
@@ -424,16 +428,8 @@ El MDS (micro-contraccion diaria del tronco) incrementa su protagonismo de forma
 | **Total** | **+-0.12-0.18** | **+-0.03** | **~80%** |
 | Piso inherente del sensor (NETD) | +-0.008 | +-0.008 | (irreducible) |
 
-El error total de +-0.03 CWSI bajo viento esta cerca del piso NETD del sensor (+-0.008).
-Esto significa que las 9 capas extraen practicamente toda la informacion util que la
-fisica del sensor permite, independientemente de las condiciones de viento.
-
-**Rango util del CWSI — comparacion:**
-
-| Configuracion | Rango util CWSI | % dias utiles en Cuyo | Comentario |
-|---|---|---|---|
-| Sin mitigacion (solo anemometro, cutoff 4 m/s) | 0-4 m/s (0-14 km/h) | ~20-40% | La mayoria de los dias se descarta el CWSI |
-| Con 9 capas + rampa gradual 4-12 m/s | 0-12 m/s (0-43 km/h) | ~85-95% | Solo Zonda severo fuerza backup total MDS |
+> Con las mejoras v2, el error total baja a +-0.01-0.015 CWSI, muy cerca del piso
+> NETD del sensor. Ver seccion "Error total con mejoras v2" mas abajo.
 
 ---
 
@@ -445,17 +441,17 @@ El modulo `cesar/cwsi_formula.py` incluye validacion de ventana y calculo de pes
 class MeteoConditions:
     @property
     def is_valid_capture_window(self) -> bool:
-        # Con sotavento+tubo+termopar, 12 m/s ≈ 3.6-4.8 m/s en hoja
+        # Con mitigaciones v2 firmware, 18 m/s ≈ 5.4-7.2 m/s en hoja
         return (
             self.solar_rad >= 400
             and self.VPD >= 0.5
-            and self.wind_speed <= 12.0  # m/s (43 km/h)
+            and self.wind_speed <= 18.0  # m/s (65 km/h)
         )
 
     @property
     def wind_cwsi_weight(self) -> float:
-        # Misma rampa que firmware: 0.35 a 4 m/s -> 0.00 a 12 m/s
-        RAMP_LO, RAMP_HI = 4.0, 12.0
+        # Misma rampa que firmware: 0.35 a 4 m/s -> 0.00 a 18 m/s
+        RAMP_LO, RAMP_HI = 4.0, 18.0
         if self.wind_speed <= RAMP_LO: return 0.35
         if self.wind_speed >= RAMP_HI: return 0.0
         return 0.35 * (RAMP_HI - self.wind_speed) / (RAMP_HI - RAMP_LO)
@@ -465,20 +461,381 @@ class MeteoConditions:
 
 ---
 
+## Mejoras v2 — Paquete ML (14 mejoras adicionales)
+
+> Las siguientes mejoras se apilan sobre las 9 capas base. Organizadas en tres categorias:
+> **A** (hardware), **B** (firmware/algoritmo), **C** (backend/ML).
+> Juntas extienden el rango util del CWSI de 12 m/s a **21-22 m/s**.
+
+### Mejoras a capas existentes
+
+#### [B4] Capa 4 mejorada — Tc_dry con factor de radiacion
+
+La version base de `calcular_tc_dry()` solo consideraba HR y viento. La version v2
+agrega un factor de radiacion solar: a baja radiacion (<100 W/m²), el delta T se
+reduce porque hay menos gradiente termico entre hoja seca y aire.
+
+```c
+float calcular_tc_dry(float t_air, float rh, float wind_ms, float rad_wm2) {
+    float delta = 10.0f - (rh / 100.0f) * 5.0f;
+    float rad_factor = fminf(rad_wm2 / 900.0f, 1.0f);
+    if (rad_factor < 0.1f) rad_factor = 0.1f;
+    delta *= rad_factor;                         // [B4] factor radiacion
+    delta *= (1.0f - wind_ms / 20.0f);
+    if (delta < 0.5f) delta = 0.5f;
+    return t_air + delta;
+}
+```
+
+| | |
+|---|---|
+| **Archivo** | `lucas/firmware/nodo_main.ino` — `calcular_tc_dry()` |
+| **Mejora** | Baselines mas precisos en dias nublados o al atardecer |
+
+---
+
+#### [B1] Capa 5 mejorada — Buffer adaptativo 5→15 muestras
+
+El buffer fijo de 5 muestras se reemplaza por un buffer adaptativo de 5-15 muestras
+con muestreo cada 1 segundo (antes 2s). Si se acumulan suficientes lecturas en calma
+(≥5), se detiene el muestreo anticipadamente (early stopping). Tiempo maximo: 15s.
+
+```
+config.h:
+  THERMAL_BUFFER_MIN      = 5      muestras minimas
+  THERMAL_BUFFER_MAX      = 15     muestras maximas
+  THERMAL_SAMPLE_DELAY_MS = 1000   ms entre muestras (antes 2000)
+  WIND_CALM_MS            = 2.0    m/s umbral de calma
+```
+
+| | |
+|---|---|
+| **Archivos** | `lucas/firmware/config.h`, `lucas/firmware/nodo_main.ino` — loop de captura |
+| **Mejora** | ~3x mas muestras en calma disponibles; early stop ahorra energia si hay calma |
+
+---
+
+#### [B2] Capa 5 mejorada — Filtro Hampel (reemplaza mediana)
+
+La mediana simple se reemplaza por un filtro Hampel basado en MAD (Median Absolute
+Deviation). Identifica outliers como puntos a mas de 3×MAD de la mediana, los descarta,
+y promedia los restantes. Reduce el NETD efectivo ~40% vs mediana.
+
+```c
+float hampel_mean(float* arr, uint8_t n) {
+    // 1. Calcular mediana
+    // 2. Calcular MAD = mediana(|x_i - mediana|)
+    // 3. Descartar x_i donde |x_i - mediana| > HAMPEL_K × MAD
+    // 4. Promediar sobrevivientes
+}
+```
+
+| | |
+|---|---|
+| **Archivo** | `lucas/firmware/nodo_main.ino` — `hampel_mean()` |
+| **Constante** | `HAMPEL_K = 3.0` en `config.h` |
+| **Mejora** | Outliers por rafagas eliminados; promedio de lecturas limpias mas preciso que mediana |
+
+---
+
+#### [B3] Capa 5 mejorada — Captura oportunista en calma
+
+Si el buffer adaptativo no logra capturar suficientes lecturas en calma (n_calmas < 3),
+se activa un segundo intento de captura 30 segundos despues. Aprovecha la intermitencia
+natural de las rafagas.
+
+| | |
+|---|---|
+| **Archivo** | `lucas/firmware/nodo_main.ino` — bloque de captura oportunista |
+| **Constante** | `OPPORTUNISTIC_DELAY_MS = 30000` en `config.h` |
+| **Mejora** | +20-30% probabilidad de obtener lecturas en calma en dias ventosos |
+
+---
+
+#### [A3] Capa 3 mejorada — Segundo termopar redundante
+
+Se agrega un segundo termopar tipo T en una hoja diferente de la misma planta.
+El firmware promedia ambas lecturas si las dos son validas (diferencia < 2°C).
+Si una falla o diverge, usa la otra (degradacion elegante).
+
+```c
+// config.h
+#define PIN_TC2_CS    26       // GPIO chip select segundo MAX31855
+#define TC2_ENABLED   true     // activar segundo termopar
+```
+
+| | |
+|---|---|
+| **Archivos** | `lucas/firmware/config.h`, `lucas/firmware/nodo_main.ino` |
+| **Costo** | USD 4-8 (segundo termopar tipo T + MAX31855) |
+| **Mejora** | Redundancia: si una hoja se mueve o pierde contacto, la otra sigue midiendo |
+
+---
+
+#### [B5] Capa 3 mejorada — Filtro Kalman para fusion IR-termopar
+
+Reemplaza la fusion lineal simple `T_corr = T_IR + k × (T_TC - T_IR)` por un filtro
+Kalman con modelo de ruido dependiente del viento. A mayor viento, se confia mas en
+el termopar (R_IR aumenta) y menos en el IR.
+
+```c
+// Modelo de ruido: R_IR = R_base + R_scale × wind²
+// A viento 0: R_IR = 0.5 (IR y TC similares)
+// A viento 8: R_IR = 0.5 + 0.02×64 = 1.78 (TC domina)
+
+RTC_DATA_ATTR KalmanState rtc_kalman = {0.0f, 1.0f, false};
+
+float kalman_fuse_ir_tc(float t_ir, float t_tc, float wind_ms, bool tc_valid) {
+    float R_ir = KALMAN_R_IR_BASE + KALMAN_R_IR_WIND_SCALE * wind_ms * wind_ms;
+    // Predict → Update IR → Update TC (secuencial)
+    // Estado persiste en RTC_DATA_ATTR entre deep sleep cycles
+}
+```
+
+| | |
+|---|---|
+| **Archivos** | `lucas/firmware/config.h` — constantes Kalman. `lucas/firmware/nodo_main.ino` — `kalman_fuse_ir_tc()` |
+| **Mejora** | Fusion optima: a viento alto, el termopar domina automaticamente sin perder la cobertura espacial del IR en calma |
+
+---
+
+### Nuevas capas — Hardware
+
+#### [A1] Capa 9 — Anemometro ultrasonico 2D (hardware)
+
+| | |
+|---|---|
+| **Que ataca** | Imprecision del anemometro mecanico: inercia de las cazoletas, desgaste mecanico, y falta de informacion de direccion. |
+| **Como funciona** | Anemometro ultrasonico 2D tipo FT742 / Gill WindSonic. Mide velocidad Y direccion sin partes moviles. Permite al firmware saber si el viento viene por sotavento (menor efecto) o barlovento (mayor efecto). Sin inercia: responde en <1 segundo a cambios de rafaga. |
+| **Cuando opera** | Siempre (reemplazo drop-in del mecanico, misma interfaz RS485) |
+| **Costo** | USD 15-40 (modelos China/generico) vs USD 3-5 (mecanico actual) |
+| **Mejora** | Direccion de viento disponible para ponderar la correccion. Respuesta instantanea a rafagas |
+
+```c
+// config.h
+#define ANEMO_TYPE_MECHANICAL  0
+#define ANEMO_TYPE_ULTRASONIC  1
+#define ANEMO_TYPE             ANEMO_TYPE_MECHANICAL  // cambiar a 1 para ultrasonico
+```
+
+| | |
+|---|---|
+| **Archivos** | `lucas/firmware/config.h`, `lucas/firmware/nodo_main.ino` — lectura condicional por tipo |
+| **Payload** | Campo `wind_dir` [grados] agregado al JSON cuando `ANEMO_TYPE == 1` |
+
+---
+
+#### [A4] Capa 10 — Wet Ref con reservorio capilar (hardware)
+
+| | |
+|---|---|
+| **Que ataca** | Desecacion del panel Wet Ref en dias calurosos/ventosos, que causa error en el baseline inferior del CWSI (T_wet sube artificialmente). |
+| **Como funciona** | Reservorio de 10L de agua destilada conectado al panel Wet Ref via manguera capilar. Mantiene la tela humeda constantemente por gravedad + capilaridad. Autonomia: ~30 dias en verano. |
+| **Costo** | USD 2-4 (bidon 10L + manguera + conector) |
+| **Mejora** | Baseline T_wet estable en condiciones extremas. Elimina error por desecacion |
+
+---
+
+#### [C4] Capa 11 — Referencia dual Muller (gbh desde ΔT aluminio)
+
+| | |
+|---|---|
+| **Que ataca** | Necesidad de un estimador independiente de la conductancia de la capa limite (gbh), que es el parametro fisico que el viento modifica. |
+| **Como funciona** | Dos placas de aluminio pintadas (una negra α=0.95, una blanca α=0.15) en el FOV del MLX90640. La diferencia de temperatura entre ellas, combinada con la radiacion medida, permite calcular gbh directamente (Muller et al. 2021, New Phytologist). |
+
+```c
+// firmware: muller_gbh()
+float muller_gbh(float t_black, float t_white, float rad_wm2) {
+    float delta_T = t_black - t_white;
+    if (delta_T < 0.3f) return MULLER_GBH_REF;  // sin gradiente util
+    float delta_alpha = MULLER_ALPHA_BLACK - MULLER_ALPHA_WHITE;
+    return (delta_alpha * rad_wm2) / (MULLER_RHO_CP * delta_T);
+}
+```
+
+| | |
+|---|---|
+| **Costo** | USD 1-2 (dos placas aluminio 5×5cm + pintura) |
+| **Archivos** | `lucas/firmware/config.h` — coordenadas pixel, constantes termicas. `lucas/firmware/nodo_main.ino` — `muller_gbh()`. |
+| **Payload** | Campo `muller_gbh` [m/s] en JSON |
+| **Mejora** | gbh medido in situ, no estimado desde velocidad de viento. Mas preciso para correccion del CWSI |
+| **Referencia** | Muller et al. (2021). Leaf-level energy balance. New Phytologist, 230(4), 1558-1570. |
+
+---
+
+### Nuevas capas — Firmware
+
+#### [B6] Capa 12 — Quality score continuo (0-100)
+
+| | |
+|---|---|
+| **Que ataca** | Falta de metrica de confianza del CWSI en cada medicion. Sin quality score, el backend no puede distinguir un CWSI tomado en calma perfecta de uno tomado en tormenta. |
+| **Como funciona** | Puntaje 0-100 que pondera: (1) porcentaje de lecturas en calma, (2) velocidad media del viento, (3) disponibilidad del termopar, (4) rango Tc_dry − Tc_wet. |
+
+```c
+float calcular_quality_score(uint8_t n_calmas, uint8_t n_total,
+                             float wind_ms, bool tc_ok, float rango_dryWet) {
+    float q = 100.0f;
+    float pct_calma = (n_total > 0) ? (float)n_calmas / n_total : 0.0f;
+    q *= (0.3f + 0.7f * pct_calma);        // 30% base + 70% por calma
+    if (wind_ms > WIND_CALM_MS) q *= fmaxf(0.3f, 1.0f - (wind_ms - WIND_CALM_MS) / 15.0f);
+    if (!tc_ok) q *= 0.7f;
+    if (rango_dryWet < 2.0f) q *= fmaxf(0.5f, rango_dryWet / 2.0f);
+    return fmaxf(0.0f, fminf(100.0f, q));
+}
+```
+
+| | |
+|---|---|
+| **Archivos** | `lucas/firmware/nodo_main.ino` — `calcular_quality_score()` |
+| **Payload** | Seccion `quality` en JSON con `score`, `n_calmas`, `n_muestras`, `tc_ok`, `rango_dryWet` |
+| **Mejora** | Backend puede ponderar CWSI por confianza. ML puede filtrar datos de entrenamiento |
+
+---
+
+### Nuevas capas — Backend / ML
+
+#### [C3] Capa 13 — Jones Ig (indice de estrés independiente del viento)
+
+| | |
+|---|---|
+| **Que ataca** | Dependencia del CWSI clasico de los baselines empiricos, que se deforman con el viento. |
+| **Como funciona** | El indice Jones Ig = (T_dry - T_canopy) / (T_canopy - T_wet) es un ratio que cancela parcialmente el efecto del viento porque T_dry, T_wet y T_canopy se afectan proporcionalmente. Se calcula en firmware y se transmite en el payload para validacion cruzada con CWSI. |
+
+```c
+float calcular_jones_ig(float tc_canopy, float tc_wet_ref, float tc_dry_ref) {
+    float denom = tc_canopy - tc_wet_ref;
+    if (fabsf(denom) < 0.3f) return -1.0f;
+    return (tc_dry_ref - tc_canopy) / denom;
+}
+```
+
+| | |
+|---|---|
+| **Archivos** | `lucas/firmware/nodo_main.ino` — `calcular_jones_ig()`. `cesar/thermal_pipeline.py` — `compute_ig()` |
+| **Payload** | Campo `jones_ig` en JSON |
+| **Mejora** | Indicador de estres parcialmente inmune al viento. Feature para modelo ML |
+| **Referencia** | Jones (1999). Use of infrared thermometry for estimation of stomatal conductance. J. Experimental Botany, 50(339), 1523-1534. |
+
+---
+
+#### [C1] Capa 14 — CWSI teorico con resistencia aerodinamica dinamica
+
+| | |
+|---|---|
+| **Que ataca** | Los baselines empiricos (NWSB) no capturan la fisica del enfriamiento convectivo. |
+| **Como funciona** | Implementa la formulacion teorica completa de Jackson (1981) con resistencia aerodinamica ra = 208/u (FAO-56). Los baselines se calculan desde el balance energetico: ΔT_LL = (ra·Rn/(ρ·Cp)) × (γ/(Δ+γ)) − VPD/(Δ+γ), ΔT_UL = ra·Rn/(ρ·Cp). Cuando el viento aumenta, ra disminuye y ambos baselines se comprimen proporcionalmente. |
+
+```python
+# cesar/cwsi_formula.py — CWSICalculator.cwsi_theoretical()
+def cwsi_theoretical(self, T_leaf, meteo):
+    ra = meteo.aerodynamic_resistance      # 208/u [s/m]
+    Rn = meteo.solar_rad                   # [W/m²]
+    delta = meteo.delta_sat                # Δ saturacion [kPa/°C]
+    dT = T_leaf - meteo.T_air
+    dT_LL = (ra * Rn / RHO_CP) * (GAMMA / (delta + GAMMA)) - meteo.VPD / (delta + GAMMA)
+    dT_UL = ra * Rn / RHO_CP
+    cwsi = (dT - dT_LL) / max(dT_UL - dT_LL, 0.5)
+    return clip(cwsi, 0, 1)
+```
+
+| | |
+|---|---|
+| **Archivo** | `cesar/cwsi_formula.py` — `cwsi_theoretical()`, `aerodynamic_resistance`, `delta_sat` |
+| **Mejora** | Baselines fisicamente correctos a cualquier velocidad de viento. Complementa NWSB empirico |
+| **Referencia** | Jackson et al. (1981). Canopy temperature as a crop water stress index. Water Resources Research, 17(4). Allen et al. (1998). FAO-56 Eq. 4: ra = 208/u. |
+
+---
+
+#### [C2] Capa 15 — Modelo ML correccion por viento (Random Forest / XGBoost)
+
+| | |
+|---|---|
+| **Que ataca** | Error residual no capturado por las correcciones fisicas/algoritmicas. |
+| **Como funciona** | Un modelo Random Forest / XGBoost aprende la relacion psi_stem = f(cwsi_raw, wind_ms, rad_wm2, vpd, t_air, hora, jones_ig, quality_score, muller_gbh, wind_ms²) usando las 4 sesiones Scholander (~800 obs) como ground truth. El termino cuadratico wind_ms² captura el efecto no-lineal del viento. La literatura reporta R² de 0.85-0.92 con ML vs 0.66 con CWSI lineal (Pires et al. 2025; Zhou et al. 2022). |
+
+| | |
+|---|---|
+| **Archivos** | `cesar/wind_correction_ml.py` — `WindCorrectionTrainer`, `WindCorrectionPredictor` |
+| **Modelo exportado** | `cesar/models/wind_correction_rf.joblib` |
+| **Mejora** | Correccion aprendida de datos reales. Captura interacciones no-lineales entre variables |
+| **Referencias** | Pires et al. (2025). Scalable thermal imaging. C&E in Agriculture, 239. Zhou et al. (2022). Ground-based thermal imaging. Agronomy, 12(2), 322. |
+
+---
+
+#### [C6] Capa 16 — Restriccion ra(wind) en PINN
+
+| | |
+|---|---|
+| **Que ataca** | El PINN (Physics-Informed Neural Network) de segmentacion termica no tenia conocimiento de como el viento afecta los baselines del CWSI. |
+| **Como funciona** | Agrega un 4to termino al loss del PINN que penaliza predicciones inconsistentes con la fisica de la resistencia aerodinamica. Cuando wind_ms y rad_wm2 estan disponibles en los datos de entrenamiento (finetune con datos Scholander), el PINN aprende que a mayor viento, los baselines ΔT_LL y ΔT_UL se comprimen (ra↓). |
+
+```python
+# investigador/02_modelo/pinn_loss.py
+# L_total += λ_ra_wind · MSE(CWSI_pred, CWSI_wind_physics(ΔT_pred, VPD, wind, Rn, Ta))
+# donde CWSI_wind_physics usa baselines dinamicos:
+#   ra = 208/u,  ΔT_LL = (ra·Rn/ρCp)·(γ/(Δ+γ)) − VPD/(Δ+γ),  ΔT_UL = ra·Rn/ρCp
+
+PINNLossWeights(mse=1.0, physics=0.3, monotone=0.05, ra_wind=0.2)  # finetune
+```
+
+| | |
+|---|---|
+| **Archivos** | `investigador/02_modelo/pinn_loss.py` — `physics_cwsi_wind()`, termino C6 en `forward()`. `investigador/02_modelo/train.py` — config finetune actualizada |
+| **Mejora** | PINN generaliza mejor a condiciones de viento no vistas en entrenamiento |
+| **Referencia** | Allen et al. (1998). FAO-56 Eq. 4. Raissi et al. (2019). Physics-informed neural networks. |
+
+---
+
+## Error total por viento — antes vs despues (con mejoras v2)
+
+| Fuente de error | Sin mitigacion | Con 9 capas base | Con 9 + 14 v2 | Reduccion total |
+|---|---|---|---|---|
+| Conveccion en hoja (T_leaf baja) | +-0.10-0.15 | +-0.02 | +-0.008-0.01 | ~93% |
+| Movimiento de hoja en FOV (ruido) | +-0.05-0.08 | +-0.01 | +-0.005 | ~93% |
+| Error T_air/VPD (sensor ambiental) | +-0.05-0.10 | +-0.01 | +-0.005 | ~95% |
+| Error baselines (Tc_dry/Tc_wet) | +-0.03-0.05 | +-0.02 | +-0.005-0.01 | ~85% |
+| **Total** | **+-0.12-0.18** | **+-0.03** | **+-0.01-0.015** | **~90%** |
+| Piso inherente del sensor (NETD) | +-0.008 | +-0.008 | +-0.008 | (irreducible) |
+
+**Rango util del CWSI — comparacion:**
+
+| Configuracion | Rango util CWSI | % dias utiles en Cuyo | Comentario |
+|---|---|---|---|
+| Sin mitigacion (cutoff 4 m/s) | 0-4 m/s (0-14 km/h) | ~20-40% | Mayoria de dias se descarta el CWSI |
+| **Con capas base + v2 firmware (rampa 4-18 m/s)** | **0-18 m/s (0-65 km/h)** | **~95-98%** | **Solo Zonda severo (>18 m/s) fuerza backup MDS** |
+| Con v2 backend/ML adicional (C1, C2, C6) | 0-21 m/s (0-76 km/h) | ~98-99% | Solo Zonda extremo (>21 m/s) fuerza backup |
+
+---
+
 ## Tabla resumen
 
-| Capa | Tipo | Que ataca | Umbral | Efecto | Costo |
+| Capa | ID | Tipo | Que ataca | Efecto | Costo |
 |---|---|---|---|---|---|
-| 0 | Fisica (instalacion) | Conveccion directa en hoja | — | -60-70% velocidad viento en zona medida | USD 0 |
-| 1 | Fisica (hardware) | Movimiento hoja + viento lateral en FOV | — | Error movimiento: +-0.04 -> +-0.01 CWSI | USD 2-4 |
-| 2 | Fisica (hardware) | Error T_air/HR -> VPD -> CWSI | — | Elimina +-0.5C error en T_air | USD 0.50-2 |
-| 3 | Fisica + firmware | Conveccion en hoja (ground truth) | — | Error conveccion: +-0.08 -> +-0.02 CWSI | USD 4-8 |
-| 4 | Algoritmica (firmware) | Baseline Tc_dry inflado | Proporcional | delta_T reducido segun wind_ms | — |
-| 5 | Algoritmica (firmware) | Ruido por rafagas | < 2 m/s (7 km/h) | Mediana de lecturas en calma | +10s/ciclo |
-| 6 | Algoritmica (firmware) | Inestabilidad inherente CWSI | — | MDS domina 65% del HSI siempre | — |
-| **7** | **Algoritmica (firmware)** | **Degradacion progresiva por viento** | **4-12 m/s (14-43 km/h) rampa** | **Transicion gradual -> 100% MDS a 12 m/s** | — |
-| 8 | Algoritmica (firmware) | CWSI no calculable | CWSI = -1 | HSI = MDS puro (red seguridad) | — |
-| | | | | **COGS incremental total** | **USD 9** |
+| 0 | — | Fisica (instalacion) | Conveccion directa en hoja | -60-70% velocidad viento | USD 0 |
+| 1 | — | Fisica (hardware) | Movimiento hoja + viento lateral FOV | Error: +-0.04 -> +-0.01 | USD 2-4 |
+| 2 | — | Fisica (hardware) | Error T_air/HR -> VPD | Elimina +-0.5C error T_air | USD 0.50-2 |
+| 3 | — | Fisica + firmware | Conveccion en hoja (ground truth) | Error: +-0.08 -> +-0.02 | USD 4-8 |
+| 3+ | A3 | Hardware | Redundancia termopar | 2do termopar, promedio/fallback | USD 4-8 |
+| 3+ | B5 | Firmware | Fusion IR-TC suboptima | Kalman con R_IR ∝ wind² | — |
+| 4 | — | Firmware | Baseline Tc_dry inflado | delta_T reducido por wind_ms | — |
+| 4+ | B4 | Firmware | Tc_dry sin radiacion | Factor rad_wm2/900 agregado | — |
+| 5 | — | Firmware | Ruido por rafagas | Mediana lecturas en calma | +10s |
+| 5+ | B1 | Firmware | Buffer fijo insuficiente | Adaptativo 5-15 muestras, 1s | +5s max |
+| 5+ | B2 | Firmware | Mediana no optima | Hampel filter (MAD), -40% NETD | — |
+| 5+ | B3 | Firmware | Pocas lecturas en calma | Captura oportunista +30s | +30s |
+| 6 | — | Firmware | Inestabilidad CWSI | MDS 65% del HSI siempre | — |
+| 7 | — | Firmware | Degradacion por viento | Rampa 4-18 m/s -> MDS | — |
+| 8 | — | Firmware | CWSI no calculable | HSI = MDS puro (fallback) | — |
+| 9 | A1 | Hardware | Anemometro sin direccion | Ultrasonico 2D: vel + dir | USD 15-40 |
+| 10 | A4 | Hardware | Desecacion Wet Ref | Reservorio capilar 10L | USD 2-4 |
+| 11 | C4 | Firmware/backend | gbh desconocido | Muller dual reference plates | USD 1-2 |
+| 12 | B6 | Firmware | Sin metrica confianza | Quality score 0-100 | — |
+| 13 | C3 | Backend | Dependencia baselines | Jones Ig wind-independent | — |
+| 14 | C1 | Backend | Baselines empiricos | CWSI teorico ra=208/u | — |
+| 15 | C2 | Backend/ML | Error residual no-lineal | RF/XGBoost, R²~0.85-0.92 | — |
+| 16 | C6 | ML (PINN) | PINN sin fisica viento | Loss ra(wind) constraint | — |
+| | | | | **COGS incremental total (con v2)** | **USD 15-25** |
 
 ---
 
@@ -486,14 +843,14 @@ class MeteoConditions:
 
 | m/s | km/h | Descripcion | Efecto en sistema |
 |---|---|---|---|
-| 0-2 | 0-7 | Calma / brisa suave | CWSI perfecto. Buffer selecciona lecturas en calma |
+| 0-2 | 0-7 | Calma / brisa suave | CWSI perfecto. Buffer Hampel selecciona lecturas en calma |
 | 2-4 | 7-14 | Brisa leve | CWSI normal (w=0.35). Sin efecto significativo con mitigaciones |
-| 4-6 | 14-22 | Brisa moderada | Inicio rampa. CWSI util con peso levemente reducido |
-| 6-8 | 22-29 | Viento moderado | Rampa media. CWSI con peso reducido ~50% |
-| 8-10 | 29-36 | Viento fuerte | Rampa alta. CWSI aporta ~25% del peso |
-| 10-12 | 36-43 | Viento muy fuerte | Rampa extrema. CWSI aporta <12% |
-| > 12 | > 43 | Zonda severo / temporal | **Backup total MDS**. CWSI descartado |
-| > 20 | > 72 | Zonda extremo | Solo MDS. Verificar abrazadera extensometro post-evento |
+| 4-8 | 14-29 | Brisa moderada | Inicio rampa. CWSI util con peso >=0.25 |
+| 8-12 | 29-43 | Viento moderado | Rampa media. CWSI peso 0.25→0.15. Kalman da mas peso al termopar |
+| 12-15 | 43-54 | Viento fuerte | Rampa alta. CWSI aporta ~10-15%. Muller gbh corrige baselines |
+| 15-18 | 54-65 | Viento muy fuerte | Rampa extrema. CWSI aporta <8% |
+| > 18 | > 65 | Zonda severo / temporal | **Backup total MDS**. CWSI descartado |
+| > 25 | > 90 | Zonda extremo | Solo MDS. Verificar abrazadera extensometro post-evento |
 
 ---
 

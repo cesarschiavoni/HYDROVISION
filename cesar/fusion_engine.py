@@ -7,7 +7,7 @@ Implementa:
 - Pesos dinámicos por madurez del historial dendrométrico (mds_maturity = min(1, n/20))
 - Imputación de CWSI desde MDS cuando cwsi_confidence < 0.4
 - Alerta de divergencia automática (|CWSI − MDS_norm| > 0.35)
-- Rampa gradual viento 4-12 m/s → reducción progresiva peso CWSI. ≥12 m/s → 100% MDS
+- Rampa gradual viento 4-18 m/s → reducción progresiva peso CWSI. ≥18 m/s → 100% MDS
 - Persistencia JSON por nodo
 
 Referencia: combined_stress_index.py (pesos estáticos base 35/65),
@@ -32,7 +32,7 @@ MDS_MATURITY_FULL = 20    # sesiones Scholander para mds_maturity = 1.0
 CWSI_CONFIDENCE_THRESHOLD = 0.4   # umbral para imputación desde MDS
 DIVERGENCE_THRESHOLD = 0.35       # |CWSI − MDS_norm| > 0.35 → alerta
 WIND_RAMP_LO_MS = 4.0     # m/s — inicio reduccion peso CWSI
-WIND_RAMP_HI_MS = 12.0    # m/s (43 km/h) — override completo → 100% MDS
+WIND_RAMP_HI_MS = 18.0    # m/s (65 km/h) — override completo → 100% MDS (v2 firmware: Kalman, Muller, Hampel)
 WIND_OVERRIDE_MS = WIND_RAMP_HI_MS  # backward compat
 DEFAULT_ALPHA = 0.0       # intercepto inicial (HSI ≈ MDS_norm si sin datos)
 DEFAULT_BETA = 1.0        # pendiente inicial (correlación perfecta asumida)
@@ -149,7 +149,7 @@ class FusionEngine:
 
     Flujo por llamada a fuse():
     1. Calcular mds_maturity = min(1, n_scholander / MDS_MATURITY_FULL)
-    2. Rampa gradual 4-12 m/s: peso CWSI se reduce linealmente. ≥12 m/s → wind_override, weight_mds=1.0
+    2. Rampa gradual 4-18 m/s: peso CWSI se reduce linealmente. ≥18 m/s → wind_override, weight_mds=1.0
     3. Si cwsi_confidence < CWSI_CONFIDENCE_THRESHOLD → imputar CWSI = α + β×MDS_norm
     4. Actualizar ventana de regresión (solo con datos no imputados)
     5. Calcular pesos dinámicos base: w_mds = 0.65 + 0.20×mds_maturity (cap 0.85)
@@ -221,7 +221,7 @@ class FusionEngine:
             cwsi: Crop Water Stress Index medido (0-1).
             mds_norm: MDS normalizado por baseline (0-1).
             cwsi_confidence: Confianza en el CWSI (0-1). < 0.4 → imputación.
-            wind_speed_ms: Velocidad del viento en m/s. Rampa 4-12 m/s. ≥8 → override 100% MDS.
+            wind_speed_ms: Velocidad del viento en m/s. Rampa 4-18 m/s. ≥18 → override 100% MDS.
             timestamp: Momento de la medición (default: ahora).
         """
         ts = (timestamp or datetime.now()).isoformat()
@@ -235,7 +235,7 @@ class FusionEngine:
         self._state.last_beta = beta
         self._state.last_r2 = r2
 
-        # --- 2. Wind override con rampa gradual 4-12 m/s
+        # --- 2. Wind override con rampa gradual 4-18 m/s
         wind_override = wind_speed_ms >= WIND_RAMP_HI_MS
         if wind_speed_ms <= WIND_RAMP_LO_MS:
             wind_cwsi_factor = 1.0
@@ -281,7 +281,7 @@ class FusionEngine:
             r2_factor = 1.0 - 0.5 * r2   # r2=0 → full shift MDS; r2=1 → half shift
             w_mds = min(0.90, w_mds_base * r2_factor + w_mds_base * (1 - r2_factor))
             w_mds = min(0.85, w_mds_base)
-            w_cwsi = (1.0 - w_mds) * wind_cwsi_factor  # rampa gradual 4-12 m/s
+            w_cwsi = (1.0 - w_mds) * wind_cwsi_factor  # rampa gradual 4-18 m/s
             w_mds = 1.0 - w_cwsi
 
         # --- 6. Fusión

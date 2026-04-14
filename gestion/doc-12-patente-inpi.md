@@ -164,8 +164,8 @@ HSI = w_cwsi(v) · CWSI + w_mds(v) · f(MDS)
 
 donde:
 - Si v_viento ≤ 4 m/s: w_cwsi = 0.35, w_mds = 0.65 (condiciones normales — las 9 capas de mitigación física mantienen el error CWSI en ±0.03)
-- Si 4 < v_viento < 12 m/s (14-43 km/h): w_cwsi se reduce linealmente de 0.35 a 0.00 (rampa gradual — el CWSI sigue aportando señal parcial gracias al tubo colimador IR, termopar foliar y orientación a sotavento que reducen el viento efectivo en la hoja a ~30-40% del medido)
-- Si v_viento ≥ 12 m/s (43 km/h): w_cwsi = 0.00, w_mds = 1.00 (exclusión automática de CWSI — viento supera la capacidad de mitigación física)
+- Si 4 < v_viento < 18 m/s (14-65 km/h): w_cwsi se reduce linealmente de 0.35 a 0.00 (rampa gradual — el CWSI sigue aportando señal parcial gracias al tubo colimador IR, termopar foliar, orientación a sotavento que reducen el viento efectivo en la hoja a ~30-40% del medido, y mejoras v2: fusión Kalman IR↔termopar, Muller gbh, Hampel filter)
+- Si v_viento ≥ 18 m/s (65 km/h): w_cwsi = 0.00, w_mds = 1.00 (exclusión automática de CWSI — viento supera la capacidad de mitigación)
 
 La función f(MDS) convierte la contracción diaria máxima (µm) a una escala normalizada 0–1 equivalente al CWSI, utilizando los umbrales por estadio fenológico y varietal.
 

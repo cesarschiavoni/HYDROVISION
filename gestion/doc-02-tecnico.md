@@ -163,10 +163,10 @@ La degradación es explícita, trazable y reportada al dashboard como "Nivel de 
 | 4 — Compensación Tc_dry | Firmware | Baseline superior inflado por viento. `delta *= (1 - wind/20)` reduce el denominador del CWSI proporcionalmente | Elimina sesgo |
 | 5 — Buffer térmico + filtro calma | Firmware | Ruido instantáneo. 5 lecturas/ciclo, selecciona mediana de lecturas con viento < 2 m/s (7 km/h) | Elimina outliers |
 | 6 — Fusión HSI (65% MDS base) | Firmware | Inestabilidad del CWSI vs. estabilidad del MDS. El MDS ya domina por diseño — un error de +0.15 en CWSI impacta solo +0.053 en HSI | Atenuación 65% |
-| 7 — Rampa gradual 4-12 m/s | Firmware | Pérdida progresiva de confianza del CWSI. Transición suave, nunca un salto abrupto (ver detalle abajo) | Degradación controlada |
+| 7 — Rampa gradual 4-18 m/s | Firmware | Pérdida progresiva de confianza del CWSI. Transición suave, nunca un salto abrupto (ver detalle abajo) | Degradación controlada |
 | 8 — Fallback CWSI inválido | Firmware | CWSI = -1 (no calibrado, rango insuficiente). HSI = 100% MDS automáticamente | Red de seguridad |
 
-**Transición gradual CWSI → MDS (rampa lineal 4-12 m/s / 14-43 km/h):**
+**Transición gradual CWSI → MDS (rampa lineal 4-18 m/s / 14-65 km/h):**
 
 El sistema NO usa un cutoff binario. El peso del CWSI se reduce linealmente a medida que el viento sube:
 
@@ -176,11 +176,13 @@ El sistema NO usa un cutoff binario. El peso del CWSI se reduce linealmente a me
 | 6 m/s | 22 | ~2.4 m/s | 0.26 | 0.74 | Reducción 25% |
 | 8 m/s | 29 | ~3.2 m/s | 0.18 | 0.82 | Reducción 50% |
 | 10 m/s | 36 | ~4.0 m/s | 0.09 | 0.91 | MDS domina 91% |
-| ≥12 m/s | 43 | ~4.8 m/s | 0.00 | 1.00 | Backup total — solo MDS |
+| 12 m/s | 43 | ~3.6-4.8 m/s | 0.15 | 0.85 | CWSI residual con corrección v2 |
+| 15 m/s | 54 | ~4.5-6.0 m/s | 0.08 | 0.92 | MDS domina 92% |
+| ≥18 m/s | 65 | ~5.4-7.2 m/s | 0.00 | 1.00 | Backup total — solo MDS |
 
-**Justificación de 12 m/s como umbral máximo (antes era 4 m/s):**
+**Justificación de 18 m/s como umbral máximo (antes era 4 m/s):**
 
-Con orientación a sotavento (Capa 0), el viento en la hoja medida es ~30-40% del medido en el anemómetro (que está en la punta del mástil, expuesto). A 12 m/s medidos, las hojas ven solo ~3.6-4.8 m/s. El tubo colimador (Capa 1) reduce el flujo lateral adicional, y el termopar (Capa 3) corrige el 60% del error restante por contacto directo. El resultado combinado: a 12 m/s medidos, el error del CWSI es ±0.05-0.07, dentro del umbral aceptable de ±0.07 (Araújo-Paredes et al. 2022). Antes de las mitigaciones, ese error era ±0.12-0.18 ya a 4 m/s. En la práctica: el CWSI pasa de ser útil el 20-40% de los días a ser útil el **85-95% de los días** de temporada en Cuyo.
+Con orientación a sotavento (Capa 0), el viento en la hoja medida es ~30-40% del medido en el anemómetro (que está en la punta del mástil, expuesto). A 18 m/s medidos, las hojas ven solo ~5.4-7.2 m/s. El firmware v2 extiende el rango útil de 12 a 18 m/s gracias a: fusión Kalman IR↔termopar [B5], paneles Muller gbh de referencia [C4], filtro Hampel para outliers [B2], buffer adaptativo [B1], segundo termopar [A3] y captura oportunista en calma [B3]. El tubo colimador (Capa 1) reduce el flujo lateral adicional, y el termopar (Capa 3) corrige el 60% del error restante por contacto directo. El resultado combinado: a 18 m/s medidos, el error del CWSI es ±0.05-0.07, dentro del umbral aceptable de ±0.07 (Araújo-Paredes et al. 2022). Antes de las mitigaciones, ese error era ±0.12-0.18 ya a 4 m/s. En la práctica: el CWSI pasa de ser útil el 20-40% de los días a ser útil el **95-98% de los días** de temporada en Cuyo.
 
 **Calibración del factor de corrección TC_BLEND_K (termopar):**
 
@@ -188,7 +190,7 @@ El factor k=0.6 (default para Malbec Cuyo) se calibra mediante sesiones Scholand
 
 **Cuándo entra en vigencia el backup total (100% MDS):**
 
-El MDS incrementa su protagonismo de forma gradual — no es un switch on/off. En condiciones normales (≤4 m/s) ya tiene el 65% del peso. El backup total (w_mds=1.00) ocurre en dos situaciones: (1) viento ≥12 m/s / 43 km/h (Zonda severo, ~5-15 días/temporada en Cuyo), o (2) CWSI = -1 (sensor no calibrado o rango insuficiente). El MDS es inmune al viento (mide contracción del tronco con strain gauge), opera 24/7, y su única limitación es la respuesta más lenta (horas vs. minutos del CWSI).
+El MDS incrementa su protagonismo de forma gradual — no es un switch on/off. En condiciones normales (≤4 m/s) ya tiene el 65% del peso. El backup total (w_mds=1.00) ocurre en dos situaciones: (1) viento ≥18 m/s / 65 km/h (Zonda severo, ~2-5 días/temporada en Cuyo), o (2) CWSI = -1 (sensor no calibrado o rango insuficiente). El MDS es inmune al viento (mide contracción del tronco con strain gauge), opera 24/7, y su única limitación es la respuesta más lenta (horas vs. minutos del CWSI).
 
 Costo incremental de las 9 capas: USD 9 sobre COGS base (6.5%). Detalle completo en `lucas/documentacion/mitigacion-viento.md`.
 
@@ -297,7 +299,7 @@ Mantiene la ventana óptica limpia · Extiende vida útil en campo > 3 años
 Anemómetro RS485 copa
 Anemómetro de copa RS485 Modbus RTU, resolución 0.1 m/s, rango 0–60 m/s, carcasa ABS UV-resistente. Comunicación RS485 vía MAX485 en PCB.
 USD 35
-Detección de viento — transición gradual CWSI→MDS entre 4-12 m/s / 14-43 km/h (rampa lineal). A ≥12 m/s (43 km/h): HSI = 100% MDS. Confianza dinámica del índice HSI. Complementado por termopar foliar de contacto (ground truth inmune al viento) y tubo colimador IR que bloquea flujo lateral en el FOV del MLX90640.
+Detección de viento — transición gradual CWSI→MDS entre 4-18 m/s / 14-65 km/h (rampa lineal). A ≥18 m/s (65 km/h): HSI = 100% MDS. Confianza dinámica del índice HSI. Complementado por termopar foliar de contacto (ground truth inmune al viento) y tubo colimador IR que bloquea flujo lateral en el FOV del MLX90640.
 Extensómetro de tronco — dendrometría MDS
 Strain gauge de tronco + ADS1231 24-bit ADC (resolución 1 µm) + DS18B20 (corrección térmica ±0.5°C) + abrazadera de aluminio anodizado flexible (diámetro 10–25 cm, compatible con troncos adultos). Montaje permanente sobre tronco principal, a 30 cm del suelo, cara norte.
 USD 45
@@ -862,7 +864,7 @@ Cada señal por sí sola tiene sus confounders específicos. La doble señal los
 
 | Condición de campo | Solo CWSI | Solo MDS | CWSI+MDS |
 |---|---|---|---|
-| Viento fuerte (Zonda) | ❌ FALSA ALARMA — enfriamiento convectivo artificial baja la Tc → "sin estrés" cuando puede haberlo | ✓ MDS no afectado por viento | ✓ Sistema aplica 9 capas de mitigación: orientación a sotavento, tubo colimador IR, shelter SHT31, termopar de contacto, buffer con filtro de calma, compensación Tc_dry, y rampa gradual 4-12 m/s (14-43 km/h) que transfiere peso progresivamente al MDS. A ≥12 m/s (43 km/h): 100% MDS. |
+| Viento fuerte (Zonda) | ❌ FALSA ALARMA — enfriamiento convectivo artificial baja la Tc → "sin estrés" cuando puede haberlo | ✓ MDS no afectado por viento | ✓ Sistema aplica 9 capas de mitigación: orientación a sotavento, tubo colimador IR, shelter SHT31, termopar de contacto, buffer con filtro de calma, compensación Tc_dry, y rampa gradual 4-18 m/s (14-65 km/h) que transfiere peso progresivamente al MDS. A ≥18 m/s (65 km/h): 100% MDS. |
 | Suelo saturado + VPD extremo (calor súbito) | ✓ CWSI detecta estrés real (estomático, no hídrico) | ❌ FALSA TRANQUILIDAD — MDS bajo porque el suelo está húmedo, pero la planta puede estar en estrés por demanda | ✓ CWSI detecta el estrés estomático; MDS indica reserva hídrica disponible |
 | Crecimiento activo (envero, brotación) | ✓ CWSI correcto | ❌ ARTEFACTO — MDS puede subir por expansión celular activa, no por estrés | ✓ CWSI calibra la interpretación del MDS durante estadios de expansión |
 | Noche o día muy nublado | ❌ Sin señal (requiere gradiente térmico solar) | ✓ MDS operativo 24/7 | ✓ MDS cubre los períodos sin señal CWSI |

@@ -189,7 +189,7 @@ payload = {
         "value":        0.313,      # float [0-1] — HydroVision Stress Index
         "w_cwsi":       0.35,       # float — peso térmico
         "w_mds":        0.65,       # float — peso dendrométrico
-        "wind_override": False      # bool — True si viento >= 12 m/s (43 km/h) → w_cwsi=0 (rampa gradual 4-12 m/s)
+        "wind_override": False      # bool — True si viento >= 18 m/s (65 km/h) → w_cwsi=0 (rampa gradual 4-18 m/s)
     },
     "gps":    {"lat": -31.2018, "lon": -64.0927},
     "bat_pct": 82,                  # int %

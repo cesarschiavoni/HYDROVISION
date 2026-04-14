@@ -74,7 +74,7 @@ El protocolo experimental de Colonia Caroya generará los primeros coeficientes 
 
 **Rol en el proyecto:** Supervisión científica del protocolo experimental de campo, diseño del protocolo de medición Scholander, validación de los coeficientes CWSI para Malbec, revisión de los resultados de correlación CWSI–Ψ_stem.
 
-**Filiación:** Investigadora Adjunta, INTA EEA Córdoba / CONICET — Centro de Investigaciones Agropecuarias (CIAP), Córdoba.
+**Filiación:** Investigadora Adjunta CONICET, con lugar de trabajo en el IFRGV-UDEA — Instituto Nacional de Tecnología Agropecuaria (INTA), Centro de Investigaciones Agropecuarias (CIAP), CCT Córdoba.
 
 **Especialidad:** Fisiología vegetal bajo estrés abiótico en cultivos. Relaciones hídricas en vid y frutales. Protocolo de medición de potencial hídrico (bomba de Scholander). Respuesta fisiológica del Malbec a condiciones de Riego Deficitario Regulado (RDI) en el pedemonte cordobés.
 

@@ -305,31 +305,31 @@ class TestStressClassification:
 
 
 # ─────────────────────────────────────────────
-# Tests — Wind override (rampa gradual 4-12 m/s, override completo >= 12 m/s)
+# Tests — Wind override (rampa gradual 4-18 m/s, override completo >= 18 m/s)
 # ─────────────────────────────────────────────
 
 class TestWindOverride:
 
     def test_wind_override_fuerza_dendro_only(self, engine, meteo_std):
-        """Viento >= 12 m/s (43 km/h) invalida la señal térmica → DENDRO_ONLY."""
+        """Viento >= 18 m/s (65 km/h) invalida la señal térmica → DENDRO_ONLY."""
         hsi = engine.fuse(T_leaf_c=36.0, meteo=meteo_std,
                           dendro_result=make_dendro(150.0),
                           wind_speed_ms=WIND_OVERRIDE_THRESHOLD_MS + 1.0)
         assert hsi.signal_agreement == SignalAgreement.DENDRO_ONLY
 
     def test_wind_override_peso_mds_100(self, engine, meteo_std):
-        """Con wind override (>= 12 m/s) el peso MDS debe ser 1.0."""
+        """Con wind override (>= 18 m/s) el peso MDS debe ser 1.0."""
         hsi = engine.fuse(T_leaf_c=36.0, meteo=meteo_std,
                           dendro_result=make_dendro(150.0),
-                          wind_speed_ms=13.0)
+                          wind_speed_ms=19.0)
         assert hsi.weight_mds_used == pytest.approx(1.0, abs=0.001)
         assert hsi.weight_cwsi_used == pytest.approx(0.0, abs=0.001)
 
     def test_wind_override_psi_cwsi_none(self, engine, meteo_std):
-        """Con wind override (>= 12 m/s), psi_cwsi debe ser None (señal descartada)."""
+        """Con wind override (>= 18 m/s), psi_cwsi debe ser None (señal descartada)."""
         hsi = engine.fuse(T_leaf_c=36.0, meteo=meteo_std,
                           dendro_result=make_dendro(150.0),
-                          wind_speed_ms=13.0)
+                          wind_speed_ms=19.0)
         assert hsi.psi_cwsi_mpa is None
 
     def test_wind_ramp_reduces_cwsi_weight(self, engine, meteo_std):
@@ -350,9 +350,9 @@ class TestWindOverride:
             assert "wind" in hsi.fusion_note.lower() or "viento" in hsi.fusion_note.lower()
 
     def test_sin_dendro_wind_override_retorna_no_data(self, engine, meteo_std):
-        """Wind override (>= 12 m/s) sin dendro: termica descartada + sin MDS = NO_DATA."""
+        """Wind override (>= 18 m/s) sin dendro: termica descartada + sin MDS = NO_DATA."""
         hsi = engine.fuse(T_leaf_c=36.0, meteo=meteo_std,
-                          wind_speed_ms=13.0)   # sin dendro_result, >= 12 m/s
+                          wind_speed_ms=19.0)   # sin dendro_result, >= 18 m/s
         assert hsi.signal_agreement == SignalAgreement.NO_DATA
 
     def test_wind_debajo_umbral_no_override(self, engine, meteo_std):
@@ -364,5 +364,5 @@ class TestWindOverride:
         assert hsi.psi_cwsi_mpa is not None
 
     def test_wind_override_threshold_constante(self):
-        """El override completo ocurre a 12 m/s (rampa gradual 4-12)."""
-        assert WIND_OVERRIDE_THRESHOLD_MS == pytest.approx(12.0, abs=0.001)
+        """El override completo ocurre a 18 m/s (rampa gradual 4-18)."""
+        assert WIND_OVERRIDE_THRESHOLD_MS == pytest.approx(18.0, abs=0.001)

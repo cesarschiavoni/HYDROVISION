@@ -48,10 +48,10 @@ from torch.utils.data import DataLoader
 # Paths relativos al módulo
 # ---------------------------------------------------------------------------
 _HERE = Path(__file__).resolve().parent          # 03_fusion/
-_ALEXIS = _HERE.parent                           # investigador/
-_MODELO = _ALEXIS / "02_modelo"
+_INVESTIGADOR = _HERE.parent                           # investigador/
+_MODELO = _INVESTIGADOR / "02_modelo"
 sys.path.insert(0, str(_MODELO))
-sys.path.insert(0, str(_ALEXIS / "01_simulador"))
+sys.path.insert(0, str(_INVESTIGADOR / "01_simulador"))
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -510,7 +510,7 @@ def main():
     if args.output_dir:
         out_dir = Path(args.output_dir)
     else:
-        out_dir = _ALEXIS / "models" / "logs" / "validation"
+        out_dir = _INVESTIGADOR / "models" / "logs" / "validation"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"\nHydroVision AG — Validación PINN")

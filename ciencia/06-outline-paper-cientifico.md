@@ -38,7 +38,7 @@
 
 | Orden | Autor | Afiliación | Contribución (CRediT) |
 |---|---|---|---|
-| 1° (primer autor) | **Monteoliva, Mariela I.** | INTA EEA Córdoba / CONICET | Conceptualización, diseño experimental, metodología Scholander, escritura |
+| 1° (primer autor) | **Monteoliva, Mariela I.** | IFRGV-UDEA, INTA-CONICET, CCT Córdoba | Conceptualización, diseño experimental, metodología Scholander, escritura |
 | 2° | **Inv. Art. 32 (a definir)** | HydroVision AG | Validación estadística, análisis de correlaciones, curación de datos |
 | 3° | **Schiavoni, César** | HydroVision AG | Software (PINN, pipeline), hardware, firmware, recursos, supervisión técnica |
 | 4° (autor de correspondencia) | **Monteoliva, Mariela I.** | INTA-CONICET | Correspondencia con editores |
@@ -91,7 +91,7 @@
 - Tabla de zonas con número de plantas y replicas
 
 **2.3 HydroVision AG monitoring node**
-- Componentes: MCU ESP32-S3, cámara LWIR MLX90640 (32×24 px, NETD<0.1°C), extensómetro lineal 24 bits (resolución 0.5 μm), T+HR SHT31, pluviómetro basculante, anemómetro
+- Componentes: MCU ESP32-S3, cámara LWIR MLX90640 (32×24 px, NETD<0.1°C), extensómetro lineal 24 bits (resolución 1 μm), T+HR SHT31, pluviómetro basculante, anemómetro
 - Frecuencia de captura: 15 min en horario 9:00–15:00 hs; hibernación nocturna
 - Gimbal de ángulo variable (35–45°), instalación a 0.6–1.0 m del tronco
 - Auto-calibración del offset Tc_wet por eventos de lluvia ≥5 mm + MDS≈0 (EMA, Nivel 2)
@@ -101,7 +101,7 @@
 - Línea base inferior: ΔT_LL = a + b·VPD (coeficientes calibrados en temporada)
 - Línea base superior: ΔT_UL = media histórica de planta bajo estrés máximo (zona E)
 - Segmentación foliar: máscara por rango de temperatura (exclusión suelo/madera)
-- Filtro de viento: rampa gradual 4-12 m/s (14-43 km/h) → peso CWSI se reduce linealmente de 35% a 0%. Frames con v_viento ≥ 12 m/s (43 km/h) → descartados del análisis CWSI (ponderación HSI = 0 para termografía)
+- Filtro de viento: rampa gradual 4-18 m/s (14-65 km/h) → peso CWSI se reduce linealmente de 35% a 0%. Frames con v_viento ≥ 18 m/s (65 km/h) → descartados del análisis CWSI (ponderación HSI = 0 para termografía)
 
 **2.5 Trunk diameter variation (TDV) measurement**
 - Máxima Contracción Diaria (MDS): MDS = D_max_noche − D_min_día
@@ -111,8 +111,8 @@
 **2.6 HSI — HydroVision Stress Index**
 - HSI = w_cwsi · CWSI + (1 − w_cwsi) · f(MDS_NORM)
 - v ≤ 4 m/s: w_cwsi = 0.35 (condiciones normales)
-- 4 < v < 12 m/s: w_cwsi = 0.35 × (12 − v) / 8 (rampa lineal)
-- v ≥ 12 m/s: w_cwsi = 0 (HSI = 100% MDS)
+- 4 < v < 18 m/s: w_cwsi = 0.35 × (18 − v) / 14 (rampa lineal)
+- v ≥ 18 m/s: w_cwsi = 0 (HSI = 100% MDS)
 - Cálculo a las 13:00 hs (máximo estrés diario)
 
 **2.7 Scholander pressure chamber measurements (reference method)**
@@ -239,4 +239,4 @@
 
 ---
 
-*Dra. Mariela Inés Monteoliva — INTA EEA Córdoba / CONICET — Abril 2026*
+*Dra. Mariela Inés Monteoliva — IFRGV-UDEA, INTA-CONICET, CCT Córdoba — Abril 2026*

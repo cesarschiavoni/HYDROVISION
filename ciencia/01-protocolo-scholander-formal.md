@@ -3,7 +3,7 @@
 ## HydroVision AG — Convocatoria STARTUP 2025 TRL 3-4 — ANPCyT/FONARSEC
 
 **Elaborado por:** Dra. Mariela Inés Monteoliva  
-**Filiación:** INTA EEA Córdoba / CONICET — Investigadora Adjunta  
+**Filiación:** Investigadora Adjunta CONICET — IFRGV-UDEA, INTA CIAP, CCT Córdoba  
 **Especialidad:** Fisiología vegetal bajo estrés abiótico — Relaciones hídricas en cultivos  
 **Publicación de referencia:** Espinosa Herlein, M.A.; Monteoliva, M.I. (2025). Estado hídrico. En: *Abordajes fisiológicos para el estudio del estrés abiótico en cultivos*. Editorial UCC, Córdoba.  
 **Viñedo experimental:** Predio familiar Schiavoni, Colonia Caroya, Córdoba (31°12' S, 64°05' O, ~700 m s.n.m.)  
@@ -37,21 +37,22 @@ La correlación CWSI–Ψ_stem reportada en vid oscila entre R² = 0.49–0.67 p
 
 ## 2. DISEÑO EXPERIMENTAL
 
-### 2.1 Fila experimental — Régimen de Riego Deficitario (RDI)
+### 2.1 Viñedo experimental — Régimen de Riego Deficitario (RDI)
 
 El protocolo aplica el paradigma de Riego Deficitario Regulado (RDI, Regulated Deficit Irrigation) documentado en la literatura vitivinícola argentina y chilena para la obtención de datos de entrenamiento del modelo IA con gradiente completo de estrés.
 
-La fila experimental de 136 m se divide en 5 zonas hídricas mediante solenoides independientes controlados por el sistema HydroVision AG (controlador Rain Bird ESP-ME3 + 5 electroválvulas 24 VAC). Cada zona recibe un porcentaje diferente de la evapotranspiración de referencia (ETc):
+El viñedo experimental tiene 10 filas de 136 m (1.360 vides, espaciado 1 m entre plantas, 3 m entre filas). Se asigna un **único régimen hídrico por fila completa** (la fila entera se riega igual), controlado por solenoides independientes Rain Bird 24 VAC (1 solenoide por fila experimental). Las 5 filas experimentales se intercalan con 5 filas buffer a 100% ETc que evitan contaminación lateral del estrés hídrico entre tratamientos:
 
-| Zona | Extensión | Régimen | ETc aplicada | Rango CWSI esperado | Función experimental |
+| Fila | Régimen | ETc aplicada | Tipo | Rango CWSI esperado | Función experimental |
 |---|---|---|---|---|---|
-| A | 0–27 m | Control pleno | 100% ETc | 0.05–0.20 | Referencia — línea base sin estrés |
-| B | 27–54 m | RDI leve | 65% ETc | 0.25–0.40 | Estrés incipiente — máxima sensibilidad del sistema |
-| C | 54–81 m | RDI moderado | 40% ETc | 0.45–0.60 | Umbral de alerta agronómica |
-| D | 81–109 m | RDI severo | 15% ETc | 0.65–0.85 | Zona de impacto productivo |
-| E | 109–136 m | Sin riego | 0% ETc | 0.85–1.00 | Estrés máximo — límite del sistema |
+| 2 | Control pleno | 100% ETc | Experimental | 0.05–0.20 | Referencia — línea base sin estrés |
+| 4 | RDI leve | 65% ETc | Experimental | 0.25–0.40 | Estrés incipiente — máxima sensibilidad del sistema |
+| 6 | RDI moderado | 40% ETc | Experimental | 0.45–0.60 | Umbral de alerta agronómica |
+| 8 | RDI severo | 15% ETc | Experimental | 0.65–0.85 | Zona de impacto productivo |
+| 10 | Sin riego | 0% ETc | Experimental | 0.85–1.00 | Estrés máximo — límite del sistema |
+| 1, 3, 5, 7, 9 | Control pleno | 100% ETc | Buffer | — | Aislamiento hídrico entre tratamientos |
 
-El gradiente de 5 niveles en una única fila permite obtener pares calibrados (Ψ_stem, CWSI) que cubren el rango operativo completo del sistema en una sola sesión de medición, maximizando la eficiencia del protocolo de campo.
+El gradiente de 5 niveles en 5 filas independientes permite obtener pares calibrados (Ψ_stem, CWSI) que cubren el rango operativo completo del sistema en una sola sesión de medición. Cada nodo (1 por fila experimental, planta central ~68) monitorea un régimen hídrico uniforme, eliminando variabilidad intra-fila.
 
 ### 2.2 Varietal y fenología del viñedo experimental
 
@@ -323,5 +324,5 @@ Catania, C.D., Avagnina, S. (2007). La interpretación sensorial del vino. *Curs
 *Protocolo elaborado por la Dra. Mariela Inés Monteoliva en el marco de su participación como asesora científica del proyecto HydroVision AG. El protocolo está basado en metodología estándar internacional adaptada a las condiciones edafoclimáticas del viñedo experimental de Colonia Caroya, Córdoba, Argentina.*
 
 **Dra. Mariela Inés Monteoliva**  
-Investigadora Adjunta — INTA EEA Córdoba / CONICET  
+Investigadora Adjunta CONICET — IFRGV-UDEA, INTA CIAP, CCT Córdoba  
 Colonia Caroya, Córdoba — Abril 2026

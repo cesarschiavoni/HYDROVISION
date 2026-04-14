@@ -27,7 +27,7 @@ Este módulo implementa tres mecanismos de auto-calibración:
      alerta de recalibración al dashboard.
 
 Persistencia: los offsets se guardan en JSON local (un archivo por nodo).
-Al reiniciar el RPi4, el nodo carga el baseline calibrado de la temporada.
+Al reiniciar el ESP32-S3, el nodo carga el baseline calibrado de la temporada.
 
 Referencias:
   Jackson, R.D. et al. (1981). Canopy temperature as a crop water stress

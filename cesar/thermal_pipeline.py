@@ -241,7 +241,11 @@ class ReferenceCalibrator:
 @dataclass
 class ThermalFrame:
     """
-    Frame térmico Y16 del FLIR Lepton 3.5.
+    Frame térmico Y16.
+
+    Acepta datos sintéticos (FLIR Lepton 3.5, 160×120 — pre-entrenamiento)
+    y datos reales de campo (MLX90640, 32×24 — fine-tuning y producción).
+    La resolución se infiere del shape del array.
 
     canopy_side: lado del canopeo capturado ("N", "S", "E", "O", "top" o "").
       Pires et al. (2025) y Zhou et al. (2022) demuestran que ambos lados
@@ -250,7 +254,7 @@ class ThermalFrame:
       En Colonia Caroya (hemisferio sur): cara norte recibe más radiación
       → habitualmente más caliente y mejor candidata para CWSI de estrés.
     """
-    raw_y16: np.ndarray        # Array uint16 160×120
+    raw_y16: np.ndarray        # Array uint16 (160×120 sintético ó 32×24 real)
     meteo: MeteoConditions
     timestamp: str = ""
     angle_deg: float = 0.0     # ángulo del gimbal
@@ -549,7 +553,7 @@ if __name__ == "__main__":
 
     print("=" * 60)
     print("Pipeline Térmico — HydroVision AG — TRL 3")
-    print("FLIR Lepton 3.5 → Segmentación → CWSI")
+    print("Datos sintéticos FLIR Lepton 3.5 → Segmentación → CWSI")
     print("=" * 60)
 
     sim = FlirLepton35Simulator(seed=42)

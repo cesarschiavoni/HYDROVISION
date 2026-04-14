@@ -5,19 +5,20 @@ El objetivo en una línea
 
 Sacarle fotos térmicas a las vides bajo distintos niveles de sed y al mismo tiempo medir exactamente qué tan sedientas están. Así el modelo aprende a "ver" el estrés hídrico antes de que la planta lo muestre visualmente.
 
-Nota clave sobre los nodos: el viñedo experimental cuenta con 5 nodos permanentes (uno por zona de régimen hídrico), cada uno montado en un bracket fijo de acero sobre poste espaldera. Los nodos operan de forma continua 24/7 capturando 7 ángulos gimbal × 96 ciclos/día. Los brackets adicionales (32 en total) son soportes fijos de acero (USD 12 cada uno) que permiten posiciones de captura complementarias. En el producto comercial, el productor instala un solo nodo permanente por zona que opera de forma completamente autónoma.
+Nota clave sobre los nodos: el viñedo experimental cuenta con 5 nodos permanentes (uno por fila experimental), cada uno montado en estaca de acero inoxidable en la planta central (planta 68) de su fila. Los nodos operan de forma continua 24/7 capturando 7 ángulos gimbal × 96 ciclos/día. Los brackets adicionales (32 en total) son soportes fijos de acero (USD 12 cada uno) que permiten posiciones de captura complementarias. En el producto comercial, el productor instala un solo nodo permanente por zona que opera de forma completamente autónoma.
 
-Componentes de la fila y función de cada uno
+Componentes del viñedo experimental y función de cada uno
 
-La fila de 136m dividida en 5 zonas hídricas de 27m
+10 filas de 136m — 5 experimentales + 5 buffer intercalados
 
-Las 136 vides se dividen en 5 grupos de ~27 plantas. Cada grupo recibe una cantidad diferente de agua a propósito, generando un rango completo de niveles de estrés en una sola sesión:
+El viñedo tiene 10 filas de 136 plantas (1.360 vides, espaciado 1 m entre plantas, 3 m entre filas). Cada fila experimental recibe un único régimen hídrico (la fila completa se riega igual). Las filas experimentales se intercalan con filas buffer a 100% ETc que actúan como aislamiento hídrico:
 
-Zona A (0–27m): Riego normal completo — planta sana, referencia. CWSI 0.05–0.20.
-Zona B (27–54m): 65% del riego normal — estrés leve. CWSI 0.25–0.40.
-Zona C (54–81m): 40% del riego normal — estrés moderado. CWSI 0.45–0.60.
-Zona D (81–109m): 15% del riego normal — estrés fuerte. CWSI 0.65–0.85.
-Zona E (109–136m): Sin riego — estrés máximo. CWSI 0.85–1.00.
+Fila 2 (Control, 100% ETc): Riego normal completo — planta sana, referencia. CWSI 0.05–0.20.
+Fila 4 (65% ETc): 65% del riego normal — estrés leve. CWSI 0.25–0.40.
+Fila 6 (40% ETc): 40% del riego normal — estrés moderado. CWSI 0.45–0.60.
+Fila 8 (15% ETc): 15% del riego normal — estrés fuerte. CWSI 0.65–0.85.
+Fila 10 (0% ETc, secano): Sin riego — estrés máximo. CWSI 0.85–1.00.
+Filas 1, 3, 5, 7, 9: Buffer a 100% ETc — evitan contaminación lateral entre tratamientos.
 
 Sin esta variedad de condiciones, el modelo solo vería plantas sanas y no aprendería a detectar ni graduar el estrés.
 
@@ -141,30 +142,30 @@ REFERENCIA RAPIDA — VALVULAS A OPERAR:
 0f. Instalar un regulador de caudal inline 16mm aguas abajo de cada válvula de fila (R1, R2, R3, R4). Marcar la escala con rotulador permanente: posición completamente abierta = 100% caudal.
 
 Semana 1 — Tendido de cinta drip y solenoides:
-1. Marcar con estacas de colores los límites de las 5 zonas en cada fila: 0m, 27m, 54m, 81m, 109m, 136m.
-2. Tender la cinta drip 16mm a lo largo de cada fila pegada al pie de las vides, asegurada con ganchos al suelo cada 2 metros.
-3. Conectar la cinta al ramal de fila aguas abajo del regulador de caudal Ri correspondiente.
-4. Instalar un solenoide 24VAC en el punto de inicio de cada zona (5 por fila × 4 filas = 20 solenoides). Etiquetar cada solenoide con cinta adhesiva: fila número + zona letra (ej. F1-A, F1-B, etc.).
-5. Conectar el cable de 2 hilos de cada solenoide al controlador Rain Bird ESP-ME3 en el tablero central. Conexión por zona en paralelo: todos los solenoides A (F1-A, F2-A, F3-A, F4-A) al canal 1 del Rain Bird; todos los B al canal 2; etc.
-6. Programar el Rain Bird: Zona A = 100% ETc referencia, B = 65%, C = 40%, D = 15%, E = 0 (cerrado). Duración inicial estimada: consultar con Monteoliva según datos meteorológicos locales del primer mes.
+1. Identificar las 5 filas experimentales (2, 4, 6, 8, 10) y las 5 filas buffer (1, 3, 5, 7, 9).
+2. Tender la cinta drip 16mm a lo largo de las 10 filas pegada al pie de las vides, asegurada con ganchos al suelo cada 2 metros.
+3. Conectar cada cinta al ramal de fila aguas abajo del regulador de caudal Ri correspondiente.
+4. Instalar 1 solenoide 24VAC en el inicio de cada fila experimental (5 solenoides total). Etiquetar: F2-100%, F4-65%, F6-40%, F8-15%, F10-0%. Las filas buffer se conectan directo al cabezal sin solenoide (riego permanente 100% ETc).
+5. Conectar el cable de 2 hilos de cada solenoide al controlador Rain Bird en el tablero central. Un canal por fila experimental: canal 1 = F2, canal 2 = F4, canal 3 = F6, canal 4 = F8, canal 5 = F10 (cerrado).
+6. Programar el Rain Bird: F2 = 100% ETc referencia, F4 = 65%, F6 = 40%, F8 = 15%, F10 = cerrado (0%). Duración inicial estimada: consultar con Monteoliva según datos meteorológicos locales del primer mes.
 
 Semana 1 — Prueba de caudales:
-7. Modo riego: abrir Vr, cerrar Vf. Abrir M1, cerrar M2+M3+M4. Abrir solenoide Zona A de la Fila 1 durante 10 minutos. Caminar la fila y verificar que cada emisor gotea. Registrar emisores obstruidos → reemplazar.
-8. Repetir paso 7 fila por fila (M2, M3, M4), luego zona por zona. Total: 20 combinaciones fila×zona.
+7. Modo riego: abrir Vr, cerrar Vf. Abrir solenoide de Fila 2 durante 10 minutos. Caminar la fila y verificar que cada emisor gotea. Registrar emisores obstruidos → reemplazar.
+8. Repetir paso 7 para las 9 filas restantes (experimentales + buffer).
 9. Verificar presión en el extremo más lejano de cada fila con manómetro portátil. Debe ser ≥ 0.8 bar. Si no: ajustar regulador Ri de esa fila.
 9b. Prueba de riego simultáneo completo: abrir M1+M2+M3+M4, activar Zona A desde el Rain Bird. Verificar que todas las filas gotean con presión uniforme. Si alguna fila recibe notablemente más presión que las otras: reducir su regulador Ri hasta equilibrar.
 
 Semana 2 — Montaje permanente de nodos, extensómetros y paneles:
-10. Instalar 1 soporte de montaje permanente por zona (5 total, uno por zona A–E): clavar estaca inox 316 punta cónica **en la línea de la hilera**, entre dos plantas consecutivas (~50 cm de cada tronco), en el punto medio de cada zona. La estaca va en la línea de plantación (no hacia el pasillo) para protegerla de la maquinaria agrícola. Verificar verticalidad con nivel de burbuja integrado.
+10. Instalar 1 soporte de montaje permanente por fila experimental (5 total, uno por fila 2/4/6/8/10): clavar estaca inox 316 punta cónica **en la línea de la hilera**, entre dos plantas consecutivas (~50 cm de cada tronco), en la planta central (planta 68). La estaca va en la línea de plantación (no hacia el pasillo) para protegerla de la maquinaria agrícola. Verificar verticalidad con nivel de burbuja integrado.
 11. Montar el nodo en la estaca. Orientar la cámara hacia el dosel a 40° con el inclinómetro de la app. Ajustar bracket angular y apretar tornillos M6 inox. El nodo queda fijo en esta posición por toda la campaña — no se retira entre sesiones.
-12. Instalar extensómetro de tronco en la vid de referencia de cada zona: colocar abrazadera de aluminio anodizado a 30 cm de altura, cara norte, sobre la corteza sin herir. Conectar el cable del strain gauge (ADS1231) y el sensor DS18B20 de temperatura al puerto correspondiente del nodo. Verificar con multímetro que la resistencia base está entre 120–350 Ω. Aguardar 24–48h antes de tomar el primer D_max/D_min como válido (período de estabilización del baseline).
+12. Instalar extensómetro de tronco en la vid de referencia de cada fila experimental: colocar abrazadera de aluminio anodizado a 30 cm de altura, cara norte, sobre la corteza sin herir. Conectar el cable del strain gauge (ADS1231) y el sensor DS18B20 de temperatura al puerto correspondiente del nodo. Verificar con multímetro que la resistencia base está entre 120–350 Ω. Aguardar 24–48h antes de tomar el primer D_max/D_min como válido (período de estabilización del baseline).
 13. Clavar un panel de referencia de emisividad (chapa negra mate 15×15cm) en el suelo a 20 cm del nodo, visible en el campo visual del gimbal. Permite corregir derive térmica entre sesiones.
-14. Numerar cada vid con estaca: Fila 1 comienza en F1-001, Fila 2 en F2-001, etc. Tomar fotos de referencia de cada vid numerada → compartir en Google Drive del proyecto.
-15. Instalar túneles plásticos de exclusión de lluvia sobre las zonas C y D de las Filas 1 y 2. Asegurar con estacas metálicas cada 3 metros.
+14. Numerar cada vid con estaca en las 5 filas experimentales: Fila 2 en F2-001 a F2-136, Fila 4 en F4-001, etc. Tomar fotos de referencia de cada vid numerada → compartir en Google Drive del proyecto.
+15. Instalar túneles plásticos de exclusión de lluvia parcial sobre las filas 8 (15% ETc) y 10 (0% ETc), al menos en la zona central alrededor del nodo. Asegurar con estacas metálicas cada 3 metros.
 
 Semana 2 — Instalación de tensiómetros:
-16. Enterrar 1 tensiómetro por zona en el centro de cada zona (a 11m del inicio), a 20 cm de profundidad junto a la vid más representativa. Etiquetar con el código de zona.
-17. Registrar lectura inicial de los 20 tensiómetros y D_max/D_min inicial de los 5 extensómetros. Fotografiar y subir a planilla.
+16. Enterrar 1 tensiómetro por fila experimental en la planta central (~planta 68), a 20 cm de profundidad junto a la vid más representativa. Etiquetar con el número de fila (5 tensiómetros total).
+17. Registrar lectura inicial de los 5 tensiómetros y D_max/D_min inicial de los 5 extensómetros. Fotografiar y subir a planilla.
 
 Semana 2 — Verificación de conectividad gateway → nube:
 18. Verificar tipo de conectividad instalada: (A) Router 4G Teltonika RUT241 — confirmar LED de señal celular verde fijo, acceder a panel web 192.168.1.1 y verificar operador y nivel de señal (RSSI > −85 dBm). (B) Starlink Mini X — confirmar LED blanco fijo (conectado), verificar en app Starlink latencia < 100 ms y velocidad > 5 Mbps. Registrar tipo de conectividad y nivel de señal en planilla.
@@ -203,7 +204,7 @@ Tarea diaria (5–10 minutos):
 17. Si hay alarma de riego en el Rain Bird: verificar en campo qué solenoide o válvula de fila falló. Reportar.
 
 Tarea semanal (45–60 minutos):
-18. Recorrer las 4 filas y leer los 20 tensiómetros. Registrar en planilla compartida (Google Sheets): fecha, hora, zona, lectura en centibares.
+18. Recorrer las 5 filas experimentales y leer los 5 tensiómetros. Registrar en planilla compartida (Google Sheets): fecha, hora, fila, lectura en centibares.
 19. Inspeccionar visualmente: emisores tapados (reemplazar), túneles rotos (parchar con cinta), estacas caídas (volver a clavar).
 20. Fotografiar 1 plano general de cada zona mostrando el estado de las vides. Subir a carpeta del proyecto.
 21. Flush de la cinta drip: abrir el tapón del extremo de cada fila 30 segundos con el solenoide abierto para limpiar sedimentos.
@@ -324,16 +325,16 @@ Estructura de montaje: placa de aluminio 80×30 mm, espesor 3 mm, doblada en U. 
 
 Datalogger: Arduino Nano + módulo lector de tarjeta SD + reloj de tiempo real RTC DS3231. El Arduino toma una lectura cada 10 minutos, la graba en la SD con fecha y hora exactas, y entra en modo de bajo consumo hasta la próxima lectura. Batería de litio 18650: autonomía de 45-60 días sin recarga. Precio completo: USD 12-15/unidad.
 
-Costo total del kit de 6 dendrómetros: USD 140-190 según el tipo de sensor elegido.
+Costo total del kit de 5 dendrómetros: USD 120-160 según el tipo de sensor elegido.
 
 Instalación paso a paso
 
-El técnico de campo instala los 6 dendrómetros en una sola mañana de trabajo (~3 horas). Monteoliva o César Schiavoni verifican la instalación el día de la Sesión 1.
+El técnico de campo instala los 5 dendrómetros en una sola mañana de trabajo (~2.5 horas). Monteoliva o César Schiavoni verifican la instalación el día de la Sesión 1.
 
-Vides a instrumentar: 1 por zona en Fila 1 (zonas A, B, C) y 1 por zona en Fila 2 (zonas A, B, C) = 6 unidades. Las zonas D y E no llevan dendrómetro permanente — se miden solo con Scholander en las 4 sesiones.
+Vides a instrumentar: 1 por fila experimental (Filas 2, 4, 6, 8 y 10) = 5 unidades. Cada dendrómetro se instala en la vid central de la fila (planta ~68), la misma vid donde se posiciona el nodo sensor HydroVision.
 
-Paso D1 — Seleccionar la vid representativa de cada zona.
-Criterio: vid ubicada en el centro de la zona (aproximadamente a 11 m del inicio de esa zona), sin síntomas de enfermedad, tronco recto y sin heridas visibles, grosor de tronco entre 3 y 6 cm. Marcar con cinta de colores: Zona A = azul, Zona B = verde, Zona C = amarillo, en ambas filas. Anotar el número de estaca de cada vid elegida en la planilla del proyecto.
+Paso D1 — Seleccionar la vid representativa de cada fila experimental.
+Criterio: vid ubicada en el centro de la fila (~planta 68), sin síntomas de enfermedad, tronco recto y sin heridas visibles, grosor de tronco entre 3 y 6 cm. Marcar con cinta de colores: Fila 2 = azul (100% ETc), Fila 4 = verde (65% ETc), Fila 6 = amarillo (40% ETc), Fila 8 = rojo (15% ETc), Fila 10 = blanco (0% ETc). Anotar el número de estaca de cada vid elegida en la planilla del proyecto.
 Por qué importa: usar siempre la misma vid garantiza que las variaciones medidas reflejan el estado hídrico de esa planta a lo largo del tiempo, y no la variabilidad natural entre individuos distintos. Cambiar de vid entre sesiones invalida la serie temporal de datos.
 
 Paso D2 — Limpiar la corteza en el punto de contacto.
@@ -349,7 +350,7 @@ Insertar el potenciómetro en el soporte de la placa. Extender el brazo con punt
 Por qué importa: un sensor posicionado al extremo de su rango saturará cuando el tronco se expanda por hidratación nocturna, produciendo lecturas de techo que enmascaran el ciclo diurno real. Centrar el sensor en el rango medio garantiza que tanto la expansión nocturna como la contracción por estrés diurno queden dentro del rango medible.
 
 Paso D5 — Conectar el datalogger y verificar la primera grabación.
-Conectar el potenciómetro al pin analógico A0 del Arduino. Encender el datalogger. El LED de confirmación parpadea una vez cada 10 minutos confirmando la grabación. Verificar espacio en la SD. Anotar en planilla: fecha, hora, Fila, Zona, número de estaca de la vid, valor ADC inicial (número entre 0 y 1023).
+Conectar el potenciómetro al pin analógico A0 del Arduino. Encender el datalogger. El LED de confirmación parpadea una vez cada 10 minutos confirmando la grabación. Verificar espacio en la SD. Anotar en planilla: fecha, hora, Fila, número de estaca de la vid, valor ADC inicial (número entre 0 y 1023).
 Por qué importa: el valor ADC inicial es el punto de referencia absoluto de toda la calibración posterior. Si el datalogger pierde este dato por un reseteo accidental antes de la Sesión 1, la calibración debe rehacerse desde cero. El respaldo manual en planilla es el seguro ante fallos electrónicos.
 
 Paso D6 — Proteger el datalogger de la intemperie.
@@ -357,7 +358,7 @@ Colocar el datalogger dentro de su caja estanca (caja de paso eléctrica IP65, U
 Por qué importa: las lluvias de verano en la región de Colonia Caroya pueden superar 80 mm en 24 horas. Un datalogger sin protección adecuada se daña de forma permanente e irrecuperable. La pérdida de un sensor a mitad de la temporada significa romper la serie temporal del modelo sin posibilidad de recuperación retroactiva.
 
 Paso D7 — Fotografiar el montaje completo.
-Tomar 3 fotos por sensor: (a) vista general de la vid mostrando la abrazadera y la caja del datalogger, (b) primer plano del contacto punta-corteza desde arriba, (c) etiqueta de zona visible junto al sensor. Subir a Google Drive con el nombre: "Dendro_Instalacion_F1_ZonaA.jpg".
+Tomar 3 fotos por sensor: (a) vista general de la vid mostrando la abrazadera y la caja del datalogger, (b) primer plano del contacto punta-corteza desde arriba, (c) etiqueta de zona visible junto al sensor. Subir a Google Drive con el nombre: "Dendro_Instalacion_F2.jpg" (o F4, F6, F8, F10 según la fila).
 Por qué importa: la foto del contacto sensor-corteza permite al investigador verificar remotamente que la instalación es correcta antes de confiar en los primeros datos. También es la referencia visual indispensable si el sensor se desplaza y hay que reposicionarlo de manera idéntica para mantener la continuidad de la serie.
 
 Calibración — el paso más crítico de toda la estrategia
@@ -386,7 +387,7 @@ Protocolo: los pares de calibración se obtienen únicamente entre las 10:00 y l
 
 Consideración 4 — Cada sensor tiene su propia calibración.
 Dos vides de la misma zona pueden tener densidades de madera distintas y responder cuantitativamente diferente al mismo Ψstem. La función Ψstem = a × ADC + b es específica de la vid en la que está instalado ese sensor y no puede transferirse a otra vid.
-Protocolo: cada uno de los 6 dendrómetros tiene su propia función de calibración, obtenida individualmente en la Sesión 1. La calibración de Zona A Fila 1 no puede aplicarse al sensor de Zona A Fila 2.
+Protocolo: cada uno de los 5 dendrómetros tiene su propia función de calibración, obtenida individualmente en la Sesión 1. La calibración de Fila 2 no puede aplicarse al sensor de Fila 4.
 
 Consideración 5 — Deriva de largo plazo por crecimiento del tronco.
 El tronco crece lentamente durante la temporada. La abrazadera permanece fija y el crecimiento empuja el sensor hacia el extremo de su rango. Pasados 2-3 meses, el sensor puede quedar fuera del rango útil sin que el técnico lo note.
@@ -394,16 +395,16 @@ Protocolo: en cada sesión Scholander (2, 3 y 4), antes de iniciar mediciones, v
 
 Protocolo de calibración en la Sesión 1 — paso a paso
 
-Paso C1 — A las 9:00hs: encender todos los dataloggers y confirmar grabación activa. Anotar en planilla el valor ADC de los 6 sensores en este momento.
+Paso C1 — A las 9:00hs: encender todos los dataloggers y confirmar grabación activa. Anotar en planilla el valor ADC de los 5 sensores en este momento.
 Por qué importa: establece el estado de referencia matutino (baja VPD, mayor turgencia) como primer punto de anclaje del ciclo diurno.
 
-Paso C2 — A las 9:30hs: Monteoliva mide Ψstem con Scholander en las 6 vides instrumentadas. En el momento exacto de cada corte de hoja, el técnico anota el valor ADC de ese sensor.
+Paso C2 — A las 9:30hs: Monteoliva mide Ψstem con Scholander en las 5 vides instrumentadas. En el momento exacto de cada corte de hoja, el técnico anota el valor ADC de ese sensor.
 Por qué importa: primer par de calibración (baja VPD, estrés leve). Ancla el extremo inferior de la curva — el tronco en su estado más turgente.
 
-Paso C3 — A las 11:30hs: segunda ronda Scholander en las mismas 6 vides. El técnico anota el valor ADC en el momento exacto de cada corte.
+Paso C3 — A las 11:30hs: segunda ronda Scholander en las mismas 5 vides. El técnico anota el valor ADC en el momento exacto de cada corte.
 Por qué importa: segundo par de calibración (VPD alta, estrés máximo del mediodía). Ancla el extremo superior — el tronco en su estado más encogido. Con dos puntos contrastantes la función lineal queda definida con los grados de libertad estadísticamente necesarios.
 
-Paso C4 — el investigador recibe los 12 pares de calibración (6 vides × 2 momentos) y ajusta las 6 funciones individuales por regresión lineal. Entrega en menos de 24 horas: gráfico de la función de calibración de cada sensor con intervalo de confianza, RMSE por sensor, y alerta si algún sensor tiene R² < 0.85.
+Paso C4 — el investigador recibe los 10 pares de calibración (5 vides × 2 momentos) y ajusta las 5 funciones individuales por regresión lineal. Entrega en menos de 24 horas: gráfico de la función de calibración de cada sensor con intervalo de confianza, RMSE por sensor, y alerta si algún sensor tiene R² < 0.85.
 Por qué importa: el R² indica si la relación diámetro-Ψstem es lineal y consistente en esa vid. Un R² < 0.85 indica un problema en la simultaneidad, el posicionamiento o la elección de la vid. Detectarlo el mismo día de la Sesión 1 permite corregirlo en campo.
 
 Paso C5 — Si alguna calibración tiene R² < 0.85: Monteoliva toma 2 mediciones Scholander adicionales en esa vid entre las 13:00 y las 14:00hs. El técnico anota los valores ADC correspondientes. el investigador repite la regresión con los pares adicionales.
@@ -411,7 +412,7 @@ Por qué importa: una calibración pobre detectada el mismo día puede corregirs
 
 Verificación de calibración en las Sesiones 2, 3 y 4
 
-Al inicio de cada sesión, antes de medir las vides seleccionadas por Active Learning, Monteoliva mide con Scholander las 6 vides instrumentadas. el investigador compara el Ψstem medido por Scholander con el Ψstem estimado por el dendrómetro en ese instante.
+Al inicio de cada sesión, antes de medir las vides seleccionadas por Active Learning, Monteoliva mide con Scholander las 5 vides instrumentadas. el investigador compara el Ψstem medido por Scholander con el Ψstem estimado por el dendrómetro en ese instante.
 
 Diferencia menor a 0.20 bar: calibración válida. Continuar normalmente.
 Diferencia entre 0.20 y 0.40 bar: deriva aceptable. Aplicar corrección de offset lineal a los datos desde la sesión anterior.
@@ -422,30 +423,30 @@ Este protocolo garantiza que los datos del dendrómetro entre sesiones son audit
 Rutina del técnico de campo con los dendrómetros
 
 Acción mensual (15 minutos, primer lunes de cada mes):
-Retirar la tarjeta SD de cada datalogger y copiar los archivos CSV al celular. Devolver la SD y verificar que el LED de confirmación parpadea nuevamente. Subir los archivos a Google Drive con el nombre del mes y zona: "Dendro_F1_ZonaA_2026-11.csv". Fotografiar el contacto sensor-corteza de cada dendrómetro. Verificar que el valor ADC está en el rango 200-800. Si está fuera de ese rango: avisar al investigador por WhatsApp antes de tocar el sensor.
+Retirar la tarjeta SD de cada datalogger y copiar los archivos CSV al celular. Devolver la SD y verificar que el LED de confirmación parpadea nuevamente. Subir los archivos a Google Drive con el nombre del mes y fila: "Dendro_F2_2026-11.csv". Fotografiar el contacto sensor-corteza de cada dendrómetro. Verificar que el valor ADC está en el rango 200-800. Si está fuera de ese rango: avisar al investigador por WhatsApp antes de tocar el sensor.
 Por qué importa: la foto del contacto permite al investigador detectar de forma remota si el sensor se desplazó antes de que la deriva contamine semanas de datos. La verificación del rango ADC previene la pérdida silenciosa de datos por saturación sin que nadie lo note.
 
 Acción semanal integrada al protocolo existente:
-El Paso 19 del protocolo de campo (Sección 11A.1) ya incluye el recorrido visual de las 4 filas. Durante ese recorrido verificar que ninguna abrazadera de dendrómetro se aflojó, que el cable del sensor no está dañado, y que la tapa de la caja estanca no tiene agua adentro. No requiere tiempo adicional.
+El Paso 19 del protocolo de campo (Sección 11A.1) ya incluye el recorrido visual de las 5 filas experimentales. Durante ese recorrido verificar que ninguna abrazadera de dendrómetro se aflojó, que el cable del sensor no está dañado, y que la tapa de la caja estanca no tiene agua adentro. No requiere tiempo adicional.
 
 Flujo de responsabilidades
 
-Técnico de campo: instala los 6 sensores en una mañana (Semana 1). Realiza la descarga mensual (15 min/mes). Realiza la inspección visual semanal durante el recorrido ya planificado. No necesita interpretar los datos.
+Técnico de campo: instala los 5 sensores en una mañana (Semana 1). Realiza la descarga mensual (15 min/mes). Realiza la inspección visual semanal durante el recorrido ya planificado. No necesita interpretar los datos.
 
-el investigador Art. 32: recibe los datos crudos en CSV, aplica la corrección térmica, mantiene actualizadas las 6 funciones de calibración, alimenta el modelo GP con los datos entre sesiones, detecta y corrige derivas, y alerta ante anomalías. Toda esta tarea se ejecuta de forma remota.
+el investigador Art. 32: recibe los datos crudos en CSV, aplica la corrección térmica, mantiene actualizadas las 5 funciones de calibración, alimenta el modelo GP con los datos entre sesiones, detecta y corrige derivas, y alerta ante anomalías. Toda esta tarea se ejecuta de forma remota.
 
-Monteoliva: en las Sesiones 1-4 realiza las mediciones Scholander de inicialización y verificación de calibración (6 vides instrumentadas), más las 20-25 vides por Active Learning. No requiere presencia adicional fuera de las 4 sesiones planificadas.
+Monteoliva: en las Sesiones 1-4 realiza las mediciones Scholander de inicialización y verificación de calibración (5 vides instrumentadas), más las 20-25 vides por Active Learning. No requiere presencia adicional fuera de las 4 sesiones planificadas.
 
 Resultado del sistema combinado
 
-Con los 6 dendrómetros operativos y las 4 sesiones Scholander optimizadas por OED, el proyecto obtiene:
+Con los 5 dendrómetros operativos y las 4 sesiones Scholander optimizadas por OED, el proyecto obtiene:
 
-Cobertura continua de Ψstem estimado en zonas A, B y C durante los 9 meses de temporada, con resolución de 10 minutos.
-Medición directa Scholander de alta precisión en las 4 sesiones clave, cubriendo las 5 zonas incluyendo D y E.
+Cobertura continua de Ψstem estimado en las 5 filas experimentales (Filas 2, 4, 6, 8, 10) durante los 9 meses de temporada, con resolución de 10 minutos.
+Medición directa Scholander de alta precisión en las 4 sesiones clave, cubriendo los 5 regímenes hídricos (100% ETc a sin riego).
 Un dataset de entrenamiento con 120 mediciones Scholander distribuidas en los momentos de máxima información estadística, más señal continua de dendrómetros para interpolar el modelo entre sesiones.
 Documentación auditada de la deriva y corrección de cada sensor, con verificación cruzada en cada sesión, cumpliendo el requisito mínimo para publicación científica.
 
-El costo adicional de este sistema es USD 150-190 de hardware, absorbido dentro de la partida de contingencia existente. No genera costo adicional en honorarios ni en viajes.
+El costo adicional de este sistema es USD 120-160 de hardware, absorbido dentro de la partida de contingencia existente. No genera costo adicional en honorarios ni en viajes.
 
 ---
 
