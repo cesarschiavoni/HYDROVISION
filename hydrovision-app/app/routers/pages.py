@@ -62,6 +62,11 @@ def traceability_page(_=Depends(_require_user)):
     return (_TEMPLATES / "trazabilidad.html").read_text(encoding="utf-8")
 
 
+@router.get("/viento", response_class=HTMLResponse)
+def viento_page(_=Depends(_require_user)):
+    return (_TEMPLATES / "viento.html").read_text(encoding="utf-8")
+
+
 @router.get("/backoffice", response_class=HTMLResponse)
 def backoffice_page(
     hv_session: str | None = Cookie(default=None),

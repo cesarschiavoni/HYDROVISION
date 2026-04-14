@@ -22,7 +22,7 @@ hydrovision-app/
     routers/
       __init__.py
       auth.py             # POST /login, /logout
-      pages.py            # GET /dashboard, /admin, /informe, /trazabilidad, /backoffice
+      pages.py            # GET /dashboard, /admin, /informe, /trazabilidad, /viento, /backoffice
       api.py              # POST /ingest, GET /api/status, /alerts, /history, /zones, POST /api/irrigate
       admin.py            # GET/PUT /api/admin/config, /zones, /nodes
       backoffice.py       # Superadmin: /api/backoffice/users, /plans, /nodes/assign
@@ -30,6 +30,7 @@ hydrovision-app/
       report.py           # GET /api/report/summary, /csv, /traceability
       inference.py        # POST /api/inference — PINN imagen termica -> CWSI
       emails.py           # Background: annual_report, lifecycle emails
+      wind.py             # GET /api/wind-rose — rosa de vientos por zona
     services/
       __init__.py
       email_service.py    # EmailService: render + envio de emails transaccionales
@@ -269,6 +270,7 @@ PBKDF2-HMAC SHA256 con 300.000 iteraciones y salt aleatorio de 16 bytes.
 | GET | `/admin` | User | admin.html | Configuracion de campo (zonas con Leaflet.draw) |
 | GET | `/informe` | User | informe.html | Generador de informe anual |
 | GET | `/trazabilidad` | User | trazabilidad.html | Trazabilidad hidrica (gated Tier 3) |
+| GET | `/viento` | User | viento.html | Viento dominante por zona (rosa de vientos) |
 | GET | `/backoffice` | Superadmin | backoffice.html | Gestion de usuarios y planes |
 
 ### 5.3 Telemetria y Control (routers/api.py)
@@ -357,6 +359,16 @@ PBKDF2-HMAC SHA256 con 300.000 iteraciones y salt aleatorio de 16 bytes.
 | POST | `/api/emails/preview/{email_type}` | Superadmin | SendRequest | Previsualizar email sin enviarlo |
 | POST | `/api/emails/send/{email_type}` | Superadmin | SendRequest | Enviar email (annual_report o lifecycle) |
 | GET | `/api/emails/schedule` | Superadmin | — | Calendario de proximos envios |
+
+### 5.10 Viento dominante (routers/wind.py)
+
+| Metodo | Ruta | Auth | Params | Retorna | Descripcion |
+|--------|------|------|--------|---------|-------------|
+| GET | `/api/wind-rose` | User | `zone_id` o `lat+lon`, `varietal?`, `years?` (1-5, default 3) | `{dominant, dominant_pct, sectors[], calm_pct, avg_speed_ms, leaf_months[]}` | Rosa de vientos historica (Open-Meteo ERA5), filtrada por meses con hojas del varietal |
+
+Servicio: `app/services/wind_analysis.py` — consulta Open-Meteo Archive API (gratis, sin key).
+Filtra horas diurnas (6-20 hs), calma < 0.5 m/s. 16 sectores de brujula.
+Meses con hojas determinados por `app/services/phenology.py` (vid: Sep-May, olivo: todo el ano, cerezo: Ago-Abr).
 
 ---
 

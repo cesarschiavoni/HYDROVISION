@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HydroVision AG — Viento dominante</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            green: {
+              50:'#F0F9F4',100:'#D1F2E0',200:'#A3E4C1',300:'#6FCE9C',
+              400:'#27AE60',500:'#1E7B55',600:'#1B6B4A',700:'#155A3C',
+              800:'#1B6B4A',900:'#0F3624',
+            },
+            yellow: { 500:'#F39C12',600:'#F39C12' },
+            red:    { 500:'#E74C3C',600:'#E74C3C' },
+            blue:   { 500:'#2980B9',600:'#2980B9' },
+            gray:   { 100:'#FAFAF7' },
+          },
+          fontFamily: {
+            sans:  ['"IBM Plex Sans"','Inter','system-ui','sans-serif'],
+            title: ['Inter','system-ui','sans-serif'],
+            mono:  ['"IBM Plex Mono"','ui-monospace','monospace'],
+          },
+        }
+      }
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>[x-cloak] { display: none !important; }</style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen" x-data="windApp()" x-init="init()">
+
+  <!-- Nav -->
+  <nav class="bg-green-700 text-white px-6 py-3 flex items-center justify-between shadow">
+    <div class="flex items-center gap-4">
+      <a href="/dashboard" class="font-title font-bold text-lg tracking-tight">HydroVision AG</a>
+      <span class="text-green-200 text-sm">/ Viento dominante</span>
+    </div>
+    <div class="flex gap-3 text-sm">
+      <a href="/dashboard" class="hover:text-green-200">Dashboard</a>
+      <a href="/admin" class="hover:text-green-200">Admin</a>
+      <a href="/informe" class="hover:text-green-200">Informe</a>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto px-4 py-8">
+
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl font-title font-bold text-green-800">Viento dominante por zona</h1>
+      <p class="text-gray-500 text-sm mt-1">
+        Direccion predominante del viento durante los meses con hojas de cada variedad.
+        Datos historicos ERA5 via Open-Meteo (ultimos <span x-text="years"></span> anos).
+      </p>
+    </div>
+
+    <!-- Controles -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 mb-6 flex flex-wrap items-end gap-4">
+      <div>
+        <label class="block text-xs font-medium text-gray-500 mb-1">Zona</label>
+        <select x-model="selectedZone" @change="onZoneChange()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
+          <option value="">Seleccionar zona...</option>
+          <template x-for="z in zones" :key="z.id">
+            <option :value="z.id" x-text="`${z.name} (${z.varietal || 'sin varietal'})`"></option>
+          </template>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-gray-500 mb-1">Anos</label>
+        <select x-model.number="years" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-gray-500 mb-1">Franja horaria</label>
+        <select x-model="hours" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-400 focus:border-green-400">
+          <option value="dia">6–20 hs (dia — CWSI)</option>
+          <option value="all">24 hs (completo)</option>
+          <option value="noche">21–5 hs (noche — heladas)</option>
+        </select>
+      </div>
+      <button @click="fetchWind()" :disabled="!selectedZone || loading"
+        class="bg-green-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition">
+        <span x-show="!loading">Analizar viento</span>
+        <span x-show="loading" x-cloak>Consultando...</span>
+      </button>
+    </div>
+
+    <!-- Error -->
+    <div x-show="error" x-cloak class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6 text-sm" x-text="error"></div>
+
+    <!-- Resultados -->
+    <template x-if="result">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Rosa de vientos -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h2 class="text-lg font-semibold text-green-800 mb-4">Rosa de vientos</h2>
+          <div class="flex justify-center">
+            <canvas id="windRoseChart" width="400" height="400"></canvas>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="space-y-4">
+
+          <!-- Resumen -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <h2 class="text-lg font-semibold text-green-800 mb-3">Resumen</h2>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+              <div class="bg-green-50 rounded-lg p-3">
+                <div class="text-xs text-gray-500">Direccion dominante</div>
+                <div class="text-2xl font-bold text-green-700" x-text="result.dominant"></div>
+                <div class="text-xs text-gray-500"><span x-text="result.dominant_pct"></span>% del tiempo</div>
+              </div>
+              <div class="bg-blue-50 rounded-lg p-3">
+                <div class="text-xs text-gray-500">Velocidad promedio</div>
+                <div class="text-2xl font-bold text-blue-600"><span x-text="result.avg_speed_ms"></span> <span class="text-sm font-normal">m/s</span></div>
+                <div class="text-xs text-gray-500"><span x-text="(result.avg_speed_ms * 3.6).toFixed(1)"></span> km/h</div>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-3">
+                <div class="text-xs text-gray-500">Calma (&lt;0.5 m/s)</div>
+                <div class="text-xl font-bold text-gray-600"><span x-text="result.calm_pct"></span>%</div>
+              </div>
+              <div class="bg-gray-50 rounded-lg p-3">
+                <div class="text-xs text-gray-500">Horas analizadas</div>
+                <div class="text-xl font-bold text-gray-600" x-text="result.total_hours.toLocaleString()"></div>
+                <div class="text-xs text-gray-500" x-text="result.hours_label"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meses con hojas -->
+          <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+            <h2 class="text-sm font-semibold text-green-800 mb-2">
+              Meses con hojas — <span class="font-normal text-gray-500" x-text="result.crop"></span>
+            </h2>
+            <div class="flex flex-wrap gap-1.5">
+              <template x-for="m in allMonths" :key="m.num">
+                <span :class="result.leaf_months.includes(m.num) ? 'bg-green-100 text-green-800 border-green-300' : 'bg-gray-100 text-gray-400 border-gray-200 line-through'"
+                  class="px-2.5 py-1 rounded-full text-xs font-medium border" x-text="m.name"></span>
+              </template>
+            </div>
+          </div>
+
+          <!-- Uso practico -->
+          <div class="bg-yellow-50 rounded-xl border border-yellow-200 p-5">
+            <h2 class="text-sm font-semibold text-yellow-800 mb-2">Recomendacion para instalacion</h2>
+            <p class="text-sm text-yellow-700">
+              El viento dominante viene del <strong x-text="result.dominant"></strong>.
+              Orientar el panel Wet Ref y la carcasa del nodo para minimizar la exposicion directa al viento desde esa direccion.
+              El anemometro debe quedar libre de obstrucciones en todas las direcciones.
+            </p>
+          </div>
+        </div>
+
+        <!-- Tabla detallada -->
+        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-5">
+          <h2 class="text-lg font-semibold text-green-800 mb-3">Detalle por sector</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-xs text-gray-500 border-b">
+                  <th class="pb-2 pr-4">Direccion</th>
+                  <th class="pb-2 pr-4 text-right">Frecuencia</th>
+                  <th class="pb-2 pr-4 text-right">Vel. media</th>
+                  <th class="pb-2 pr-4 text-right">Vel. maxima</th>
+                  <th class="pb-2">Barra</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="s in result.sectors" :key="s.dir">
+                  <tr class="border-b border-gray-100" :class="s.dir === result.dominant ? 'bg-green-50 font-semibold' : ''">
+                    <td class="py-1.5 pr-4" x-text="s.dir"></td>
+                    <td class="py-1.5 pr-4 text-right font-mono" x-text="s.freq_pct + '%'"></td>
+                    <td class="py-1.5 pr-4 text-right font-mono" x-text="s.avg_speed + ' m/s'"></td>
+                    <td class="py-1.5 pr-4 text-right font-mono" x-text="s.max_speed + ' m/s'"></td>
+                    <td class="py-1.5">
+                      <div class="h-3 rounded-full bg-gray-100 w-full max-w-[200px]">
+                        <div class="h-3 rounded-full" :class="s.dir === result.dominant ? 'bg-green-500' : 'bg-blue-400'"
+                          :style="`width: ${Math.min(100, s.freq_pct / maxFreq * 100)}%`"></div>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </template>
+
+    <!-- Empty state -->
+    <div x-show="!result && !loading && !error" class="text-center text-gray-400 py-20">
+      <svg class="mx-auto mb-4 w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+      </svg>
+      <p>Selecciona una zona y presiona <strong>Analizar viento</strong></p>
+    </div>
+
+  </main>
+
+<script>
+function windApp() {
+  return {
+    zones: [],
+    selectedZone: '',
+    years: 3,
+    hours: 'dia',
+    loading: false,
+    error: null,
+    result: null,
+    chart: null,
+    allMonths: [
+      {num:1,name:'Ene'},{num:2,name:'Feb'},{num:3,name:'Mar'},{num:4,name:'Abr'},
+      {num:5,name:'May'},{num:6,name:'Jun'},{num:7,name:'Jul'},{num:8,name:'Ago'},
+      {num:9,name:'Sep'},{num:10,name:'Oct'},{num:11,name:'Nov'},{num:12,name:'Dic'},
+    ],
+    get maxFreq() {
+      if (!this.result) return 1;
+      return Math.max(...this.result.sectors.map(s => s.freq_pct), 1);
+    },
+    async init() {
+      try {
+        const r = await fetch('/api/admin/zones');
+        if (r.ok) this.zones = await r.json();
+      } catch(e) { /* zonas no disponibles */ }
+    },
+    onZoneChange() {
+      this.result = null;
+      this.error = null;
+    },
+    async fetchWind() {
+      if (!this.selectedZone) return;
+      this.loading = true;
+      this.error = null;
+      this.result = null;
+      try {
+        const r = await fetch(`/api/wind-rose?zone_id=${this.selectedZone}&years=${this.years}&hours=${this.hours}`);
+        if (!r.ok) {
+          const d = await r.json().catch(() => ({}));
+          throw new Error(d.detail || `Error ${r.status}`);
+        }
+        this.result = await r.json();
+        this.$nextTick(() => this.renderChart());
+      } catch(e) {
+        this.error = e.message;
+      } finally {
+        this.loading = false;
+      }
+    },
+    renderChart() {
+      if (this.chart) { this.chart.destroy(); this.chart = null; }
+      const canvas = document.getElementById('windRoseChart');
+      if (!canvas || !this.result) return;
+      const ctx = canvas.getContext('2d');
+      const labels = this.result.sectors.map(s => s.dir);
+      const freqs = this.result.sectors.map(s => s.freq_pct);
+      const speeds = this.result.sectors.map(s => s.avg_speed);
+      const dominant = this.result.dominant;
+      const bgColors = labels.map(l => l === dominant ? 'rgba(39,174,96,0.5)' : 'rgba(41,128,185,0.3)');
+      const borderColors = labels.map(l => l === dominant ? 'rgba(39,174,96,1)' : 'rgba(41,128,185,0.7)');
+
+      this.chart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Frecuencia (%)',
+            data: freqs,
+            backgroundColor: 'rgba(41,128,185,0.15)',
+            borderColor: 'rgba(41,128,185,0.8)',
+            borderWidth: 2,
+            pointRadius: 4,
+            pointBackgroundColor: borderColors,
+            pointBorderColor: borderColors,
+          },{
+            label: 'Vel. media (m/s)',
+            data: speeds,
+            backgroundColor: 'rgba(39,174,96,0.1)',
+            borderColor: 'rgba(39,174,96,0.6)',
+            borderWidth: 1.5,
+            borderDash: [4,4],
+            pointRadius: 3,
+            pointBackgroundColor: 'rgba(39,174,96,0.6)',
+          }],
+        },
+        options: {
+          responsive: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { font: { size: 11 } } },
+          },
+          scales: {
+            r: {
+              beginAtZero: true,
+              ticks: { font: { size: 10 }, backdropColor: 'transparent' },
+              pointLabels: {
+                font: { size: 12, weight: 'bold' },
+                callback: function(label) {
+                  return label === dominant ? '>> ' + label + ' <<' : label;
+                },
+              },
+              grid: { color: 'rgba(0,0,0,0.06)' },
+              angleLines: { color: 'rgba(0,0,0,0.08)' },
+            },
+          },
+        },
+      });
+    },
+  };
+}
+</script>
+
+</body>
+</html>

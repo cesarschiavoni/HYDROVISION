@@ -1281,6 +1281,7 @@ from app.routers.inference import router as inference_router
 from app.routers.auth        import router as auth_router
 from app.routers.backoffice  import router as backoffice_router
 from app.routers.emails      import router as emails_router
+from app.routers.wind         import router as wind_router
 
 app.include_router(auth_router)
 app.include_router(backoffice_router)
@@ -1291,4 +1292,5 @@ app.include_router(admin_router)
 app.include_router(report_router)
 app.include_router(inference_router)
 app.include_router(emails_router)
+app.include_router(wind_router)
 
