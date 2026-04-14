@@ -27,7 +27,7 @@ Funcionalidades clave del producto en TRL 5 (sobre la base del TRL 4):
 · Federated learning entre nodos deployados (ver arriba).
 · Calibración de modelo para Sauvignon Blanc y Olivo Arauco — segunda variedad y segundo cultivo con coeficientes propios validados en campo.
 · Dashboard de gestión multi-lote: el productor o asesor con múltiples campos visualiza el estado hídrico de todos sus lotes en un solo mapa, con filtros por cultivo, zona y nivel de alerta.
-· Evaluación de arquitectura de calibración en escala comercial: los datos de la campaña TRL 4 (5 nodos, 10 meses) permitirán comparar la precisión del sistema Wet Ref físico vs. el sistema lluvia+MDS para determinar si la micro-bomba peristáltica es necesaria en despliegues comerciales de 50+ nodos o si el sistema lluvia+MDS (sin partes mecánicas adicionales) alcanza la misma precisión en condiciones reales de Cuyo. Esta decisión se tomará con datos propios antes de escalar el BOM de producción.
+· Evaluación de arquitectura de calibración en escala comercial: los datos de la campaña TRL 4 (10 nodos, 10 meses) permitirán comparar la precisión del sistema Wet Ref físico vs. el sistema lluvia+MDS para determinar si la micro-bomba peristáltica es necesaria en despliegues comerciales de 50+ nodos o si el sistema lluvia+MDS (sin partes mecánicas adicionales) alcanza la misma precisión en condiciones reales de Cuyo. Esta decisión se tomará con datos propios antes de escalar el BOM de producción.
 
 #### 8.2.1 Modelo de negocio — Tiers de servicio
 Modelo: Hardware + suscripción de software separados. El productor adquiere el hardware del nodo (venta única o financiado en cuotas) y paga una suscripción anual por software, datos y plataforma. Este modelo es el más adecuado para el mercado argentino: elimina la barrera del capital de trabajo para HydroVision AG y reduce la cuota recurrente para el productor. Un nodo cubre 1–2 hectáreas según la geometría del lote.
@@ -1056,7 +1056,7 @@ El modelo se entrena y valida durante el período de máxima demanda hídrica (d
 Si el modelo muestra drift estacional, se recalibra con datos de cada estación usando el simulador para generar condiciones observadas. En TRL 5 se amplía el dataset real a múltiples estadios.
 Representatividad geográfica — Colonia Caroya tiene condiciones climáticas diferentes a los mercados objetivo (Valle de Uco, San Juan). Altitud, HR y amplitud térmica difieren.
 Media
-El proyecto concentra la validación primaria en el viñedo experimental de Colonia Caroya (5 filas experimentales × 136m con drip diferencial + 5 filas buffer) complementada con 3 campañas de validación cruzada en Mendoza y 2 en San Juan. Estas campañas capturan datos meteorológicos y térmicos en condiciones reales de Cuyo para verificar la transferibilidad del modelo.
+El proyecto concentra la validación primaria en el viñedo experimental de Colonia Caroya (5 filas de calibración + 5 filas de producción × 136m con drip diferencial, 10 nodos permanentes) complementada con 3 campañas de validación cruzada en Mendoza y 2 en San Juan. Estas campañas capturan datos meteorológicos y térmicos en condiciones reales de Cuyo para verificar la transferibilidad del modelo.
 Si los datos de Colonia Caroya resultan no representativos, las 3 campañas a Mendoza (Valle de Uco) proporcionan datos de recalibración. El simulador permite interpolar entre condiciones de ambas regiones.
 Disponibilidad de tiempo del Inv. Art. 32 — ~5 hs/semana promedio (~177 hs totales), con obligaciones paralelas en su institución de investigación.
 Baja

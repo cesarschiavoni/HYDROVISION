@@ -58,9 +58,9 @@ Verifica que todos los documentos sean mutuamente consistentes:
 - Verificar que el equipo listado en todos los documentos sea el mismo (mismas personas, mismos roles, mismas cifras)
 - Verificar que las fechas de inicio (Octubre 2026) y duración (12 meses) sean consistentes
 - Verificar que los hitos TRL 4 sean idénticos en Plan de Trabajo, Gantt, y documentos de gestión
-- Verificar que el número de nodos experimentales sea consistente: 5 nodos en viñedo experimental
+- Verificar que el número de nodos sea consistente: 10 nodos en viñedo experimental (5 calibración filas 1–5 + 5 producción filas 6–10)
 - Horas Inv. Art. 32: ~177 horas totales (no 155, no otro número)
-- Horas Javier Schiavoni: ~208 horas totales
+- Horas Javier Schiavoni: ~227 horas totales
 - Horas Monteoliva: ~180 horas totales (~15 hs/mes × 12 meses)
 
 ## Proceso de auditoría

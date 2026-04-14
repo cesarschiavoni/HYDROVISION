@@ -3,7 +3,7 @@ quantize.py — Cuantización INT8 y exportación TFLite Micro / ONNX
 HydroVision AG | ML Engineer / 02_modelo
 
 Convierte el modelo PINN entrenado en PyTorch a formato deployable en
-RPi Zero 2W con latencia < 200ms por frame.
+ESP32-S3 con latencia < 200ms por frame.
 
 Pipeline:
     1. PyTorch FP32  →  PyTorch INT8 (quantization-aware o post-training)
@@ -12,8 +12,8 @@ Pipeline:
 
 Validación post-cuantización:
     - Error máximo CWSI: < ±0.02 respecto al modelo FP32
-    - Tamaño objetivo: < 2 MB para flash de RPi
-    - Latencia objetivo: < 200ms en RPi Zero 2W (ARM Cortex-A53 @ 1GHz)
+    - Tamaño objetivo: < 2 MB para flash de ESP32-S3
+    - Latencia objetivo: < 200ms en ESP32-S3 (Xtensa LX7 dual-core 240MHz)
 
 Uso:
     python quantize.py --checkpoint ../models/checkpoints/best_finetune.pt \
@@ -22,7 +22,7 @@ Uso:
 
 Salidas en ../models/edge/:
     hydrovision_cwsi.onnx            — modelo ONNX FP32
-    hydrovision_cwsi_int8.tflite     — modelo TFLite INT8 para RPi Zero 2W
+    hydrovision_cwsi_int8.tflite     — modelo TFLite Micro INT8 para ESP32-S3
     benchmark_results.json           — latencia y error vs. FP32
 """
 
@@ -45,7 +45,7 @@ import torch.nn as nn
 def quantize_pytorch_ptq(
     model: nn.Module,
     calibration_data: torch.Tensor,
-    backend: str = "qnnpack",   # qnnpack para ARM (RPi), fbgemm para x86
+    backend: str = "qnnpack",   # qnnpack para ARM (exportación a TFLite Micro para ESP32-S3), fbgemm para x86
 ) -> nn.Module:
     """
     Cuantización post-training estática (PTQ) para inferencia INT8 en ARM.
@@ -53,7 +53,7 @@ def quantize_pytorch_ptq(
     Args:
         model:             modelo FP32 entrenado
         calibration_data:  (N, 1, 120, 160) — subset representativo para calibrar
-        backend:           'qnnpack' para ARM/RPi, 'fbgemm' para x86
+        backend:           'qnnpack' para ARM (exportación TFLite Micro ESP32-S3), 'fbgemm' para x86
 
     Returns:
         modelo cuantizado INT8 listo para torch.jit.script
@@ -357,7 +357,7 @@ def main():
 
     # Benchmark
     if args.benchmark:
-        print("\n[Benchmark] Latencia en CPU (simula RPi Zero 2W)...")
+        print("\n[Benchmark] Latencia en CPU (simula ESP32-S3)...")
         lat = benchmark_latency(model_fp32, n_runs=100, device="cpu")
         print(f"  FP32  mean={lat['mean_ms']:.1f}ms  std={lat['std_ms']:.1f}ms")
         lat_int8 = benchmark_latency(model_int8, n_runs=100, device="cpu")

@@ -151,7 +151,7 @@ La posición óptima del gimbal varía según el sistema de conducción. El téc
 
 | Sistema de conducción | Ángulo vertical óptimo | Ángulo horizontal | Distancia nodo-planta | Cultivos típicos |
 |---|---|---|---|---|
-| Espaldera simple o doble | 35–45° | ±20° (5 posiciones) | 0.6–1.0 m del tronco | Vid (todas), cerezo en alta densidad |
+| Espaldera simple o doble | 35–45° | ±20° (6 pos. fijas + 1 nadir condicional = 7 total) | 0.6–1.0 m del tronco | Vid (todas), cerezo en alta densidad |
 | Parral | 75–85° (casi cenital) | ±15° | 1.0–1.5 m lateral | Vid parral (San Juan), nogal |
 | Vaso libre | 25–35° | ±25° | 0.8–1.2 m del tronco | Olivo intensivo, cerezo, pistacho |
 | Alta densidad lineal | 40–50° | ±15° | 0.5–0.8 m | Arándano, cerezo enano |

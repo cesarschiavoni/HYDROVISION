@@ -26,8 +26,8 @@ El nodo HydroVision AG es un sistema embebido autónomo diseñado para operar en
 | 7b | Piranómetro | Sensor radiación solar (BPW34 + ADC o equivalente) | 15–20 | Radiación solar para cálculo físico de Tc_dry (balance energético). Fuente primaria: Dry Ref panel. Piranómetro: backup y validación científica en TRL 4 |
 | 8 | GPS | u-blox NEO-6M o similar (UART) | 8–12 | Georreferenciación del nodo y sesiones. Hemisferio → reinicio acumulador GDD |
 | 9 | RTC | DS3231 con batería CR2032 (I2C) | 2–4 | Timestamp sesiones. Persiste ante cortes de energía |
-| 10 | IMU + Gimbal pan-tilt | ICM-42688-P + 2× servo MG90S (PWM via LEDC del ESP32-S3) | 20–35 | Escaneo activo: **5 posiciones fijas + 1 extra condicional** (viento > 20 km/h) a ±20°H / ±15°V. IMU compensa vibración. Fusión multi-frame local en ESP32-S3 |
-| 11 | Panel solar + batería | Panel 6W policristalino 6V + LiPo / LiFePO4 6.000 mAh | 23–40 | Autonomía energética. Promedio de consumo ~0.18W. Autonomía sin sol: **~120 horas** (5+ días) |
+| 10 | IMU + Gimbal pan-tilt | ICM-42688-P + 2× servo MG90S (PWM via LEDC del ESP32-S3) | 20–35 | Escaneo activo: **6 posiciones fijas + 1 nadir condicional** (viento > 20 km/h) = 7 ángulos totales a ±20°H / ±15°V. IMU compensa vibración. Fusión multi-frame local en ESP32-S3 |
+| 11 | Panel solar + batería | Panel 6W policristalino 6V + LiFePO4 3,2V 6.000 mAh | 23–40 | Autonomía energética. Promedio de consumo ~0.18W. Autonomía sin sol: **~120 horas** (5+ días) |
 | 12 | Carcasa IP67 (sin PCB custom) | **Hammond IP67 200×150×100mm** + pasacables M16. Arquitectura modular TRL4: DevKit + breakouts I2C/SPI — sin PCB custom. | 15–25 | Protección IP67 + integración modular. 0–45°C, 10–95% RH, polvo, viento 80 km/h. PCB custom reservada para TRL5+ producción. |
 | 13 | Paneles Dry Ref / Wet Ref | Panel aluminio negro mate (ε≈0.98) + fieltro hidrofílico + micro-bomba peristáltica 6V GPIO + reservorio 10L | 20 | Calibración física dual 96×/día. Auto-diagnóstico óptico (ISO_nodo). Reservorio: 90–120 días de autonomía sin recarga |
 | 13f | Tubo colimador IR | PVC negro 110mm × 250mm + 2 abrazaderas plásticas | 2–4 | Bloquea flujo lateral de aire sobre el FOV del MLX90640. Reduce enfriamiento convectivo de hojas en el campo de visión |
@@ -51,7 +51,7 @@ El nodo HydroVision AG es un sistema embebido autónomo diseñado para operar en
 | Consumo deep sleep | < 15 µA (ESP32-S3 + periféricos apagados) |
 | Ciclo cada 15 min: 90s activo + 810s sleep | |
 | Consumo promedio ponderado | **~0.18 W** |
-| Batería LiPo 6.000 mAh a 3.7V | 22.2 Wh |
+| Batería LiFePO4 6.000 mAh a 3,2V | 19,2 Wh |
 | Autonomía sin sol | **~120 horas (5+ días)** |
 | Panel 6W con 6h sol efectivo/día | 30 Wh/día generados |
 | Consumo diario promedio | ~4.3 Wh/día |
@@ -86,7 +86,7 @@ Con ESP32-S3 como plataforma de cómputo, el procesamiento se distribuye entre e
 
 ## 5. Sistema de Captura Multi-Angular — Gimbal Pan-Tilt
 
-La cámara MLX90640 se monta sobre un gimbal pan-tilt motorizado de 2 ejes (2× servo MG90S, controlados por PWM via LEDC del ESP32-S3). En cada ciclo de 15 minutos se ejecutan **5 capturas fijas + 1 condicional** en ~8–10 segundos:
+La cámara MLX90640 se monta sobre un gimbal pan-tilt motorizado de 2 ejes (2× servo MG90S, controlados por PWM via LEDC del ESP32-S3). En cada ciclo de 15 minutos se ejecutan **6 capturas fijas + 1 condicional** (= 7 ángulos totales) en ~8–10 segundos:
 
 | Posición | Ángulo H | Ángulo V | Condición | Propósito |
 |---|---|---|---|---|
@@ -95,7 +95,8 @@ La cámara MLX90640 se monta sobre un gimbal pan-tilt motorizado de 2 ejes (2× 
 | Derecha | +20° | 0° | Siempre | Zona de exposición máxima |
 | Arriba | 0° | +15° | Siempre | Máxima cobertura foliar, mínima reflexión de suelo |
 | Abajo | 0° | −10° | Siempre | Dosel inferior |
-| Extra | aleatorio | aleatorio | Viento > 20 km/h | Frame adicional para validación estadística en condiciones de alta vibración |
+| Diagonal IzqArriba | −20° | +15° | Siempre | Vista oblicua — reduce reflexión directa de sol |
+| Nadir adicional | aleatorio | aleatorio | Viento > 20 km/h | Frame extra para validación estadística en condiciones de alta vibración |
 
 **Algoritmo de fusión (en el ESP32-S3):**
 1. Calcular fracción foliar de cada frame: píxeles en rango P20–P75 del histograma térmico.
@@ -179,7 +180,7 @@ El promediado sobre múltiples píxeles foliares y la calibración física por p
 - [x] **Anemómetro RS485 Modbus RTU** con MAX485: lectura de velocidad de viento estable.
 - [x] **Deep sleep ESP32-S3 con DS3231:** wakeup por timer verificado. Consumo sleep: 8 µA medido.
 - [x] **Ciclo solar 6W + LiFePO4 6.000 mAh:** balance energético positivo verificado en laboratorio.
-- [x] **Gimbal MG90S controlado por PWM LEDC del ESP32-S3:** secuencia angular 5 posiciones ejecutada correctamente.
+- [x] **Gimbal MG90S controlado por PWM LEDC del ESP32-S3:** secuencia angular 6 posiciones fijas + 1 condicional (= 7 ángulos totales) ejecutada correctamente.
 - [x] **Pipeline Python CWSI/HSI/GDD:** 10 módulos, 135 tests, 0 fallos. Validación computacional completa.
 
 ### Pendientes para TRL 4 (Mes 1–12 del proyecto financiado):
@@ -203,21 +204,21 @@ El promediado sobre múltiples píxeles foliares y la calibración física por p
 | Superficie | ~0,37 ha netas (~3.672 m² cultivados, 10 filas × 136m, espaciado 3,0m) |
 | Plantas totales | 1.360 vides (1m entre plantas × 3,0m entre hileras) |
 | Altitud | ~700 m s.n.m. |
-| Nodos instalados | **5 nodos** (1 por zona hídrica) — las primeras 5 unidades del producto |
-| Densidad comercial equivalente | 1 nodo cubre 1/3 ha (sobre-densificado vs. Tier 1: 1/10 ha) — fortaleza experimental |
+| Nodos instalados | **10 nodos permanentes (5 calibración + 5 producción)** — 1 por fila — las primeras 10 unidades del producto |
+| Densidad comercial equivalente | 10 nodos en 0.37 ha = 1 nodo/0.037 ha (sobre-densificado vs. Tier 1: 1/10 ha) — fortaleza experimental |
 | Técnicos de campo | Javier y Franco Schiavoni (residentes, hermanos de César) |
 | Supervisión científica | Dra. Mariela Monteoliva (INTA-CONICET) — protocolo Scholander |
-| Riego | Canal → goteo con 5 zonas independientes (Mes 3–4, contrapartida equipo) |
+| Riego | Canal → goteo con 10 zonas independientes (Mes 3–4, contrapartida equipo) |
 
 **Diseño experimental:**
-- 10 filas de 136m: 5 filas experimentales (filas 2, 4, 6, 8, 10) + 5 filas buffer a 100% ETc (filas 1, 3, 5, 7, 9).
-- 1 régimen hídrico uniforme por fila experimental (100% ETc → sin riego).
-- 5 nodos permanentes (1 por fila experimental, planta central) + 32 brackets fijos en espaldera para posiciones complementarias.
-- Protocolo Scholander: ≥5 plantas/fila experimental × 4 sesiones OED (Mes 4–9).
+- 10 filas de 136m divididas en dos zonas: Zona de CALIBRACIÓN (filas 1–5, regímenes F1=0%, F2=15%, F3=40%, F4=65%, F5=100% ETc) + Zona de PRODUCCIÓN (filas 6–10, todas 100% ETc, nodos en modo comercial autónomo con pipeline completo CWSI→HSI→alerta→recomendación de riego).
+- 1 régimen hídrico uniforme por fila de calibración (0% ETc → 100% ETc).
+- 10 nodos permanentes (5 calibración + 5 producción, 1 por fila, planta central) + 64 brackets fijos en espaldera para posiciones complementarias.
+- Protocolo Scholander: ≥5 plantas/fila de calibración × 4 sesiones OED (Mes 4–9).
 - 800 frames térmicos etiquetados con ψ_stem verificado por Scholander.
 
 **Posicionamiento de nodos:**
-Cada nodo se instala en la **planta central de su fila experimental** (planta 68 de 136, espaciado 1m entre plantas). Se evitan las 5 plantas de cada extremo de la fila por dos razones: (1) en los extremos existe efecto borde por exposición diferencial al viento y la radiación; (2) el píxel Sentinel-2 de calibración (10m × 10m) que contiene al nodo debe caer íntegramente dentro de la fila, garantizando que el valor espectral utilizado para calibrar la extrapolación satelital corresponde al tratamiento de esa fila y no a una mezcla con la cabecera o el pasillo. El extensómetro de tronco se instala en la misma planta central que el nodo.
+Cada nodo se instala en la **planta central de su fila** (planta 68 de 136, espaciado 1m entre plantas). Se evitan las 5 plantas de cada extremo de la fila por dos razones: (1) en los extremos existe efecto borde por exposición diferencial al viento y la radiación; (2) el píxel Sentinel-2 de calibración (10m × 10m) que contiene al nodo debe caer íntegramente dentro de la fila, garantizando que el valor espectral utilizado para calibrar la extrapolación satelital corresponde al tratamiento de esa fila y no a una mezcla con la cabecera o el pasillo. El extensómetro de tronco se instala en la misma planta central que el nodo.
 
 **Criterios de éxito TRL 4:**
 
@@ -238,7 +239,7 @@ Lucas Bergon (MBG Controls, 45% del capital de HydroVision AG) es responsable de
 
 - Diseño del **PCB integrado** (Mes 1–2) y selección final de componentes.
 - Desarrollo del **firmware ESP32-S3**: drivers de todos los sensores, CWSI/HSI/GDD en nodo, control gimbal, LoRa, alertas, deep sleep.
-- **Instalación y mantenimiento** de los 5 nodos en viñedo experimental (Mes 4–5).
+- **Instalación y mantenimiento** de los 10 nodos en viñedo experimental (Mes 4–5).
 - Coordinación técnica con César Schiavoni (backend) para el pipeline de transmisión de frames al backend PINN.
 
 MBG Controls tiene experiencia demostrada en diseño de PCBs industriales y sistemas embebidos con protocolos RS485/Modbus en ambientes agresivos — experiencia directamente aplicable a las condiciones del viñedo en Cuyo y NOA.

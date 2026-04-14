@@ -22,7 +22,7 @@ Dentro del bloque, 4 sub-bloques verticales representando los grupos de sensores
 
 **Sub-bloque 1 — Imagen térmica:**
 - Ícono de cámara. "MLX90640 32×24 px"
-- "Gimbal 5+1 posiciones"
+- "Gimbal 6+1 posiciones (7 ángulos)"
 - "→ CWSI = (Tc − T_LL) / (T_UL − T_LL)"
 
 **Sub-bloque 2 — Dendrómetro:**
@@ -38,7 +38,7 @@ Dentro del bloque, 4 sub-bloques verticales representando los grupos de sensores
 - "96 capturas/día (cada 15 min)"
 - "Payload JSON v1"
 
-**Debajo del bloque:** "×5 nodos (1 por zona hídrica)" con 5 íconos de nodo en fila.
+**Debajo del bloque:** "×10 nodos (5 calibración + 5 producción)" con 10 íconos de nodo en fila: 5 verdes (calibración) + 5 azules (producción).
 
 **Anotación lateral:** "Energía: Panel 6W + LiFePO4 6Ah → 120h sin sol"
 

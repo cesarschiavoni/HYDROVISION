@@ -47,17 +47,17 @@ Encuesta a productores de la zona (INTA EEA Córdoba, 2022):
 
 ### 3.1 Escenarios RDI y sus ahorros estimados
 
-El experimento de 5 zonas genera datos para cuantificar el trade-off entre ahorro hídrico y calidad:
+El experimento de 5 filas genera datos para cuantificar el trade-off entre ahorro hídrico y calidad:
 
-| Zona | ETc aplicada | m³/ha/año estimados | Ahorro vs. base empírica | Impacto calidad esperado |
+| Fila | ETc aplicada | m³/ha/año estimados | Ahorro vs. base empírica | Impacto calidad esperado |
 |---|---|---|---|---|
-| A — Control pleno | 100% ETc = 1.920 m³ | 1.920 | 38% de ahorro vs. base | Sin cambio (referencia) |
-| B — RDI moderado | 65% ETc = 1.248 m³ | 1.248 | 60% de ahorro vs. base | Leve mejora °Brix (+0.5–1.0) |
-| C — RDI medio | 40% ETc = 768 m³ | 768 | 75% de ahorro vs. base | Mejora significativa (+1.5–2.0 °Brix) |
-| D — RDI severo | 15% ETc = 288 m³ | 288 | 91% de ahorro vs. base | Mejora máxima, riesgo productivo |
-| E — Sin riego | 0% ETc = 0 m³ | 0 (+ lluvia PE) | 100% de ahorro vs. base | Uso experimental — no recomendado |
+| Fila 5 — Control pleno | 100% ETc = 1.920 m³ | 1.920 | 38% de ahorro vs. base | Sin cambio (referencia) |
+| Fila 4 — RDI moderado | 65% ETc = 1.248 m³ | 1.248 | 60% de ahorro vs. base | Leve mejora °Brix (+0.5–1.0) |
+| Fila 3 — RDI medio | 40% ETc = 768 m³ | 768 | 75% de ahorro vs. base | Mejora significativa (+1.5–2.0 °Brix) |
+| Fila 2 — RDI severo | 15% ETc = 288 m³ | 288 | 91% de ahorro vs. base | Mejora máxima, riesgo productivo |
+| Fila 1 — Sin riego | 0% ETc = 0 m³ | 0 (+ lluvia PE) | 100% de ahorro vs. base | Uso experimental — no recomendado |
 
-### 3.2 Escenario comercial recomendado: Zona B (65% ETc)
+### 3.2 Escenario comercial recomendado: Fila 4 (65% ETc)
 
 El RDI al 65% ETc es el escenario con mejor balance ahorro/calidad documentado en la literatura:
 
@@ -65,7 +65,7 @@ El RDI al 65% ETc es el escenario con mejor balance ahorro/calidad documentado e
 - **Dry & Loveys 1998**: RDI 50% ETc en vid → +25% concentración de compuestos fenólicos
 - **Bellvert et al. 2016**: RDI 65% ETc en Malbec Mendoza → rendimiento −8%, calidad +15% (índice de madurez)
 
-**Ahorro neto en escenario Zona B:**
+**Ahorro neto en régimen Fila 4 (65% ETc):**
 
 ```
 Consumo base empírico:       3.100 m³/ha/año
@@ -118,10 +118,10 @@ Porcentaje de ahorro total:  66% vs. práctica empírica
 
 Los ahorros proyectados en §4.1 son estimaciones basadas en:
 1. Datos bibliográficos de RDI para vid y olivo en condiciones similares a las argentinas
-2. El escenario de adopción de zona B (65% ETc) — escenario intermedio, no el más agresivo
+2. El escenario de adopción de fila 4 (65% ETc) — escenario intermedio, no el más agresivo
 3. Tasa de adopción implícita del 100% de la superficie objetivo — en la práctica, el ahorro real dependerá del porcentaje de productores que implementen el sistema
 
-La calibración experimental de Colonia Caroya (Malbec, 5 zonas RDI) generará el dato empírico argentino que reemplazará estas estimaciones bibliográficas en el paper científico y en los reportes de TRL 5 y 6.
+La calibración experimental de Colonia Caroya (Malbec, 5 filas de calibración RDI) generará el dato empírico argentino que reemplazará estas estimaciones bibliográficas en el paper científico y en los reportes de TRL 5 y 6.
 
 ---
 

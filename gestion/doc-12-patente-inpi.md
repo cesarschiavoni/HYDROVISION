@@ -71,7 +71,7 @@ El nodo comprende los siguientes componentes integrados en una arquitectura modu
 
 La cámara de imagen térmica es un sensor de microbolómetro de onda larga infrarroja (LWIR, 8–14 µm) con resolución mínima de 32×24 píxeles, campo visual horizontal ≥ 80°, precisión radiométrica NETD ≤ 150 mK (preferentemente ≤ 100 mK, implementado con Melexis MLX90640ESF-BAB, NETD típico 100 mK, error CWSI resultante ±0.038, dentro del umbral agronómico ±0.07 definido por Araújo-Paredes et al., 2022).
 
-La cámara se monta sobre un sistema gimbal pan-tilt de dos ejes actuados por servomotores (implementado con 2× MG90S, controlados por señal PWM vía módulo LEDC del microcontrolador ESP32-S3). La unidad inercial ICM-42688-P, integrada en el mismo PCB, compensa las vibraciones por viento durante la captura. En cada ciclo de medición (preferentemente cada 15 minutos) se adquieren 5 posiciones angulares fijas más una adicional condicional según velocidad de viento:
+La cámara se monta sobre un sistema gimbal pan-tilt de dos ejes actuados por servomotores (implementado con 2× MG90S, controlados por señal PWM vía módulo LEDC del microcontrolador ESP32-S3). La unidad inercial ICM-42688-P, integrada en el mismo PCB, compensa las vibraciones por viento durante la captura. En cada ciclo de medición (preferentemente cada 15 minutos) se adquieren 6 posiciones angulares fijas más una adicional condicional según velocidad de viento (= 7 ángulos totales):
 
 | Posición | Ángulo Horizontal | Ángulo Vertical | Condición |
 |---|---|---|---|
@@ -80,7 +80,8 @@ La cámara se monta sobre un sistema gimbal pan-tilt de dos ejes actuados por se
 | Derecha | +20° | 0° | Siempre |
 | Superior | 0° | +15° | Siempre |
 | Inferior | 0° | −10° | Siempre |
-| Adicional | Aleatorio | Aleatorio | Viento > 20 km/h |
+| Diagonal IzqArriba | −20° | +15° | Siempre |
+| Nadir adicional | Aleatorio | Aleatorio | Viento > 20 km/h |
 
 La fusión de los múltiples frames se realiza localmente en el microcontrolador: para cada frame se calcula la fracción foliar (proporción de píxeles cuya temperatura se ubica en el rango percentil 20–75 del histograma térmico); se retienen los 3 frames con mayor fracción foliar; el CWSI resultante es la mediana ponderada por fracción foliar de los 3 frames retenidos.
 
@@ -121,7 +122,7 @@ ESP32-S3 dual-core Xtensa LX7, 240 MHz, 8 MB Flash, 2 MB PSRAM. Ejecuta localmen
 
 **i) Sistema de energía:**
 
-Panel solar monocristalino o policristalino de 6 W / 6 V con controlador de carga integrado en PCB. Batería LiFePO₄ de 6 Ah (22.2 Wh). Balance energético en condiciones de operación normal: +25.7 Wh/día (margen de generación 6× sobre el consumo).
+Panel solar monocristalino o policristalino de 6 W / 6 V con controlador de carga integrado en PCB. Batería LiFePO₄ de 6 Ah (19,2 Wh). Balance energético en condiciones de operación normal: +25.7 Wh/día (margen de generación 6× sobre el consumo).
 
 **j) Actuador de riego (Tier 2–3, opcional):**
 
@@ -199,7 +200,7 @@ En el firmware del ESP32-S3 se ejecuta una red neuronal liviana (MobileNetV3-Tin
 L_total = L_datos + λ · L_física
 ```
 
-donde L_física penaliza predicciones de ΔT_foliar inconsistentes con el balance energético foliar bajo las condiciones meteorológicas instante a instante (T_aire, VPD, radiación). Este término actúa como regularización física, mejorando la generalización con datasets pequeños (≥ 500 frames etiquetados) — condición exacta del TRL 4.
+donde L_física penaliza predicciones de ΔT_foliar inconsistentes con el balance energético foliar bajo las condiciones meteorológicas instante a instante (T_aire, VPD, radiación). Este término actúa como regularización física, mejorando la generalización con datasets pequeños (800 frames etiquetados: 680 fine-tuning + 120 validación independiente) — condición exacta del TRL 4.
 
 El modelo recibe como entrada el frame térmico segmentado, los datos meteorológicos del ciclo, y las referencias de calibración de los paneles Dry/Wet Ref. La salida es un CWSI refinado y un intervalo de confianza.
 
@@ -222,7 +223,7 @@ El sistema implementa un método de calibración cruzada entre el punto de medic
 
 **Nodo sensor autónomo de campo** para la medición continua del estrés hídrico en cultivos perennes, caracterizado por comprender, integrados en una carcasa con protección IP65 y sistema de energía solar autónomo:
 
-(a) una cámara de imagen térmica infrarroja de onda larga (LWIR) con resolución mínima de 32×24 píxeles montada sobre un soporte pan-tilt motorizado de dos ejes con compensación inercial activa mediante unidad de medición inercial (IMU), adaptada para adquirir imágenes térmicas del canopeo vegetal en al menos cinco posiciones angulares fijas por ciclo de medición;
+(a) una cámara de imagen térmica infrarroja de onda larga (LWIR) con resolución mínima de 32×24 píxeles montada sobre un soporte pan-tilt motorizado de dos ejes con compensación inercial activa mediante unidad de medición inercial (IMU), adaptada para adquirir imágenes térmicas del canopeo vegetal en al menos seis posiciones angulares fijas por ciclo de medición;
 
 (b) un extensómetro de tronco de alta resolución, comprendiendo un sensor de deformación tipo puente Wheatstone con convertidor analógico-digital de al menos 24 bits y sensor de temperatura para corrección de dilatación térmica, montado en abrazadera sobre el tronco de la planta, para la medición continua de la máxima contracción diaria del tronco (MDS);
 
@@ -300,7 +301,7 @@ Sistema autónomo para el monitoreo continuo y el control de riego en cultivos, 
 
 *(Las figuras se prepararán como ilustraciones técnicas para la presentación formal ante INPI.)*
 
-- **Figura 1:** Vista general del nodo de campo con indicación de componentes principales (cámara LWIR, gimbal, paneles Dry/Wet Ref, extensómetro, carcasa IP65, panel solar).
+- **Figura 1:** Vista general del nodo de campo con indicación de componentes principales (cámara LWIR, gimbal, paneles Dry/Wet Ref, extensómetro, carcasa IP67, panel solar).
 - **Figura 2:** Diagrama de bloques del hardware del nodo (MCU, sensores, actuadores, interfaces).
 - **Figura 3:** Diagrama de flujo del firmware: ciclo de medición, cálculo CWSI, HSI, motor GDD, decisión de riego.
 - **Figura 4:** Diagrama del sistema de calibración dual y la auto-calibración dinámica del baseline.

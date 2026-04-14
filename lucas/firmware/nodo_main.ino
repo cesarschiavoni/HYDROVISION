@@ -1084,7 +1084,7 @@ float muller_gbh(float t_black, float t_white, float rad_wm2) {
 
 /**
  * Estima % batería desde ADC con divisor de tensión R1/R2.
- * LiPo: BAT_FULL_MV = 4200 mV, BAT_EMPTY_MV = 3000 mV.
+ * LiFePO4: BAT_FULL_MV = 3600 mV, BAT_EMPTY_MV = 2800 mV.
  * NOTA: PIN_BAT_ADC comparte GPIO con PIN_GPS_TX — verificar en PCB v1.
  */
 uint8_t estimar_bateria() {

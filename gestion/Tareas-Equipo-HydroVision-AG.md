@@ -62,7 +62,7 @@
 | Driver **pluviómetro** ISR IRAM_ATTR + debounce → rain_mm | `lucas/firmware/driver_pluviometro.h` |
 | Driver **piranómetro BPW34** ADC promedio 8 muestras → rad_wm2 | `lucas/firmware/driver_piranometro.h` |
 | Driver **bomba peristáltica** Wet Ref GPIO pulso temporizado | `lucas/firmware/driver_bomba_wetref.h` |
-| Driver **gimbal MG90S** LEDC PWM 16-bit + 5 posiciones fijas + 1 nadir condicional + fusión multi-frame | `lucas/firmware/driver_gimbal.h` |
+| Driver **gimbal MG90S** LEDC PWM 16-bit + 6 posiciones fijas + 1 nadir condicional (viento > 20 km/h) = 7 ángulos totales + fusión multi-frame | `lucas/firmware/driver_gimbal.h` |
 | Driver **LoRa SX1276** `publicar_lora(topic, json)` + sleep pre-deep-sleep | `lucas/firmware/driver_lora.h` |
 | Driver **PMS5003** partículas UART1 — detección automática fumigación + lluvia | `lucas/firmware/driver_pms5003.h` |
 | Driver **ICM-42688-P IMU** SPI — verifica estabilización gimbal antes de captura, detecta desplazamiento | `lucas/firmware/driver_imu.h` |
@@ -80,14 +80,14 @@
 | 2 | **Calibrar 3 constantes** con hardware real: `ADS1231_COUNTS_PER_UM` (extensómetro referencia), `PYRANO_WPM2_PER_MV` (piranómetro referencia), `PLUV_MM_PER_PULSE` (datasheet sensor comprado) | Mes 2–3 |
 | 3 | ~~**Confirmar PIN_BAT_ADC** (GPIO 11)~~ → **✓ Resuelto** — PIN_BAT_ADC movido a GPIO 40 (`config.h`). SPI explícito reasignado a GPIO 34/33/32 para evitar conflicto. Verificar en PCB que GPIO 40 (ADC1_CH9) está libre. | Mes 1 |
 | 4 | **Integración modular TRL4**: cableado ESP32-S3 DevKit + breakouts I2C/SPI (MLX90640, SHT31, IMU, etc.) en carcasa Hammond IP67 200×150×100mm | Mes 1–3 |
-| 5 | **Montaje 5 nodos prototipo** — carcasa Hammond IP67 + pasacables M16 + sistema de montaje campo | Mes 2–4 |
+| 5 | **Montaje 10 nodos prototipo (5 calibración + 5 producción)** — carcasa Hammond IP67 + pasacables M16 + sistema de montaje campo | Mes 2–4 |
 | 6 | **Testing integrado en banco**: autonomía ≥ 72h, deep sleep 8µA, IP67 (0–45°C), vibración gimbal | Mes 4–6 |
 | 7 | Anotación inicial del dataset térmico (~400 frames MLX90640) con el Inv. Art. 32 | Mes 4–6 |
 
 ### Tareas Mes 7–12 (integración campo y validación)
 | # | Tarea | Período |
 |---|-------|---------|
-| 11 | Instalación física de los **5 nodos** en el viñedo experimental (1 por fila experimental, filas 2/4/6/8/10, junto a Javier Schiavoni). **Posición: planta central de la fila (~planta 68 de 136)**. Evitar las 5 plantas de cada extremo de la fila — efecto borde por exposición diferencial y mezcla de píxeles Sentinel-2. | Mes 3–4 |
+| 11 | Instalación física de los **10 nodos** en el viñedo experimental (1 por fila, filas 1–10: 5 en zona de calibración + 5 en zona de producción, junto a Javier Schiavoni). **Posición: planta central de la fila (~planta 68 de 136)**. Evitar las 5 plantas de cada extremo de la fila — efecto borde por exposición diferencial y mezcla de píxeles Sentinel-2. | Mes 3–4 |
 | 12 | Firmware OTA: actualizaciones over-the-air, corrección de bugs detectados en campo | Mes 7–12 |
 | 13 | Soporte técnico a Javier: diagnóstico remoto por dashboard ISO_nodo, reemplazo de componentes | Mes 7–9 |
 | 14 | ~~Documentación técnica definitiva~~ → **✓ Claude Code** (estructura) — `lucas/documentacion/guia-instalacion-nodo-v1.md` (guía completa de instalación). **Lucas revisa, valida y agrega fotos reales del nodo instalado** | Mes 4–6 |
@@ -144,7 +144,7 @@
 
 ## Javier Schiavoni — Técnico de Campo Principal
 **Residencia:** Colonia Caroya (a metros del viñedo experimental)
-**Dedicación:** ~208 hs efectivas · Mes 1–9 (≈6 hs/semana promedio)
+**Dedicación:** ~227 hs efectivas · Mes 1–9 (≈7 hs/semana promedio)
 **Honorarios:** USD 1.000/mes × 9 = **USD 9.000**
 
 ### Para qué sirve cada tarea
@@ -152,17 +152,17 @@
 | # | Tarea | Período | Propósito claro |
 |---|-------|---------|-----------------|
 | 0 | Preparación de la base para el tanque australiano 20.000L: nivelado del terreno con tractor, encofrado de losa de hormigón 3m×3m×0,15m, mezcla y vertido de hormigón, curado 48h antes de colocar el tanque. Sin base adecuada el tanque lleno (~20 ton) puede hundirse, inclinarse o agrietarse. | Mes 1 · ~10h | Prerequisito de toda la instalación de riego — el tanque no puede colocarse sin una base nivelada y firme |
-| 1 | Instalación completa infraestructura de riego: colocación del tanque sobre la losa, excavación zanjas para cañería PE, tendido 1.450m cinta drip (10 filas), instalación eléctrica 70m, operación tractor, conexión 5 solenoides Rain Bird (1 por fila experimental), pruebas hidráulicas | Mes 1–2 · 80h | Infraestructura base: sin riego diferencial por fila no hay protocolo de 5 regímenes hídricos |
+| 1 | Instalación completa infraestructura de riego: colocación del tanque sobre la losa, excavación zanjas para cañería PE, tendido 1.450m cinta drip (10 filas), instalación eléctrica 70m, operación tractor, conexión 10 solenoides Rain Bird (1 por fila, todas las filas), pruebas hidráulicas | Mes 1–2 · 80h | Infraestructura base: sin riego diferencial por fila no hay protocolo de 5 regímenes hídricos |
 | 2 | Mantenimiento del viñedo experimental: verificación de caudales, lectura de tensiómetros, registro de lluvia, detección de fallas en solenoides | Mes 1–9 · 8h/mes = 72h | Mantiene los 5 regímenes hídricos diferenciados activos durante toda la campaña |
-| 3 | Instalación del extensómetro de tronco en 5 plantas de referencia: abrazadera aluminio anodizado, cara norte, 30 cm altura, verificación strain gauge. **La planta de referencia debe ser la misma planta central donde se instala el nodo** (planta 68 de la fila experimental, ≥5 plantas alejada de cada extremo de la fila). | Mes 3 · 45 min/nodo × 5 = 4h | El extensómetro mide MDS 24/7 — es la señal de tronco que calibra la cámara y valida el modelo |
+| 3 | Instalación del extensómetro de tronco en 10 plantas de referencia (1 por fila): abrazadera aluminio anodizado, cara norte, 30 cm altura, verificación strain gauge. **La planta de referencia debe ser la misma planta central donde se instala el nodo** (planta 68 de la fila, ≥5 plantas alejada de cada extremo). | Mes 3 · 45 min/nodo × 10 = 8h | El extensómetro mide MDS 24/7 — es la señal de tronco que calibra la cámara y valida el modelo |
 | 4 | Operación de la bomba Scholander en 4 sesiones OED (Mes 4–9): medición ψ_stem en ventana 10–14hs, registro en planilla `cesar/planilla_scholander_template.csv` (**✓ Claude Code**), etiquetado de frames | Mes 4–9 · 5h/sesión × 4 = 20h | **No es para calibrar el sistema** — eso lo hacen el Wet Ref y el extensómetro solos. Es para: (a) validar que la estimación MDS→ψ_stem es correcta para este viñedo, (b) etiquetar los frames que entrena el modelo PINN, (c) medir el R² del HSI contra gold standard |
 | 5 | Verificación del extensómetro en cada sesión Scholander: inspección visual de abrazadera, cable y conexiones, confirmación de D_max/D_min del día en el celular (Xiaomi Redmi Note 13 Pro+ 5G) | Mes 4–9 · 15 min/sesión × 4 = 1h | Confirma que el sensor de tronco está operando correctamente antes de cada sesión |
 | 6 | Coordinación logística y registro: verificar condiciones meteorológicas (>48h sin lluvia significativa antes de sesión), activar ventanas horarias 9hs/12hs/16hs | Mes 4–9 · ~30 min/semana × 14 semanas = 8h | Garantiza que las mediciones se toman en las condiciones correctas |
-| 7a | Recarga mensual del reservorio de 10L del Wet Ref con agua destilada o clorada (5 nodos) | Mes 4–10 · 15 min/nodo × 5 × 7 meses = 9h | El Wet Ref físico provee T_wet en tiempo real — **es el mecanismo principal de calibración térmica**, sin este la cámara usa solo el modelo matemático de respaldo |
-| 7b | Limpieza del lente de la cámara térmica **únicamente cuando el dashboard reporta ISO_nodo < 80%** — el sistema avisa por la tablet | Eventual · ~2 eventos × 5 nodos × 30 min = 4h | Mantenimiento reactivo basado en diagnóstico automático — no hay limpiezas fijas semanales |
+| 7a | Recarga mensual del reservorio de 10L del Wet Ref con agua destilada o clorada (10 nodos) | Mes 4–10 · 15 min/nodo × 10 × 7 meses = 18h | El Wet Ref físico provee T_wet en tiempo real — **es el mecanismo principal de calibración térmica**, sin este la cámara usa solo el modelo matemático de respaldo |
+| 7b | Limpieza del lente de la cámara térmica **únicamente cuando el dashboard reporta ISO_nodo < 80%** — el sistema avisa por la tablet | Eventual · ~2 eventos × 10 nodos × 30 min = 10h | Mantenimiento reactivo basado en diagnóstico automático — no hay limpiezas fijas semanales |
 | 7c | **Fumigación y lluvia: sin acción requerida.** El sensor PMS5003 detecta automáticamente el aerosol de fumigación (PM2.5 > 200 µg/m³) y la lluvia con aerosol. El firmware invalida las capturas MLX90640 y extensómetro durante el evento y por 4h post-fumigación / 3h post-lluvia. El payload incluye `calidad_captura` y el backend descarta los frames automáticamente. | — | Javier no necesita hacer nada durante ni después de una fumigación |
 
-**Desglose auditado:** 10 (base tanque) + 80 (riego) + 72 (mant. viñedo) + 4 (extensómetros) + 20 (Scholander 4 sesiones OED) + 1 (verif. extens.) + 8 (coord. logística) + 9 (Wet Ref) + 4 (limpieza lente) = **208 horas**
+**Desglose auditado:** 10 (base tanque) + 80 (riego) + 72 (mant. viñedo) + 8 (extensómetros ×10 nodos) + 20 (Scholander 4 sesiones OED) + 1 (verif. extens.) + 8 (coord. logística) + 18 (Wet Ref ×10 nodos) + 10 (limpieza lente ×10 nodos) = **227 horas**
 
 ---
 
@@ -239,7 +239,7 @@
 | Lucas Bergon | COO / Hardware & Firmware | 50% M1-6 · 25% M7-12 | USD 15.000 | ANR + especie (horas USD 4.650 + herramientas USD 400 + equipamiento MBG USD 710 = USD 5.760) |
 | Inv. Art. 32 (a incorporar) | Investigador en Validación de Señales y Datos Agronómicos (perfil Art. 32) | ~5 hs/sem promedio (~177 hs totales) | USD 6.000 | ANR (USD 500/mes) |
 | Dra. Monteoliva | Investigadora INTA-CONICET | ~180h en 12 meses | USD 10.800 | ANR (USD 900/mes) |
-| Javier Schiavoni | Técnico de Campo Principal | ~208h · 9 meses | USD 9.000 | ANR (USD 1.000/mes) |
+| Javier Schiavoni | Técnico de Campo Principal | ~227h · 9 meses | USD 9.000 | ANR (USD 1.000/mes) |
 | Franco Schiavoni | Soporte Campo | eventual | USD 0 | Especie familiar |
 | Matías Tregnaghi | CFO / Contador | 20% · 12 meses | USD 6.000 | ANR (USD 500/mes) |
 | Ximena Crespo | Agente PI (patente) | honorario único | incluido en ítem PI | ANR |
@@ -253,11 +253,11 @@
 
 | Rubro | Monto USD | Nota |
 |---|---|---|
-| Honorarios equipo (ver tabla arriba) | 64.800 | César USD 1.500/mes; Inv. Art. 32 USD 500/mes; Javier USD 1.000/mes (~208h, incluye base tanque + riego + Scholander) |
-| Hardware — 5 nodos ESP32-S3 + MLX90640 | 5.500 | Incluye repuestos, 2do prototipo testing, herramientas banco |
+| Honorarios equipo (ver tabla arriba) | 64.800 | César USD 1.500/mes; Inv. Art. 32 USD 500/mes; Javier USD 1.000/mes (~227h, incluye base tanque + riego + Scholander + 10 nodos) |
+| Hardware — 10 nodos ESP32-S3 + MLX90640 (5 calibración + 5 producción) | 7.500 | Incluye repuestos, prototipo testing, herramientas banco |
 | Gateway RAK7268 + conectividad dual (4G + Starlink Mini X) | 847 | RAK7268 + Teltonika RUT241 + chip M2M + Starlink Mini X + plan |
 | Instrumentos referencia (Scholander, Davis, HOBO, etc.) | 5.642 | Nota: calibrador cuerpo negro e instrumental portátil provistos por lab INTA-CONICET |
-| Equipamiento campo experimental [B] (solenoides, brackets, etc.) | 2.500 | Incluye reposición, señalización, protección nodos |
+| Equipamiento campo experimental [B] (solenoides x10, brackets x64, paneles ref. x64, etc.) | 3.300 | Solenoides Rain Bird x10 (1/fila — todas las filas) + controlador 10 zonas + brackets + paneles ref. + túneles + estacas + cableado + malla antigranizo + canaleta UV |
 | Infraestructura cloud + herramientas desarrollo | 500 | Colab Pro (César) + Cloudflare R2 + dominio. VPS: Oracle Free Tier. Licencias: free tiers suficientes para TRL 3-4 |
 | Claude Code Max (2 devs × 12 meses, USD 100/mes neto) | 2.400 | Art. 21g — IVA e Impuesto PAIS no elegibles (Art. 22j/22k) |
 | Legal + constitución SAS | 800 | |

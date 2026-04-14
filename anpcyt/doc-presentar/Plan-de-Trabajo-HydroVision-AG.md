@@ -117,11 +117,11 @@ HydroVision AG es una plataforma autónoma de inteligencia agronómica para cult
 Más allá del CWSI, el sistema opera como plataforma de inteligencia agronómica completa: detecta automáticamente el estadio fenológico del cultivo mediante grados-día acumulados (GDD), genera alertas de helada tardía, estrés calórico, riesgo de enfermedades fúngicas y timing de operaciones de manejo (desbrote, análisis foliar, deadlines de fungicidas), y predice fechas de floración, envero y cosecha actualizadas semanalmente. Todo esto sin hardware adicional significativo — solo un pluviómetro de USD 15 completa el kit.
 El sistema se instala como nodo fijo autónomo — alimentado por energía solar, conectado por LoRaWAN privado — y opera las 24 horas sin intervención humana. Los datos se fusionan con imágenes satelitales Sentinel-2 gratuitas (revisita cada 5 días, 10m/px) mediante un modelo de correlación CWSI↔NDWI: el nodo calibra el satélite en un punto y el satélite extrapola esa calibración a todo el lote, generando mapas de prescripción de riego diferencial y mapas de vigor vegetativo por zona, visibles desde una aplicación móvil con notificaciones push configurables por tipo de alerta. En su versión Tier 2-3, el nodo automatiza el riego por goteo directamente mediante relé SSR → solenoide — el nodo decide autónomamente cuándo regar según HSI, eliminando la intervención manual del operario.
 
-Problema cuantificado: en cultivos de vid, olivo, cerezo, pistacho, nogal y citrus, el estrés hídrico mal gestionado genera pérdidas de rendimiento del 15 al 35% por campaña según condiciones y cultivo (Maes & Steppe 2012 para vid; García-Tejero et al. 2018 para olivo en condiciones de déficit controlado), equivalentes a USD 680–3.200 por hectárea según variedad. En condiciones de manejo promedio con riego tecnificado, las pérdidas evitables se estiman conservadoramente en el rango 10–20%. Argentina cuenta con ~447.700 hectáreas de cultivos de alto valor con riego tecnificado; sumando Chile el mercado direccionable supera las 600.000 ha. El valor de producción en riesgo supera los USD 498 millones anuales solo en Argentina.
+Problema cuantificado: en cultivos de vid, olivo, cerezo, pistacho, nogal y citrus, el estrés hídrico mal gestionado genera pérdidas de rendimiento del 15 al 35% por campaña según condiciones y cultivo (Maes & Steppe 2012 para vid; García-Tejero et al. 2018 para olivo en condiciones de déficit controlado), equivalentes a USD 680–3.600 por hectárea según variedad. En condiciones de manejo promedio con riego tecnificado, las pérdidas evitables se estiman conservadoramente en el rango 10–20%. Argentina cuenta con ~447.700 hectáreas de cultivos de alto valor con riego tecnificado; sumando Chile el mercado direccionable supera las 600.000 ha. El valor de producción en riesgo supera los USD 498 millones anuales solo en Argentina.
 
 Brecha tecnológica: no existe en Argentina ni en América Latina un sistema comercial que realice detección de estrés hídrico foliar en tiempo real mediante termografía, operando autónomamente en campo. Las soluciones existentes (satélite, drones con operador, tensiómetros de suelo) no detectan el estrés fisiológico de la planta antes del síntoma de marchitez. Esta brecha fue verificada mediante búsqueda de anterioridad en Google Patents, Espacenet (EPO), INPI Argentina y revisión de literatura científica 2020–2025.
 
-Viabilidad Económica: El aporte de HydroVision varía según el cultivo, con un promedio ponderado de USD 9,6 recuperados por cada dólar invertido en la suscripción anual del servicio. En vid premium (USD 9.600/ha de ingreso bruto), el aporte evitado de pérdidas es USD 1.150/ha. Cálculo de ROI Año 1 en configuración Tier 1 (1 nodo/10 ha): costo hardware por ha USD 95 (amortizado en Año 1, sin deuda) + suscripción USD 95/ha = USD 190/ha total · Beneficio: USD 1.150/ha → ROI Año 1 = 1.150 / 190 ≈ 6x. En configuraciones Tier 3 (alta densidad, 1 nodo/2 ha), el hardware domina el costo Año 1 y el payback se extiende a ~2,4 años, con ROI Año 2+ fuertemente positivo. En cultivos de mayor valor el retorno es aún más pronunciado: cerezo (USD 3.200/ha de aporte, ingreso bruto USD 30.000/ha), pistacho (USD 2.160/ha) y nogal (USD 1.200/ha). El punto de equilibrio del negocio (HydroVision AG) se alcanza con las primeras 800 hectáreas bajo contrato recurrente — menos del 0,18% del mercado nacional direccionable de ~447.700 ha. La inversión en hardware Tier 1 se recupera en la primera cosecha en cultivos de alto valor.
+Viabilidad Económica: El aporte de HydroVision varía según el cultivo, con un promedio ponderado de USD 9,6 recuperados por cada dólar invertido en la suscripción anual del servicio. En vid premium (USD 9.600/ha de ingreso bruto), el aporte evitado de pérdidas es USD 1.150/ha. Cálculo de ROI Año 1 en configuración Tier 1 (1 nodo/10 ha): costo hardware por ha USD 95 (amortizado en Año 1, sin deuda) + suscripción USD 95/ha = USD 190/ha total · Beneficio: USD 1.150/ha → ROI Año 1 = 1.150 / 190 ≈ 6x. En configuraciones Tier 3 (alta densidad, 1 nodo/2 ha), el hardware domina el costo Año 1 y el payback se extiende a ~2,4 años, con ROI Año 2+ fuertemente positivo. En cultivos de mayor valor el retorno es aún más pronunciado: cerezo (USD 3.600/ha de aporte, ingreso bruto USD 30.000/ha), pistacho (USD 2.160/ha) y nogal (USD 1.200/ha). El punto de equilibrio del negocio (HydroVision AG) se alcanza con las primeras 800 hectáreas bajo contrato recurrente — menos del 0,18% del mercado nacional direccionable de ~447.700 ha. La inversión en hardware Tier 1 se recupera en la primera cosecha en cultivos de alto valor.
 
 Viabilidad del Negocio (HydroVision AG): El punto de equilibrio operativo se alcanza con 800 hectáreas bajo contrato recurrente (Tier 1, USD 95/ha/año promedio) — equivalente al 0,18% del mercado nacional direccionable de 447.700 ha. Proyección post-ANPCyT: Año 1 (TRL 5) 500 ha · USD 47.500 ARR; Año 2 (TRL 6) 2.500 ha · USD 260.000 ARR; Año 3 (TRL 7) 10.000 ha · USD 1.100.000 ARR — escenario conservador basado en tasa de penetración del 0,02% anual del mercado total. Los costos operativos de HydroVision AG post-TRL 4 son principalmente cloud (ya presupuestados a escala en el ítem de infraestructura) y soporte comercial, con margen bruto estimado >78% en operación recurrente estable (Año 3+).
 
@@ -172,13 +172,13 @@ Cuando ve el síntoma de marchitez, el daño fisiológico ocurrió 5–10 días 
 2.2 La oportunidad de innovación
 HydroVision AG integra tres tecnologías maduras que hasta ahora no se combinaron en un sistema embebido de campo permanente:
 
-[1] Termografía infrarroja de bajo costo — MLX90640 (Melexis) con NETD ~100mK, resolución 32x24px, disponible a USD 40–60 por módulo. Alternativa de mayor resolución: FLIR Lepton 3.5 (NETD < 50mK, USD 150–220) para TRL 5+.
+[1] Termografía infrarroja de bajo costo — MLX90640 (Melexis) con NETD ~100mK, resolución 32x24px, disponible a USD 40–60 por módulo.
 [2] Modelos de IA de inferencia en edge — redes neuronales cuantizadas INT8 que procesan imágenes localmente con latencia < 200ms en ESP32-S3.
 [3] Conectividad LoRaWAN privada — protocolo de baja potencia, sin cobertura celular requerida, alcance hasta 15 km en campo abierto con un gateway por lote.
 [4] Actuación en campo — control de riego autónomo integrado en el nodo Tier 2-3 (relé SSR + solenoide Rain Bird). El nodo decide localmente cuándo regar según HSI (histéresis 0.30/0.20) y activa el solenoide vía GPIO → SSR. El servidor recibe el estado vía payload LoRa. Nodos Tier 1 (solo monitoreo) reportan alertas vía WhatsApp, email y dashboard web. Las alertas son desactivables por el productor.
 [5] Motor fenológico automático por grados-día acumulados (GDD) — el nodo calcula GDD desde su sensor de temperatura 24/7 y detecta automáticamente el estadio fenológico del cultivo (brotación, floración, envero, maduración, dormancia), seleccionando los coeficientes CWSI correspondientes y generando alertas agronómicas específicas por estadio. Cero configuración humana.
 [6] Fusión calibrada nodo-satélite — el nodo proporciona CWSI preciso en un punto; Sentinel-2 (gratuito, cada 5 días, 10m/px) proporciona cobertura espacial de todo el lote. El modelo de correlación CWSI↔NDWI permite que un solo nodo calibre el satélite para 50+ ha, reduciendo la densidad de nodos necesaria y generando mapas de estrés de campo completo.
-[7] Captura multi-angular con gimbal motorizado — inspirada en la metodología de termografía UAV (Pires et al. 2025, Zhou et al. 2022), la cámara térmica del nodo se monta sobre un gimbal pan-tilt motorizado de 2 ejes que barre el canopeo en 5–9 ángulos por ciclo de captura (±20° horizontal, ±15° vertical). Los frames se fusionan mediante un algoritmo de selección por fracción foliar: se retienen los 3 frames con mayor proporción de píxeles hoja (P20–P75 térmico) y se calcula el CWSI como promedio ponderado. Resultado: cobertura equivalente a un vuelo UAV de baja altitud desde un punto fijo, sin dependencia climática, sin certificación ANAC y sin límite de frecuencia de captura.
+[7] Captura multi-angular con gimbal motorizado — inspirada en la metodología de termografía UAV (Pires et al. 2025, Zhou et al. 2022), la cámara térmica del nodo se monta sobre un gimbal pan-tilt motorizado de 2 ejes que barre el canopeo en 7 ángulos por ciclo de captura (6 posiciones fijas + 1 condicional con viento > 20 km/h; ±20° horizontal, ±15° vertical). Los frames se fusionan mediante un algoritmo de selección por fracción foliar: se retienen los 3 frames con mayor proporción de píxeles hoja (P20–P75 térmico) y se calcula el CWSI como promedio ponderado. Resultado: cobertura equivalente a un vuelo UAV de baja altitud desde un punto fijo, sin dependencia climática, sin certificación ANAC y sin límite de frecuencia de captura.
 [8] Dendrometría de tronco integrada — extensómetro de tronco (strain gauge + ADS1231 24-bit ADC, resolución 1 µm) mide micro-contracciones diarias del tronco (MDS = D_max − D_min). Correlación directa con ψ_stem R²=0.80–0.92 (Fernández & Cuevas 2010) vs. R²=0.62–0.67 del CWSI térmico solo. Opera 24/7 sin dependencia de ventana solar. El HSI (HydroVision Stress Index) fusiona ambas señales: 35% CWSI + 65% MDS → R²~0.90–0.95 combinado. No se ha identificado en el mercado global ningún producto comercial que integre termografía foliar + dendrometría de tronco en un único nodo autónomo de campo.
 [9] Confianza dinámica de señal con mitigación multinivel — el nodo implementa 9 capas base + mejoras v2 firmware de defensa contra el artefacto de viento: orientación a sotavento (plantas como barrera ~60-70%), shelter anti-viento SHT31, tubo colimador IR, termopar foliar Type T con fusión Kalman (ground truth por contacto, peso adaptativo según viento²), buffer térmico Hampel adaptativo, referencia dual Muller para gbh medido in situ, y rampa gradual firmware 4-18 m/s (14-65 km/h) que reduce linealmente el peso del CWSI. El CWSI permanece útil hasta 18 m/s / 65 km/h (antes solo hasta 4 m/s). A partir de 18 m/s, el HSI usa 100% MDS dendrométrico. Error reducido de ±0.12-0.18 a ±0.015 CWSI (Jones 2004).
 
@@ -224,7 +224,7 @@ OBJETIVO
 Validación tecnológica en laboratorio — OBJETIVO AL CIERRE DEL PROYECTO
 Hitos que demostrarán TRL 4:
 Prototipo hardware integrado: ESP32-S3 + MLX90640 + SHT31 + GPS + LoRa SX1276 operando simultáneamente con autonomía solar mayor o igual a 72 horas continuas.
-Validación en condiciones de campo real controlado: 5 filas experimentales de Malbec de 136m (680 vides) con sistema de riego por goteo diferencial — 5 regímenes hídricos independientes (100% ETc → sin riego), 1 tratamiento uniforme por fila, intercaladas con 5 filas buffer a 100% ETc, controladas por solenoides Rain Bird (1 por fila experimental). 5 nodos permanentes (1 por fila experimental, planta central), gimbal motorizado 7 ángulos × 96 ciclos/día. Potencial hídrico de tallo verificado con bomba de Scholander bajo protocolo Dra. Monteoliva. Error CWSI predicho vs. medido < ±0.10 unidades.
+Validación en condiciones de campo real controlado: 10 filas de Malbec de 136m (1.360 vides) divididas en zona de calibración (filas 1–5, 5 regímenes hídricos: 0% → 100% ETc, controlados por solenoides Rain Bird) y zona de producción (filas 6–10, 100% ETc, nodos en modo comercial autónomo). 10 nodos permanentes: 5 de calibración (1 por fila 1–5, planta central) + 5 de producción (1 por fila 6–10, pipeline completo CWSI → HSI → alerta). Gimbal motorizado 7 ángulos × 96 ciclos/día. Potencial hídrico de tallo verificado con bomba de Scholander bajo protocolo Dra. Monteoliva. Error CWSI predicho vs. medido < ±0.10 unidades. Los 5 nodos de producción bajo condiciones idénticas demuestran reproducibilidad del prototipo (CV < 10%) y generan recomendaciones de riego validables contra ground truth Scholander de la zona de calibración adyacente.
 Dataset de calibración propio: 800 frames de imágenes térmicas de Malbec bajo protocolo Scholander (Dra. Monteoliva), capturados en al menos 2 estadios fenológicos y 2 regiones (Colonia Caroya + Mendoza). Split: 680 frames para fine-tuning (85%) + 120 frames reservados como set de validación independiente (15%). Dataset total del modelo: 1.050.680 imágenes (50.000 públicas + 1.000.000 sintéticas + 680 reales de fine-tuning). Set de validación independiente: 120 frames reales no vistos durante entrenamiento.
 Modelo IA PINN (Physics-Informed Neural Network) — MobileNetV3-Tiny INT8 con la ecuación física del CWSI embebida en la función de pérdida. El modelo no puede predecir valores que violan el balance energético foliar. Entrenado con 1.050.680 imágenes (50.000 públicas + 1.000.000 sintéticas + 680 reales). Target: accuracy > 85% en set de validación de 120 frames independientes, latencia < 200ms en ESP32-S3. Primer modelo PINN de CWSI con termografia embebida documentado en Argentina.
 Comunicación LoRaWAN funcional: transmisión nodo → gateway a 500m en ambiente abierto, latencia < 5 segundos, payload < 50 bytes.
@@ -340,7 +340,7 @@ Email
 El productor puede desactivar cualquier alerta, cambiar el canal y ajustar umbrales numéricos. La configuración se sincroniza con todos los nodos del lote.
 
 4.3 Estrategia de datos y entrenamiento del modelo IA — arquitectura PINN
-Fundamento de la arquitectura PINN: La arquitectura Physics-Informed Neural Network (PINN) fue elegida específicamente porque el CWSI está gobernado por una ecuación física exacta (Jackson et al., 1981) que el modelo no debe violar. A diferencia de un regresor de caja negra, la función de pérdida PINN incorpora un término de residuo físico adicional: L_total = L_datos + λ · L_física. El término L_física penaliza predicciones de ΔT_foliar que no sean consistentes con el balance energético foliar bajo las condiciones meteorológicas medidas en ese instante (T°, VPD, radiación). Esto actúa como regularización física — reduce el espacio de soluciones admisibles y mejora la generalización con pocos datos reales, que es exactamente la condición de TRL 4 (500 frames reales). La factibilidad del enfoque está documentada en literatura reciente de 2024-2025: Ridder et al. (2025) aplican PINN a la absorción radicular con 2% de error en parámetros de estrés hídrico; Benkirane et al. (2025) demuestran PINN con Penman-Monteith para evapotranspiración en contextos de datos limitados; Hu et al. (2025) aplican PINN a estimación de humedad de suelo con Landsat 8 Thermal; y Rouholahnejad et al. (2024) implementan physics-informed yield loss forecasting con Sentinel-2. Ninguno aplica PINN al CWSI calculado desde termografía embebida en campo — ese es el aporte original de HydroVision AG.
+Fundamento de la arquitectura PINN: La arquitectura Physics-Informed Neural Network (PINN) fue elegida específicamente porque el CWSI está gobernado por una ecuación física exacta (Jackson et al., 1981) que el modelo no debe violar. A diferencia de un regresor de caja negra, la función de pérdida PINN incorpora un término de residuo físico adicional: L_total = L_datos + λ · L_física. El término L_física penaliza predicciones de ΔT_foliar que no sean consistentes con el balance energético foliar bajo las condiciones meteorológicas medidas en ese instante (T°, VPD, radiación). Esto actúa como regularización física — reduce el espacio de soluciones admisibles y mejora la generalización con pocos datos reales, que es exactamente la condición de TRL 4 (800 frames reales: 680 fine-tuning + 120 validación independiente). La factibilidad del enfoque está documentada en literatura reciente de 2024-2025: Ridder et al. (2025) aplican PINN a la absorción radicular con 2% de error en parámetros de estrés hídrico; Benkirane et al. (2025) demuestran PINN con Penman-Monteith para evapotranspiración en contextos de datos limitados; Hu et al. (2025) aplican PINN a estimación de humedad de suelo con Landsat 8 Thermal; y Rouholahnejad et al. (2024) implementan physics-informed yield loss forecasting con Sentinel-2. Ninguno aplica PINN al CWSI calculado desde termografía embebida en campo — ese es el aporte original de HydroVision AG.
 
 El modelo de IA se entrena con una estrategia de tres capas que permite alcanzar un dataset efectivo de 1.050.680 imágenes sin necesidad de campañas de captura masivas en campo:
 
@@ -412,7 +412,7 @@ Georreferenciación
 IMU + Gimbal motorizado
 ICM-42688-P (SparkFun) + servo pan-tilt 2 ejes (MG90S × 2)
 $49
-Escaneo activo multi-angular del canopeo: 5–9 capturas por ciclo a ±20° horizontal y ±15° vertical. IMU compensa vibración de viento durante cada captura. Inspirado en metodología de termografía UAV.
+Escaneo activo multi-angular del canopeo: 7 capturas por ciclo (6 posiciones fijas + 1 condicional con viento > 20 km/h) a ±20° horizontal y ±15° vertical. IMU compensa vibración de viento durante cada captura. Inspirado en metodología de termografía UAV.
 Módulo LoRaWAN
 SX1276 LoRa (EBYTE E32-900T20D)
 $15
@@ -498,7 +498,11 @@ Abajo
 0°
 −10°
 Validación de dosel inferior — detecta stress en zonas de menos exposición
-Extra (viento > 20 km/h)
+Diagonal IzqArriba
+−20°
++15°
+Cobertura zona de sombra superior — completa el hemisferio de captura
+Nadir adicional (viento > 20 km/h)
 Aleatorio
 Aleatorio
 Frame adicional para validación estadística en condiciones de alta vibración
@@ -534,8 +538,8 @@ USD 950 (hardware)
 Sin regulación
 ±0.10–0.15
 Nodo con gimbal multi-angular (TRL 4 mejorado)
-32×24px × 5–9 frames fusionados
-5–9 por ciclo
+32×24px × 7 frames fusionados (6 fijos + 1 condicional)
+7 por ciclo
 96/día
 USD 754 (+USD 30 servo)
 Sin regulación
@@ -546,7 +550,7 @@ El sistema multi-angular no reemplaza un drone de alta resolución para mapeo de
 Costo del upgrade: La incorporación de dos servos MG90S (USD 8 c/u) más el bracket de montaje ajustado (USD 14) añade USD 30 al costo del nodo. El firmware de control del gimbal (PWM, secuencia angular, retorno a posición de reposo) se implementa en el Mes 1–2 del proyecto junto con los drivers de sensores.
 
 4.4.3 Diseño modular para escalabilidad multi-varietal
-La PCB del nodo incorpora un conector I2C para el MLX90640 (32x24px, NETD ~100mK). Para escalar a cultivos de hoja pequena (olivo, arandano) en TRL 5+, el mismo bus I2C acepta sensores de mayor resolucion (MLX90641 o FLIR Lepton 3.5 via adaptador SPI-I2C) sin cambios en la PCB base. El firmware detecta automaticamente que camara esta conectada y ajusta los parametros de captura.
+La PCB del nodo incorpora un conector I2C para el MLX90640 (32x24px, NETD ~100mK). Para escalar a cultivos de hoja pequena (olivo, arandano) en TRL 5+, el mismo bus I2C acepta sensores de mayor resolucion (MLX90641) sin cambios en la PCB base. El firmware detecta automaticamente que camara esta conectada y ajusta los parametros de captura.
 El sistema de montaje usa un kit modular de piezas combinables: estaca base 1.5m + extensiones + brazos específicos por cultivo (penetrante para olivo en seto, cenital para arándano, estaca alta para citrus). Todas las piezas comparten la misma rosca y sistema de ajuste. Un técnico reconfigura un nodo en 15 minutos.
 
 Motor GDD multi-varietal — estrategia de reinicio por tipo de cultivo: La extensión del motor GDD a nuevos cultivos requiere adaptar dos parámetros: la temperatura base (T_base) y la estrategia de reinicio del acumulador. Todos los cultivos objetivo de HydroVision comparten el mismo sensor SHT31 — no se necesita hardware adicional.
@@ -642,7 +646,7 @@ Investigadora en Fisiología Vegetal del Estrés Hídrico (Dra. Mariela Monteoli
 Diseño del protocolo experimental y calibración agronómica del CWSI por cultivo
 Investigadora Adjunta INTA-CONICET (IFRGV-UDEA, CCT Córdoba). Doctora en Ciencias Químicas. Tres posdoctorados en fisiología vegetal del estrés hídrico. Autora en 'Estado hídrico' (2025) — en capítulo del libro 'Abordajes fisiológicos para el estudio del estrés abiótico en cultivos'. Experiencia en convenios de asistencia técnica con sector privado (Criadero El Carmen). Especialidad: calibración CWSI, potencial hídrico foliar con bomba de Scholander, tolerancia a sequía.
 Técnico de Campo Principal (Javier Schiavoni) — Asistente experimental viñedo y protocolo Scholander (Mes 1–9)
-Residente en Colonia Caroya, a metros del viñedo experimental. Entrenado directamente por Dra. Monteoliva en el protocolo de medición de potencial hídrico con bomba de Scholander (1–2 sesiones de práctica supervisada). Compromisos: (1) instalación del sistema de riego diferencial por goteo (tendido de cintas drip, conexión de solenoides, prueba de caudal por fila, ~30h); (2) mantenimiento del viñedo experimental (verificación de caudales, lectura de tensiómetros, detección de fallas, ~8h/mes × 9 meses); (3) operación de la bomba Scholander en 4 sesiones OED de captura (medición psi_stem en ventana 10–14hs, registro en planilla, etiquetado de frames, ~5h/sesión); (4) instalación y verificación de extensómetros de tronco en 5 plantas de referencia; (5) mantenimiento reactivo de nodos (recarga Wet Ref, limpieza lente cuando ISO_nodo < 80%); (6) coordinación logística de sesiones (condiciones meteorológicas, ventanas horarias). Total estimado: ~208 horas efectivas en 9 meses. Compensación: USD 1.000/mes × 9 meses = USD 9.000 (honorarios técnicos, incluidos en presupuesto ANPCyT).
+Residente en Colonia Caroya, a metros del viñedo experimental. Entrenado directamente por Dra. Monteoliva en el protocolo de medición de potencial hídrico con bomba de Scholander (1–2 sesiones de práctica supervisada). Compromisos: (1) instalación del sistema de riego diferencial por goteo (tendido de cintas drip, conexión de solenoides, prueba de caudal por fila, ~30h); (2) mantenimiento del viñedo experimental (verificación de caudales, lectura de tensiómetros, detección de fallas, ~8h/mes × 9 meses); (3) operación de la bomba Scholander en 4 sesiones OED de captura (medición psi_stem en ventana 10–14hs, registro en planilla, etiquetado de frames, ~5h/sesión); (4) instalación y verificación de extensómetros de tronco en 10 plantas de referencia (5 calibración + 5 producción); (5) mantenimiento reactivo de 10 nodos (recarga Wet Ref, limpieza lente cuando ISO_nodo < 80%); (6) coordinación logística de sesiones (condiciones meteorológicas, ventanas horarias). Total estimado: ~227 horas efectivas en 9 meses. Compensación: USD 1.000/mes × 9 meses = USD 9.000 (honorarios técnicos, incluidos en presupuesto ANPCyT).
 Investigador en Validación de Señales y Datos Agronómicos — Perfil científico-tecnológico (Art. 32)
 Análisis estadístico de correlaciones entre señales de campo (CWSI térmico, MDS dendrómetrico, Ψstem Scholander). Calibración de sensores embebidos de bajo costo. Diseño experimental óptimo (OED). Generación de conocimiento original sobre el comportamiento hídrico diferencial de Vitis vinifera cv. Malbec en condiciones de campo argentinas.
 Investigador con experiencia en adquisición y procesamiento de señales físicas, estadística aplicada (regresión, calibración de sensores, series temporales) y sistemas de sensores de bajo costo. Docente universitario o investigador activo con publicaciones en congresos o revistas científicas — cumple el requisito de formación de recursos humanos altamente calificados del Art. 32°. Contribución científico-tecnológica al proyecto: (1) diseño del protocolo de sesiones óptimas (OED — cuántas vides medir, en qué momentos del ciclo, con qué ventanas horarias — para maximizar la información estadística del modelo con el mínimo de mediciones Scholander); (2) calibración de sensores dendrómetro por regresión individual: función Ψstem↔ADC para cada vid de referencia (5 vides × 2 momentos = 10 pares), con verificación de R² y alerta de recalibración; (3) análisis de correlaciones CWSI↔MDS↔Ψstem con ajuste de parámetros del modelo HSI para condiciones del viñedo local; (4) corrección térmica de señales dendrómetro (expansión/contracción por temperatura) y detección de derivas de sensor; (5) validación de métricas TRL 4 — R²(CWSI, Ψstem) ≥ 0.75, MAE ≤ 0.08 CWSI vs datos Scholander independientes; (6) co-autoría en publicación científica (correlaciones en campo real vs modelos PINN pre-entrenados). Nota: el entrenamiento PINN, la segmentación U-Net++, la cuantización INT8 y la fusión Sentinel-2 están implementados en código y corren autónomamente — este perfil valida resultados e interpreta correlaciones, no entrena modelos. Dedicación: ~5 hs/semana promedio (~177 hs totales en 12 meses). Presente en gate reviews mensuales.
@@ -720,9 +724,9 @@ I
 R
 I
 Motor GDD + fenología
+R
 I
-I
-A
+C
 I
 C
 I
@@ -803,7 +807,7 @@ Actividades principales
 Hito de cierre
 Fase 0Setup
 Mes 1–3
-Constitucion SAS. Adquisicion de hardware (ESP32-S3, MLX90640, sensores, componentes PCB). Setup entorno de desarrollo con Claude Code para los desarrolladores. Implementacion de drivers de captura MLX90640 + sensores meteorologicos en MicroPython. Implementacion del modo deep sleep con RTC DS3231. Primeras capturas termicas en vinedo propio de Malbec en Colonia Caroya. Segmentacion foliar por percentiles. Pipeline CWSI funcional. Instalacion sistema drip diferencial en 5 filas experimentales x 136m (filas 2, 4, 6, 8, 10): tendido de cinta drip en 10 filas, conexion de solenoides (1 por fila experimental), calibracion de caudales por fila. Instalacion de 32 brackets de captura fijos en postes de espaldera (cada 17m). 5 regimenes hidricos independientes activos: 100% ETc a sin riego. Implementacion del motor GDD: calculo de grados-dia acumulados desde SHT31, deteccion automatica de brotacion por convergencia termica+GDD, integracion del pluviometro de balancin. Integracion ChirpStack/LoRaWAN en gateway RAK7268. Conectividad de campo — modelo dual: gateway LoRaWAN conectado por Ethernet a router 4G industrial (Teltonika RUT241, donde hay cobertura celular) o a Starlink Mini X (donde no hay 4G).
+Constitucion SAS. Adquisicion de hardware (ESP32-S3, MLX90640, sensores, componentes PCB). Setup entorno de desarrollo con Claude Code para los desarrolladores. Implementacion de drivers de captura MLX90640 + sensores meteorologicos en MicroPython. Implementacion del modo deep sleep con RTC DS3231. Primeras capturas termicas en vinedo propio de Malbec en Colonia Caroya. Segmentacion foliar por percentiles. Pipeline CWSI funcional. Instalacion sistema drip diferencial en 10 filas (filas 1–10): tendido de cinta drip en 10 filas, conexion de 10 solenoides Rain Bird (1 por fila — todas las filas, incluyendo filas de produccion 6–10), calibracion de caudales por fila. Instalacion de 64 brackets de captura fijos en postes de espaldera (cada ~10m). 5 regimenes hidricos independientes en zona de calibracion: 0% ETc a 100% ETc. 5 nodos de produccion (filas 6–10) en modo comercial autonomo. Implementacion del motor GDD: calculo de grados-dia acumulados desde SHT31, deteccion automatica de brotacion por convergencia termica+GDD, integracion del pluviometro de balancin. Integracion ChirpStack/LoRaWAN en gateway RAK7268. Conectividad de campo — modelo dual: gateway LoRaWAN conectado por Ethernet a router 4G industrial (Teltonika RUT241, donde hay cobertura celular) o a Starlink Mini X (donde no hay 4G).
 Pipeline CWSI funcional en laboratorio. Nodo capturando imágenes térmicas verificadas.
 Fase 1Dataset
 Mes 4–6
@@ -815,7 +819,7 @@ Pre-entrenamiento del backbone en 50.000 imágenes públicas (transfer learning)
 Accuracy > 85% en set de validacion independiente (120 frames reales no vistos). Latencia < 200ms en ESP32-S3. Modelo INT8 deployado.
 Fase 3Integración
 Mes 10–12
-Integracion completa del nodo sensor. Pruebas LoRaWAN end-to-end (nodo ESP32-S3 -> gateway RAK7268 -> ChirpStack -> MQTT -> FastAPI -> PostgreSQL). Validacion del control de riego autonomo integrado en nodo Tier 2: el nodo decide localmente cuando regar segun HSI (histeresis 0.30/0.20), activa solenoide Rain Bird via GPIO -> SSR en vinedo Colonia Caroya (zona E — activacion automatica). El servidor recibe estado via payload MQTT. Override manual disponible via API REST. Conectividad dual (4G Teltonika RUT241 + Starlink Mini X) validada en campo (viñedo Colonia Caroya). Prueba de autonomia 72h continuas. Validacion de campo en Bodega Estancia Las Canitas (Gabriel Campana) con al menos 2 variedades distintas a Malbec. Ximena Crespo: presentacion solicitud de patente INPI. Notebooks de validacion TRL 4 completos (HSI vs psi_stem, fusion satelital). Documentacion TRL 4 completa para ANPCyT.
+Integracion completa del nodo sensor. Pruebas LoRaWAN end-to-end (nodo ESP32-S3 -> gateway RAK7268 -> ChirpStack -> MQTT -> FastAPI -> PostgreSQL). Validacion del control de riego autonomo integrado en nodo Tier 2: el nodo decide localmente cuando regar segun HSI (histeresis 0.30/0.20), activa solenoide Rain Bird via GPIO -> SSR en vinedo Colonia Caroya (fila 1, 0% ETc — activacion automatica de control de riego). El servidor recibe estado via payload MQTT. Override manual disponible via API REST. Conectividad dual (4G Teltonika RUT241 + Starlink Mini X) validada en campo (viñedo Colonia Caroya). Prueba de autonomia 72h continuas. Validacion de campo en Bodega Estancia Las Cañitas (Gabriel Campana) con al menos 2 variedades distintas a Malbec. Ximena Crespo: presentacion solicitud de patente INPI. Notebooks de validacion TRL 4 completos (HSI vs psi_stem, fusion satelital). Documentacion TRL 4 completa para ANPCyT.
 Sistema integrado operativo 72h continuas. Control de riego autonomo demostrado en vinedo (nodo Tier 2: HSI -> GPIO -> SSR -> solenoide Rain Bird). Pipeline completo nodo->LoRa->ChirpStack->MQTT->FastAPI->PostgreSQL validado. Conectividad dual (4G + Starlink) validada en campo. Solicitud INPI presentada. Informe TRL 4 completo para ANPCyT. Nota: dashboard comercial, app movil y onboarding QR son entregables de TRL 5.
 
 
@@ -832,13 +836,13 @@ Fin Mes 3
 Pipeline CWSI funcional en laboratorio. Nodo capturando imágenes térmicas. Firmware con deep sleep operativo. Backend base + ChirpStack levantados.
 Gate 1 — Dataset validado
 Fin Mes 6
-800 frames reales capturados bajo protocolo Scholander (680 fine-tuning + 120 validación independiente), etiquetados con Ψstem medido. Capturados en 5 filas experimentales × 136m (1 régimen hídrico por fila, 5 nodos permanentes con gimbal 7 ángulos × 96 ciclos/día → 800 frames alcanzables en 2 sesiones). Simulador físico generando imágenes sintéticas (≥ 100.000 al Mes 6). Operación autónoma del nodo > 72h continuas en campo. Campaña Scholander #1 completada (≥ 30 pares ΔT/VPD para calibración de ΔT_LL y ΔT_UL). Correlación CWSI↔NDWI inicial documentada.
+800 frames reales capturados bajo protocolo Scholander (680 fine-tuning + 120 validación independiente), etiquetados con Ψstem medido. Capturados en 5 filas de calibración (filas 1–5, 1 régimen hídrico por fila, 5 nodos de calibración con gimbal 7 ángulos × 96 ciclos/día → 800 frames alcanzables en 2 sesiones). 5 nodos de producción (filas 6–10) operando en modo comercial autónomo con recomendaciones validables contra ground truth. Simulador físico generando imágenes sintéticas (≥ 100.000 al Mes 6). Operación autónoma del nodo > 72h continuas en campo. Campaña Scholander #1 completada (≥ 30 pares ΔT/VPD para calibración de ΔT_LL y ΔT_UL). Correlación CWSI↔NDWI inicial documentada.
 Gate 2 — Modelo IA validado
 Fin Mes 9
 Accuracy > 85% en set de validación independiente (120 frames reales no vistos). Latencia < 200ms en ESP32-S3. Modelo INT8 deployado. Motor GDD con error ±5 días en predicción fenológica. Dashboard web funcional con alertas activas.
 Gate 3 — TRL 4 demostrado
 Fin Mes 12
-Sistema integrado operativo 72h continuas. Control riego autónomo (nodo Tier 2: HSI → GPIO → SSR → solenoide Rain Bird) demostrado en viñedo experimental Colonia Caroya. Dashboard web con mapa de estrés georreferenciado. Solicitud INPI presentada. Informe TRL 4 completo para ANPCyT. Nota: app móvil y onboarding QR son entregables de TRL 5.
+Sistema integrado operativo 72h continuas. Control riego autónomo (nodo Tier 2: HSI → GPIO → SSR → solenoide Rain Bird) demostrado en viñedo experimental Colonia Caroya. Dashboard web con mapa de estrés georreferenciado. Solicitud INPI presentada. Informe TRL 4 completo para ANPCyT. Métricas de validación estadística (Inv. Art. 32): R²≥0.75 CWSI vs Ψstem · R²≥0.65 MDS vs Ψstem · R²≥0.80 HSI vs Ψstem · MAE≤0.08 CWSI en set independiente 120 frames. Nota: app móvil y onboarding QR son entregables de TRL 5.
 
 
 
@@ -853,9 +857,9 @@ Monto total del proyecto: USD 150.000 · ANPCyT (80% ANR): USD 120.000 · Contra
 Rubro
 Descripcion resumida
 Monto USD
-Hardware — 5 nodos prototipo ESP32-S3 + MLX90640 (Tier 1 + control de riego)
-ESP32-S3 DevKit off-the-shelf x5 (USD 60) · MLX90640 breakout integrado Adafruit 4407 x5 (USD 275) · Sensirion SHT31 breakout + piranometro BPW34 x5 (USD 200) · GPS u-blox NEO-6M x5 (USD 100) · ICM-42688-P IMU (SPI) x5 (USD 50) · SX1276 LoRa x5 (USD 75) · Panel solar 6W + regulador + LiFePO4 6000mAh x5 (USD 375) · Carcasa Hammond IP67 200x150x100mm + pasacables M16 x5 (USD 125) · Watchdog TPL5010 x5 (USD 20) · Cables I2C Stemma QT/Qwiic + dupont + misc (USD 250) · Sistema montaje x5 estaca+bracket+M12 (USD 225) · Proteccion ventana optica x5 (USD 90) · Anemometro RS485 copa x5 (USD 125) · Extensometro tronco: strain gauge + ADS1231 + DS18B20 + abrazadera x5 (USD 150) · Bomba peristaltica Wet Ref x5 (USD 80) · SSR + solenoide Rain Bird x5 (USD 175) · Pluviometro balancin x5 (USD 75) · PMS5003 sensor particulas x5 (USD 100) · Componentes de reposicion y repuestos criticos x2 juegos (USD 550) · Segundo prototipo completo para testing destructivo y validacion termica (USD 450) · Herramientas de banco: soldador estacion, flux, cables de prueba (USD 300) · Proteccion ESD (USD 150). Nota: eliminacion de PCB custom 4-layer (-USD 600) compensa mayor costo breakouts. Arquitectura modular TRL4
-USD 5.500
+Hardware — 10 nodos prototipo ESP32-S3 + MLX90640 (5 calibración + 5 producción, con control de riego en filas de calibración)
+ESP32-S3 DevKit off-the-shelf x10 (USD 120) · MLX90640 breakout integrado Adafruit 4407 x10 (USD 550) · Sensirion SHT31 breakout + piranometro BPW34 x10 (USD 400) · GPS u-blox NEO-6M x10 (USD 200) · ICM-42688-P IMU (SPI) x10 (USD 100) · SX1276 LoRa x10 (USD 150) · Panel solar 6W + regulador + LiFePO4 6000mAh x10 (USD 750) · Carcasa Hammond IP67 200x150x100mm + pasacables M16 x10 (USD 250) · Watchdog TPL5010 x10 (USD 40) · Cables I2C Stemma QT/Qwiic + dupont + misc (USD 350) · Sistema montaje x10 estaca+bracket+M12 (USD 450) · Proteccion ventana optica x10 (USD 180) · Anemometro RS485 copa x10 (USD 250) · Extensometro tronco: strain gauge + ADS1231 + DS18B20 + abrazadera x10 (USD 300) · Bomba peristaltica Wet Ref x10 (USD 160) · SSR relay x10 (USD 175, 1 rele por nodo — solenoides en linea de riego incluidos en [B]) · Pluviometro balancin x10 (USD 150) · PMS5003 sensor particulas x10 (USD 200) · Componentes de reposicion y repuestos criticos x3 juegos (USD 825) · Segundo prototipo completo para testing destructivo y validacion termica (USD 450) · Herramientas de banco: soldador estacion, flux, cables de prueba (USD 300) · Proteccion ESD (USD 150). Nota: eliminacion de PCB custom 4-layer (-USD 600) compensa mayor costo breakouts. Arquitectura modular TRL4. 10 nodos = 5 calibracion (regimenes hidricos F1–F5) + 5 produccion (pipeline comercial autonomo F6–F10)
+USD 7.500
 Gateway LoRaWAN + conectividad dual (4G + Starlink Mini X)
 RAK7268 con antena omnidireccional 8dBi, fuente regulada, mastil y cableado coaxial de campo (USD 250) · Router 4G Teltonika RUT241 (USD 190) + chip M2M 6 meses campaña activa (USD 30) · Starlink Mini X kit para validación en zonas sin 4G (USD 215) + plan Starlink 6 meses campaña (USD 162). Modelo dual: 4G como opción principal (Colonia Caroya tiene cobertura celular), Starlink para validación de campo remoto (Mendoza/San Juan).
 USD 847
@@ -868,9 +872,9 @@ Equipamiento campo experimental — vinedo Malbec Colonia Caroya (10 filas x 136
 Tanque australiano 20.000 L (USD 800) · Bomba centrifuga autocebante 0,5 HP (USD 150) · Caneria PE 63mm suministro tanque-cabecera 15m (USD 68) · Caneria PE 63mm header principal 136m (USD 612) · Caneria PE 50mm derivaciones a filas 10 x 4m (USD 473) · Caneria PE 32mm conexiones a filas 80m (USD 160) · Cinta de goteo 16mm emisor cada 1m 1,5 L/h x 1.450m (USD 435) · Accesorios (USD 160).
 USD 2.858 — ANR (Art. 21b — infraestructura experimental)
 
-[B] Equipamiento experimental — 5 filas experimentales con 5 regimenes hidricos independientes (ANR)
-Valvulas solenoide Rain Bird 24VAC 1" x 5 filas experimentales (USD 175) · Controlador Rain Bird 6 zonas + transformador 24V (USD 160) · Filtro malla 2" + regulador de presion (USD 120) · Brackets de captura acero inox x 32 (USD 320) · Paneles de referencia emisividad e=0.98 x 32 (USD 128) · Tuneles plasticos exclusion lluvia parcial filas 8 y 10 (USD 220) · Estacas numeradas x 680 (USD 136) · Kit cableado y conectores campo (USD 164) · Cinta drip de reposicion + accesorios campo (USD 245) · Kit reparacion solenoides + herramientas campo (USD 250) · Senalizacion y delimitacion filas experimentales (USD 80) · Malla antigranizo parcial para proteccion de nodos (USD 370) · Canaleta portacables y protecciones UV (USD 132)
-USD 2.500 — ANR
+[B] Equipamiento experimental — 5 filas de calibración con 5 regímenes hídricos + 5 filas de producción con nodos comerciales (ANR)
+Valvulas solenoide Rain Bird 24VAC 1" x 10 (USD 350, 1 por fila — todas las filas) · Controlador Rain Bird 10 zonas + transformador 24V (USD 200) · Filtro malla 2" + regulador de presion (USD 120) · Brackets de captura acero inox x 64 (USD 640) · Paneles de referencia emisividad e=0.98 x 64 (USD 256) · Tuneles plasticos exclusion lluvia parcial filas 1 y 2 (0% y 15% ETc) (USD 220) · Estacas numeradas x 1.360 (USD 272) · Kit cableado y conectores campo (USD 164) · Cinta drip de reposicion + accesorios campo (USD 245) · Kit reparacion solenoides + herramientas campo (USD 250) · Senalizacion y delimitacion filas de calibracion (USD 80) · Malla antigranizo parcial para proteccion de nodos (USD 370) · Canaleta portacables y protecciones UV (USD 132)
+USD 3.300 — ANR
 Director de Desarrollo IA y Backend (Cesar Schiavoni) — Project Leader ANPCyT (40 hs/semana, 12 meses)
 Fundador y Director Tecnico. Responsable de la direccion integral del proyecto, coordinacion del equipo, desarrollo del backend (FastAPI + MQTT + PostgreSQL), integracion de la fusion Sentinel-2 (CWSI-NDWI), pipeline CI/CD, y validacion del sistema completo. Implementacion acelerada con Claude Code como herramienta principal de desarrollo. Dedicacion 40 hs/semana: 20 hs/sem facturadas al proyecto (ANR) + 20 hs/sem aporte en especie (contrapartida). Incluye coordinacion con INTA-CONICET (Dra. Monteoliva), gestion de Gate Reviews, interlocucion con ANPCyT y rendiciones. USD 1.500/mes x 12.
 USD 18.000
@@ -881,13 +885,13 @@ Embedded Systems & Hardware Engineer (Lucas Bergon) — COO / Lider Hardware, Fi
 Fundador de MBG Controls (150+ proyectos industriales). Responsable unico de la capa embedded: arquitectura modular TRL4 (ESP32-S3 DevKit + breakouts I2C/SPI), firmware MicroPython para MLX90640 breakout, SHT31, GPS u-blox, ICM-42688-P IMU y servos MG90S, integracion ChirpStack/LoRaWAN, protocolo MQTT nodo-backend via ChirpStack/Mosquitto, testing de hardware (deep sleep RTC, watchdog TPL5010, autonomia solar ~120h), anotacion inicial del dataset termico (~400 frames MLX90640), carcasa Hammond IP67 y montaje en campo. Carga maxima Mes 1–6 (diseno HW + firmware completo), soporte e integracion Mes 7–12 (validacion campo + firmware OTA). Nota: el aporte en especie de Lucas (horas USD 4.650 + herramientas USD 400 + equipamiento MBG USD 710 = USD 5.760) figura por separado en la contrapartida del 20% — los honorarios aqui reflejan su dedicacion operativa al proyecto. USD 1.500/mes x 6 + USD 1.000/mes x 6.
 USD 15.000
 Tecnico de Campo Principal (Javier Schiavoni) — Asistente experimental vinedo y protocolo Scholander (9 meses)
-Residente en Colonia Caroya, a metros del vinedo experimental. Entrenado directamente por Dra. Monteoliva en protocolo de medicion Scholander. Rol: (0) preparacion de la base para el tanque australiano Mes 1: nivelado del terreno con tractor, encofrado y hormigonado de losa base 3m×3m×0,15m, curado 48h (~10h); (1) instalacion completa de infraestructura de riego Mes 1–2: colocacion del tanque sobre la losa, excavacion de zanjas para caneria PE 136m + cross-headers, tendido de 1.450m cinta drip, instalacion electrica 70m, operacion de tractor, pruebas hidraulicas (~80h); (2) mantenimiento del vinedo experimental Mes 1–9 (~8h/mes); (3) operacion de bomba Scholander en 4 sesiones OED de captura Mes 4–9 (~5h/sesion); (4) instalacion y verificacion de extensometros de tronco en 5 plantas; (5) mantenimiento reactivo de nodos (recarga Wet Ref, limpieza lente cuando ISO_nodo < 80%); (6) coordinacion logistica de sesiones. Total estimado: ~208 horas efectivas en 9 meses. Compensacion acorde a la carga fisica (instalacion riego, zanjas, tractor) y responsabilidad tecnica del rol (instrumentacion cientifica de precision, protocolo INTA-CONICET). USD 1.000/mes x 9.
+Residente en Colonia Caroya, a metros del vinedo experimental. Entrenado directamente por Dra. Monteoliva en protocolo de medicion Scholander. Rol: (0) preparacion de la base para el tanque australiano Mes 1: nivelado del terreno con tractor, encofrado y hormigonado de losa base 3m×3m×0,15m, curado 48h (~10h); (1) instalacion completa de infraestructura de riego Mes 1–2: colocacion del tanque sobre la losa, excavacion de zanjas para caneria PE 136m + cross-headers, tendido de 1.450m cinta drip, instalacion electrica 70m, operacion de tractor, pruebas hidraulicas (~80h); (2) mantenimiento del vinedo experimental Mes 1–9 (~8h/mes); (3) operacion de bomba Scholander en 4 sesiones OED de captura Mes 4–9 (~5h/sesion); (4) instalacion y verificacion de extensometros de tronco en 10 plantas (5 calibracion + 5 produccion); (5) mantenimiento reactivo de 10 nodos (recarga Wet Ref, limpieza lente cuando ISO_nodo < 80%); (6) coordinacion logistica de sesiones. Total estimado: ~227 horas efectivas en 9 meses. Compensacion acorde a la carga fisica (instalacion riego, zanjas, tractor) y responsabilidad tecnica del rol (instrumentacion cientifica de precision, protocolo INTA-CONICET). USD 1.000/mes x 9.
 USD 9.000
 Investigadora en Fisiologia Vegetal del Estres Hidrico (Dra. Mariela Monteoliva) — INTA/CONICET, 12 meses
 Honorarios profesionales independientes. Rol: (1) diseno del protocolo experimental y calibracion CWSI para vid Malbec con bomba de Scholander (~180 horas efectivas en 12 meses); (2) calibracion de parametros CWSI locales (coeficientes dT_LL y dT_UL por estadio fenologico); (3) supervision y entrenamiento de Javier Schiavoni en protocolo Scholander; (4) validacion del simulador fisico de imagenes termicas contra datos reales; (5) revision cientifica de informes de sesiones Scholander; (6) co-autoria en publicacion cientifica. Carga variable: ~5h/mes diseno (Mes 1–3) · ~25h/mes capturas Scholander (Mes 4–6) · ~12h/mes validacion (Mes 7–9) · ~18h/mes publicacion (Mes 10–12). USD 900/mes x 12. Incluye acceso al laboratorio MEBA-IFRGV-UDEA (INTA-CONICET) para validacion de instrumentos.
 USD 10.800
 Contador Publico Senior (Matias Tregnaghi) — CFO (20% dedicacion, 12 meses)
-Contador Publico (CPA) + Diplomatura en Finanzas para Pymes. Gestion financiera del proyecto: presupuesto ejecutivo, tracking de gastos mensuales, rendiciones ANPCyT (informes trimestrales de avance + rendicion final), liquidacion de honorarios, cumplimiento fiscal AFIP, coordinacion con el contador externo y con Pablo Contreras en clausulas de PI del pacto de socios. Carga alta en Mes 1–3 (setup financiero, SAS, AFIP) y Mes 10–12 (rendicion final). Honorarios a tasa de contador CPA senior — dedicacion 20% part-time. USD 500/mes x 12.
+Contador Publico (CPA) + Diplomatura en Finanzas para Pymes. Gestion financiera del proyecto: presupuesto ejecutivo, tracking de gastos mensuales, rendiciones ANPCyT (informes trimestrales de avance + rendicion final), liquidacion de honorarios, cumplimiento fiscal AFIP, coordinacion con el contador externo y con Ximena Crespo (Agente PI) en clausulas de propiedad intelectual del pacto de socios. Carga alta en Mes 1–3 (setup financiero, SAS, AFIP) y Mes 10–12 (rendicion final). Honorarios a tasa de contador CPA senior — dedicacion 20% part-time. USD 500/mes x 12.
 USD 6.000
 Nota: Ximena Crespo (Agente PI) participa con honorarios incluidos en el item Propiedad Intelectual. Gabriel Campana (Asesor Vitivinicola) participa como advisor en equity, sin costo para el presupuesto ANPCyT.
 Infraestructura cloud y herramientas de desarrollo
@@ -903,7 +907,7 @@ Administracion, contaduria y rendicion de cuentas ANPCyT
 Contador externo para soporte en informes trimestrales de avance y rendicion final ANPCyT (complementa al CFO interno). USD 200/mes x 12.
 USD 2.400
 Seguros del proyecto
-(1) Poliza RC Civil para actividades de investigacion en campo agricola — cobertura USD 50.000 — asegurador a contratar entre Sancor Seguros / Federacion Patronal / Zurich Argentina (USD 500/ano). Cubre danos a terceros durante actividades de instalacion, medicion y mantenimiento en el sitio experimental. (2) Poliza todo riesgo equipos electronicos portatiles — valor asegurado USD 8.750 (5 nodos ESP32-S3 + gateway RAK7268 + bomba Scholander + estacion Davis Vantage Pro2) — uso en campo exterior — asegurador a contratar entre Sancor Seguros / Federacion Patronal / Zurich Argentina (USD 500/ano). Cubre robo, dano accidental y dano por agua/humedad en condiciones de campo. Colaboradores tecnicos contratados como monotributistas gestionan su propio ART. Actividades de validacion concentradas en el sitio experimental de Colonia Caroya.
+(1) Poliza RC Civil para actividades de investigacion en campo agricola — cobertura USD 50.000 — asegurador a contratar entre Sancor Seguros / Federacion Patronal / Zurich Argentina (USD 500/ano). Cubre danos a terceros durante actividades de instalacion, medicion y mantenimiento en el sitio experimental. (2) Poliza todo riesgo equipos electronicos portatiles — valor asegurado USD 9.500 (10 nodos ESP32-S3 + gateway RAK7268 + bomba Scholander + estacion Davis Vantage Pro2) — uso en campo exterior — asegurador a contratar entre Sancor Seguros / Federacion Patronal / Zurich Argentina (USD 500/ano). Cubre robo, dano accidental y dano por agua/humedad en condiciones de campo. Colaboradores tecnicos contratados como monotributistas gestionan su propio ART. Actividades de validacion concentradas en el sitio experimental de Colonia Caroya.
 USD 1.000
 Viajes y movilidad — sitio experimental Colonia Caroya
 Toda la validacion TRL 3-4 se realiza en el vinedo experimental de Colonia Caroya. No se realizan campanas externas en esta etapa. Movilidad local Cordoba ciudad <-> Colonia Caroya para sesiones Scholander, instalacion y mantenimiento del sistema (~20 viajes x USD 15 combustible = USD 300) · 1-2 viajes a Buenos Aires para Gate Reviews presenciales ANPCyT si son requeridos por el organismo (aereo + alojamiento 1 noche = USD 500). Campanas de validacion en otras provincias (Mendoza, San Juan, NOA) son etapa TRL 5.
@@ -923,9 +927,9 @@ USD 1.900
 Bienes de consumo y materiales de campo (Art. 21d)
 Nitrogeno comprimido para bomba Scholander x8 recargas (USD 200 — incluido en Instrumentos) · Cinta drip de reposicion (USD 200) · Cables, conectores y consumibles electronicos para montaje y reparacion de nodos (USD 300) · Materiales de laboratorio para calibracion de sensores (USD 200) · Elementos de proteccion personal para trabajo en campo (USD 150) · Papeleria y materiales de oficina para documentacion (USD 150) · Consumibles electronicos adicionales: resistencias, capacitores, soldadura, flux, PCBs de prueba (USD 400) · Materiales de empaque y proteccion para transporte de nodos (USD 200) · Agua destilada para Wet Ref x12 meses (USD 100)
 USD 2.500
-Imprevistos y contingencias (~16,1%)
-Reserva para reposicion de componentes danados en campo, variaciones en costos de importacion y tipo de cambio, sesiones Scholander adicionales ante perdida de datos por lluvia imprevista, reposicion de cinta drip o solenoides en el vinedo experimental, y contingencias operativas. Buffer justificado: hardware importado expuesto 12 meses en campo (lluvia, fumigaciones, granizo), protocolo Scholander sujeto a reprogramacion por condiciones climaticas, tipo de cambio volatil en Argentina.
-USD 19.353
+Imprevistos y contingencias (~13,8%)
+Reserva para reposicion de componentes danados en campo (10 nodos expuestos 12 meses), variaciones en costos de importacion y tipo de cambio, sesiones Scholander adicionales ante perdida de datos por lluvia imprevista, reposicion de cinta drip o solenoides en el vinedo experimental, y contingencias operativas. Buffer justificado: hardware importado expuesto 12 meses en campo (lluvia, fumigaciones, granizo), protocolo Scholander sujeto a reprogramacion por condiciones climaticas, tipo de cambio volatil en Argentina.
+USD 16.553
 SUBTOTAL APORTE ANPCyT (80% del proyecto)
 
 USD 120.000
@@ -955,7 +959,7 @@ Celular de campo — Cesar Schiavoni (aporte en especie)
 Smartphone dedicado a relevamiento fotografico, comunicacion con equipo de campo y verificacion de conectividad LoRa/4G en terreno.
 USD 450
 Equipamiento electronico — Lucas Bergon / MBG Controls (aporte en especie)
-Instrumental de banco (osciloscopio, analizador logico, soldadores de estacion, fuentes reguladas, multimetro de precision) y herramientas de montaje SMD para ensamble y testing de los 5 nodos prototipo. Equipamiento existente de MBG Controls puesto a disposicion del proyecto.
+Instrumental de banco (osciloscopio, analizador logico, soldadores de estacion, fuentes reguladas, multimetro de precision) y herramientas de montaje SMD para ensamble y testing de los 10 nodos prototipo. Equipamiento existente de MBG Controls puesto a disposicion del proyecto.
 USD 710
 TOTAL CONTRAPARTIDA EQUIPO (20% del proyecto)
 
@@ -1262,15 +1266,15 @@ Aporte solución (USD/ha)
 Factor clave de éxito
 Cereza
 USD 30.000
-USD 3.200
+USD 3.600
 Firmeza del fruto y ventana de cosecha
 Pistacho
-USD 22.000
-USD 2.450
+USD 18.000
+USD 2.160
 Reducción de frutos vanos (cáscara vacía)
 Nogal (Nuez)
-USD 15.000
-USD 1.850
+USD 10.000
+USD 1.200
 Maximización de calibre y peso
 Vid Premium (Malbec, Cabernet)
 USD 9.600
@@ -1278,11 +1282,11 @@ USD 1.150
 Calidad enológica (polifenoles, concentración)
 Citrus (Limón)
 USD 8.500
-USD 900
+USD 1.020
 Prevención de caída de fruta joven
 Olivo (AOVE)
 USD 5.500
-USD 680
+USD 660
 Rendimiento graso y ahorro energético de bombeo
 
 
@@ -1449,7 +1453,7 @@ Si hay retraso por baja disponibilidad en cualquier capa: César reasigna tareas
 Importacion de componentes electronicos (MLX90640, ESP32-S3, sensores) — posible retencion aduanera o demora de 4–8 semanas.
 Baja-Media
 Importar a través de MBG Controls (empresa con experiencia en importación de componentes electrónicos). Hacer el pedido en la Semana 1 del proyecto, no en el Mes 1.
-Contactar distribuidores locales de FLIR en Argentina (TEM, Distecna Buenos Aires) para verificar stock disponible.
+Contactar distribuidores locales de Melexis/Adafruit en Argentina (UNIT Electronics, MercadoLibre importado) para verificar stock disponible de MLX90640.
 Confusión de causa del estrés — temperatura foliar elevada puede deberse a déficit hídrico, estrés calórico (T°>40°C) o enfermedades foliares.
 Media
 El sistema integra datos meteorológicos en tiempo real. Si T° > 38°C y HR < 20%, activa flag 'condición extrema' que diferencia estrés calórico de déficit hídrico. Correlación con historial de riego y precipitaciones del lote.
@@ -1464,7 +1468,7 @@ El modelo se entrena y valida durante el período de máxima demanda hídrica (d
 Si el modelo muestra drift estacional, se recalibra con datos de cada estación usando el simulador para generar condiciones observadas. En TRL 5 se amplía el dataset real a múltiples estadios.
 Representatividad geográfica — Colonia Caroya tiene condiciones climáticas diferentes a los mercados objetivo (Valle de Uco, San Juan). Altitud, HR y amplitud térmica difieren.
 Media
-El proyecto concentra la validación primaria en el viñedo experimental de Colonia Caroya (5 filas experimentales × 136m con drip diferencial + 5 filas buffer) complementada con 3 campañas de validación cruzada en Mendoza y 2 en San Juan. Estas campañas capturan datos meteorológicos y térmicos en condiciones reales de Cuyo para verificar la transferibilidad del modelo.
+El proyecto concentra la validación primaria en el viñedo experimental de Colonia Caroya (5 filas de calibración × 136m con drip diferencial + 5 filas de producción con nodos en modo comercial) complementada con 3 campañas de validación cruzada en Mendoza y 2 en San Juan. La zona de producción (filas 6–10) opera bajo riego normal (100% ETc) con nodos ejecutando el pipeline comercial completo, generando alertas y recomendaciones validables contra el ground truth Scholander de la zona de calibración adyacente. Las campañas externas capturan datos meteorológicos y térmicos en condiciones reales de Cuyo para verificar la transferibilidad del modelo.
 Si los datos de Colonia Caroya resultan no representativos, las 3 campañas a Mendoza (Valle de Uco) proporcionan datos de recalibración. El simulador permite interpolar entre condiciones de ambas regiones.
 Disponibilidad de tiempo del Investigador Art. 32 — ~5 hs/semana con posibles compromisos académicos o laborales paralelos.
 Baja
@@ -1480,9 +1484,9 @@ Además de los riesgos técnicos documentados en la sección 8.5, el proyecto co
 Riesgo
 Impacto
 Estrategia de Mitigación
-Importación de Insumos (sensores FLIR, microcomputadoras)
+Importación de Insumos (sensores MLX90640, ESP32-S3, microcomputadoras)
 Alto
-Uso de la estructura de MBG Controls SAS para la gestión de licencias de importación de sensores FLIR y microcomputadoras. Pedido en Semana 1 del proyecto para absorber posibles demoras aduaneras de 4–8 semanas. Stock de repuestos críticos incluido en el presupuesto (FLIR ×2 de reserva). Alternativa: distribuidores locales certificados FLIR en Argentina (TEM, Distecna Buenos Aires).
+Uso de la estructura de MBG Controls SAS para la gestión de licencias de importación de sensores MLX90640 (Melexis), ESP32-S3 DevKit y microcomputadoras. Pedido en Semana 1 del proyecto para absorber posibles demoras aduaneras de 4–8 semanas. Stock de repuestos críticos incluido en el presupuesto (MLX90640 ×2 de reserva). Alternativa: distribuidores locales en Argentina (UNIT Electronics, MercadoLibre importado).
 Conectividad en Campo (zonas sin cobertura celular)
 Medio
 Modelo dual de conectividad: donde hay cobertura 4G, el gateway se conecta vía router industrial 4G (Teltonika RUT241, USD 190 + chip M2M USD 50/año). Donde no hay 4G, se usa Starlink Mini X (~USD 215 + USD 324/año). El gateway se conecta por Ethernet a cualquiera de las dos opciones. El nodo funciona autónomamente en edge durante períodos sin conectividad y sincroniza cuando se restablece el enlace.
@@ -1563,7 +1567,6 @@ Jones, H.G. (1999). Use of infrared thermometry for estimation of stomatal condu
 Espinosa Herlein, M.A.; Monteoliva, M.I. (2025). Estado hídrico. En: Abordajes fisiológicos para el estudio del estrés abiótico en cultivos. Editorial UCC, Córdoba.
 Maes, W.H., Steppe, K. (2012). Estimating evapotranspiration and drought stress with ground-based thermal remote sensing. Journal of Experimental Botany, 63(13), 4671-4712.
 Semtech Corporation (2024). SX1262 LoRa Transceiver Datasheet. Rev. 2.1.
-FLIR Systems (2024). Lepton 3.5 Engineering Datasheet. Rev. 200.
 Capraro, F., Tosetti, S., Campillo, P., Mut, V., Pierantozzi, P. (2025). Seguimiento del estado hídrico de un olivar superintensivo utilizando imágenes termográficas y multiespectrales de alta resolución. Congreso Argentino de Agroinformática (CAI 2025). UNLP. SEDICI:10915/190711.
 Subsecretaría de Programación Microeconómica — Ministerio de Economía Argentina (2025). AgTech Año 10, N° 85. Informe de Cadenas de Valor.
 Ridder, J., et al. (2025). A physics-informed neural network workflow for forward and inverse modeling of unsaturated flow and root water uptake from hydrogeophysical data. Journal of Hydrology. doi:10.1016/j.jhydrol.2025.202015. [PINN aplicado a absorción radicular y estrés hídrico en plantas — valida la factibilidad del enfoque PINN en el dominio de estrés hídrico vegetal].
@@ -1623,48 +1626,50 @@ Lab. MEBA, IFRGV-UDEA, CIAP, INTA-CONICET
 
 11. Anexo Operativo — Protocolo de Campo Simplificado
 
-11A. Qué es y para qué sirve cada componente de la fila experimental
+11A. Qué es y para qué sirve cada componente de la fila de calibración
 
 El objetivo en una línea
 
 Sacarle fotos térmicas a las vides bajo distintos niveles de sed y al mismo tiempo medir exactamente qué tan sedientas están. Así el modelo aprende a "ver" el estrés hídrico antes de que la planta lo muestre visualmente.
 
-Nota clave sobre los nodos: para capturar los datos de entrenamiento se usa un único nodo prototipo que el asistente lleva de posición en posición durante cada sesión — 7 brackets × 21 minutos totales por ventana horaria. Los brackets son soportes fijos de acero (USD 12 cada uno), no nodos adicionales. En el producto comercial, el productor instala un solo nodo permanente que opera de forma completamente autónoma.
+Nota clave sobre los nodos: el viñedo experimental tiene 10 nodos permanentes (1 por fila). Las filas de calibración (1–5) tienen nodos en modo experimental que capturan datos para el dataset de entrenamiento — el asistente también usa un nodo móvil en los 7 brackets por fila (21 minutos por ventana horaria). Las filas de producción (6–10) tienen nodos en modo comercial autónomo: ejecutan el pipeline completo (CWSI → HSI → alerta → recomendación de riego) exactamente como lo haría un productor real. Los brackets son soportes fijos de acero (USD 12 cada uno), no nodos adicionales.
 
 Componentes de la fila y función de cada uno
 
-10 filas de 136m — 5 experimentales + 5 buffer intercalados
+10 filas de 136m — 5 de calibración (filas 1–5) + 5 de producción (filas 6–10)
 
-El viñedo tiene 10 filas de 136 plantas cada una (1.360 vides). Cada fila experimental recibe un único régimen hídrico (la fila completa se riega igual). Las filas experimentales se intercalan con filas buffer a 100% ETc que evitan contaminación lateral del estrés:
+El viñedo tiene 10 filas de 136 plantas cada una (1.360 vides), dividido en dos zonas contiguas:
 
-Fila 2 (Control): Riego normal completo — planta sana, referencia. CWSI 0.05–0.20.
+Zona de calibración (filas 1–5) — cada fila recibe un régimen hídrico diferente:
+Fila 1 (0% ETc, secano): Sin riego — estrés máximo. CWSI 0.85–1.00.
+Fila 2 (15% ETc): 15% del riego normal — estrés fuerte. CWSI 0.65–0.85.
+Fila 3 (40% ETc): 40% del riego normal — estrés moderado. CWSI 0.45–0.60.
 Fila 4 (65% ETc): 65% del riego normal — estrés leve. CWSI 0.25–0.40.
-Fila 6 (40% ETc): 40% del riego normal — estrés moderado. CWSI 0.45–0.60.
-Fila 8 (15% ETc): 15% del riego normal — estrés fuerte. CWSI 0.65–0.85.
-Fila 10 (0% ETc): Sin riego — estrés máximo. CWSI 0.85–1.00.
-Filas 1, 3, 5, 7, 9: Buffer a 100% ETc — aislamiento hídrico entre tratamientos.
+Fila 5 (Control, 100% ETc): Riego normal completo — planta sana, referencia. CWSI 0.05–0.20.
 
-Sin esta variedad de condiciones, el modelo solo vería plantas sanas y no aprendería a detectar ni graduar el estrés.
+Zona de producción (filas 6–10) — todas a 100% ETc, con nodos en modo comercial (pipeline completo: CWSI → HSI → alerta → recomendación de riego). Simulan exactamente las condiciones de un productor real. La fila 5 (100% ETc) actúa como transición natural entre zonas.
+
+El gradiente decreciente de estrés (fila 1 → fila 5) aleja las condiciones extremas de la zona de producción. Sin la variedad de condiciones en la zona de calibración, el modelo solo vería plantas sanas y no aprendería a detectar ni graduar el estrés. Los 5 nodos de producción bajo condiciones idénticas demuestran reproducibilidad del sistema (CV < 10% entre nodos).
 
 Protocolo de rescate hídrico — protección del viñedo experimental
 
 El diseño experimental incluye un protocolo de corte obligatorio para prevenir daño permanente al viñedo, definido y supervisado por la Dra. Monteoliva (INTA-CONICET):
 
-Criterios de rescate (cualquiera activa riego de emergencia inmediato en la zona afectada):
-· ψ_stem < −1,5 MPa medido con bomba de Scholander en cualquier planta de Zona D o E.
+Criterios de rescate (cualquiera activa riego de emergencia inmediato en la fila afectada):
+· ψ_stem < −1,5 MPa medido con bomba de Scholander en cualquier planta de fila 2 (15% ETc) o fila 1 (0% ETc).
 · Temperatura foliar > 42°C sostenida por más de 30 minutos en condiciones de VPD normal.
-· 14 días consecutivos sin precipitación ni riego en Zona E durante diciembre–febrero.
+· 14 días consecutivos sin precipitación ni riego en fila 1 (0% ETc) durante diciembre–febrero.
 
 Restricciones permanentes del protocolo:
-· Zona E (sin riego) nunca se aplica durante floración (estadio fenológico GDD 280–420). El aborto floral por estrés severo es irreversible en esa temporada.
-· El período máximo de estrés total (Zona E) es de 14 días entre sesiones de medición. Al completar la sesión, se restablece un riego de recuperación mínimo antes de iniciar el siguiente ciclo de estrés.
-· Las zonas de estrés severo (D y E) rotan entre filas en distintas temporadas para que ninguna fila acumule daño permanente por repetición.
+· La fila 1 (0% ETc, secano) nunca aplica régimen sin riego durante floración (estadio fenológico GDD 280–420). El aborto floral por estrés severo es irreversible en esa temporada.
+· El período máximo de estrés total (fila 1) es de 14 días entre sesiones de medición. Al completar la sesión, se restablece un riego de recuperación mínimo antes de iniciar el siguiente ciclo de estrés.
+· Las filas de estrés severo (filas 1 y 2) rotan entre filas en distintas temporadas para que ninguna línea de plantas acumule daño permanente por repetición.
 
 Base científica: ψ_stem < −1,5 MPa sostenido por más de 3–5 días puede generar embolia en xilema de tejido lignificado (daño parcialmente irreversible). El umbral de corte −1,5 MPa está por encima del rango de daño permanente documentado para Malbec (< −2,0 MPa según Pires et al. 2025 y Chaves et al. 2010). Las mediciones Scholander realizadas por Javier y Franco Schiavoni bajo supervisión de la Dra. Monteoliva son el sistema de alerta temprana que activa el rescate.
 
 Cinta de goteo y solenoides
 
-La cinta de plástico con emisores de 2L/hora corre pegada al suelo a lo largo de toda la fila. Los solenoides son válvulas eléctricas — una por zona, 5 en total — que el controlador Rain Bird abre o cierra automáticamente. Cada zona recibe exactamente la cantidad de agua planificada sin intervención manual.
+La cinta de plástico con emisores de 2L/hora corre pegada al suelo a lo largo de toda la fila. Los solenoides son válvulas eléctricas — una por fila, 10 en total (filas 1–10) — que el controlador Rain Bird abre o cierra automáticamente. Cada fila recibe exactamente la cantidad de agua planificada sin intervención manual.
 
 Tensiómetros
 
@@ -1684,7 +1689,7 @@ Cada vid tiene un número. Permite rastrear la misma planta a lo largo de los me
 
 Túneles plásticos de exclusión de lluvia
 
-Cubiertas transparentes sobre las zonas C y D. Si llueve, el agua no altera el régimen hídrico controlado de esas zonas. Se retiran 2 horas antes de cada sesión para no afectar la temperatura del dosel.
+Cubiertas transparentes sobre las filas 1 y 2 (0% ETc y 15% ETc). Si llueve, el agua no altera el régimen hídrico controlado de esas filas. Se retiran 2 horas antes de cada sesión para no afectar la temperatura del dosel.
 
 Cómo es una sesión de medición
 
@@ -1703,12 +1708,12 @@ Resultado de una sesión: 3 ventanas × 7 brackets × 7 ángulos = 147 fotos té
 FASE 1 — Instalación del viñedo experimental (Mes 1–2, ~30 horas totales)
 
 Semana 1 — Tendido de cinta drip y solenoides:
-1. Identificar y marcar las 5 filas experimentales (2, 4, 6, 8, 10) y las 5 filas buffer (1, 3, 5, 7, 9).
+1. Identificar y marcar las 5 filas de calibración (1, 2, 3, 4, 5) y las 5 filas de producción (6, 7, 8, 9, 10).
 2. Tender la cinta drip 16mm a lo largo de las 10 filas pegada al pie de las vides, asegurada con ganchos al suelo cada 2 metros.
 3. Conectar cada cinta al cabezal de riego en el extremo inicial de la fila.
-4. Instalar 1 solenoide 24VAC en el inicio de cada fila experimental (5 solenoides total). Etiquetar: F2-100%, F4-65%, F6-40%, F8-15%, F10-0%. Las filas buffer (1, 3, 5, 7, 9) se conectan directo al cabezal sin solenoide (riego permanente 100% ETc).
-5. Conectar el cable de 2 hilos de cada solenoide al controlador Rain Bird en el tablero central.
-6. Programar el Rain Bird: Fila 2 = 100% ETc referencia, Fila 4 = 65%, Fila 6 = 40%, Fila 8 = 15%, Fila 10 = cerrado (0%). Duración inicial estimada: consultar con Monteoliva según datos meteorológicos locales del primer mes.
+4. Instalar 1 solenoide 24VAC en el inicio de cada fila (10 solenoides total). Etiquetar: F1-0%, F2-15%, F3-40%, F4-65%, F5-100% ETc (calibracion), F6–F10-100% ETc (produccion).
+5. Conectar el cable de 2 hilos de cada solenoide al controlador Rain Bird 10 zonas en el tablero central. Un canal por fila: canal 1=F1, canal 2=F2, canal 3=F3, canal 4=F4, canal 5=F5, canales 6–10=F6–F10.
+6. Programar el Rain Bird: F1 = cerrado (0% ETc), F2 = 15%, F3 = 40%, F4 = 65%, F5–F10 = 100% ETc. Duracion inicial estimada: consultar con Monteoliva segun datos meteorologicos locales del primer mes.
 
 Semana 1 — Prueba de caudales:
 7. Abrir solenoide de la Fila 2 durante 10 minutos. Caminar la fila y verificar que cada emisor gotea. Registrar: cuántos emisores no gotean (obstruidos) → reemplazar.
@@ -1718,11 +1723,11 @@ Semana 1 — Prueba de caudales:
 Semana 2 — Brackets, paneles y numeración:
 10. Instalar 7 brackets por fila en los postes de espaldera en las posiciones 0m, 15m, 30m, 45m, 60m, 75m, 90m. Usar taladro + tornillo M6 × 40mm inox. Verificar que la rótula permite fijar el ángulo a 40° hacia el dosel.
 11. Clavar un panel de referencia de emisividad (chapa negra mate 15×15cm) en el suelo a 20cm del bracket, visible desde el ángulo de captura.
-12. Numerar cada vid con estaca en las 5 filas experimentales: Fila 2 en F2-001 a F2-136, Fila 4 en F4-001 a F4-136, etc. Fotos de referencia de cada vid numerada → compartir en carpeta Google Drive del proyecto.
-13. Instalar túneles plásticos de exclusión de lluvia parcial sobre las filas 8 (15% ETc) y 10 (0% ETc), al menos en la zona central alrededor del nodo. Asegurar con estacas metálicas cada 3 metros.
+12. Numerar cada vid con estaca en las 10 filas: Fila 1 en F1-001 a F1-136, Fila 2 en F2-001, etc. Fotos de referencia de cada vid numerada → compartir en carpeta Google Drive del proyecto.
+13. Instalar túneles plásticos de exclusión de lluvia parcial sobre las filas 1 (0% ETc) y 2 (15% ETc), al menos en la zona central alrededor del nodo. Asegurar con estacas metálicas cada 3 metros.
 
 Semana 2 — Instalación de tensiómetros:
-14. Enterrar 1 tensiómetro por fila experimental en la planta central (~planta 68), a 20cm de profundidad junto a la vid más representativa. Etiquetar con el número de fila (5 tensiómetros total).
+14. Enterrar 1 tensiómetro por fila de calibración en la planta central (~planta 68), a 20cm de profundidad junto a la vid más representativa. Etiquetar con el número de fila (5 tensiómetros total, filas 1–5).
 15. Registrar lectura inicial de los 5 tensiómetros. Fotografiar y subir a planilla.
 
 FASE 2 — Mantenimiento rutinario (Mes 1–9, ~8 horas/mes)
@@ -1732,9 +1737,9 @@ Tarea diaria (5–10 minutos):
 17. Si hay alarma de riego en el Rain Bird: verificar en campo qué solenoide falló. Reportar.
 
 Tarea semanal (45–60 minutos):
-18. Recorrer las 5 filas experimentales y leer los 5 tensiómetros. Registrar en planilla compartida (Google Sheets): fecha, hora, fila, lectura en centibares.
+18. Recorrer las 10 filas y leer los 5 tensiómetros (filas de calibración 1–5). Registrar en planilla compartida (Google Sheets): fecha, hora, fila, lectura en centibares. Verificar que los 5 nodos de producción (filas 6–10) reportan lecturas consistentes entre sí.
 19. Inspeccionar visualmente: emisores tapados (reemplazar), túneles rotos (parchar con cinta), estacas caídas (volver a clavar).
-20. Fotografiar 1 plano general de cada fila experimental mostrando el estado de las vides. Subir a carpeta del proyecto.
+20. Fotografiar 1 plano general de cada fila mostrando el estado de las vides. Subir a carpeta del proyecto.
 21. Flush de la cinta drip: abrir el tapón del extremo de cada fila 30 segundos con el solenoide abierto para limpiar sedimentos.
 
 FASE 3 — Sesión de captura y medición Scholander (Mes 4–9, 4 sesiones OED)
@@ -1746,20 +1751,20 @@ DÍA ANTERIOR A LA SESIÓN:
 25. Preparar el kit Scholander: cilindro de nitrógeno (verificar que tenga presión > 50 bar), cámara de presión, lupa 10×, tijera de podar limpia y afilada, bolsitas de plástico zip × 10, planilla impresa, lapicera, linterna.
 
 MAÑANA DE LA SESIÓN — Ventana 9hs:
-26. A las 8:30hs: verificar tensiómetros de las 5 zonas — anotar lecturas de partida.
+26. A las 8:30hs: verificar tensiómetros de las 5 filas de calibración — anotar lecturas de partida.
 27. A las 8:50hs: retirar el nodo de su post permanente. Verificar que el gimbal responde (probar desde la app).
 28. 9:00hs — Bracket 1 (posición 0m, Fila 1): encajar el nodo en la rótula del bracket. Ajustar ángulo a 40° con el inclinómetro de la app. Iniciar captura desde la app → esperar que el gimbal complete las 7 posiciones angulares (~3 minutos). Verificar en la app que se guardaron 7 imágenes. Desmontar el nodo.
 29. Repetir paso 28 en Bracket 2 (15m) → Bracket 3 (30m) → … → Bracket 7 (90m). Anotar hora exacta de cada bracket en la planilla.
 30. Total ventana 9hs: 7 brackets × ~3 min = ~21 minutos. Devolver nodo al post permanente.
 
 MEDICIÓN SCHOLANDER — Ventana 10:00–13:00hs:
-31. Zona A — vid F1-010 (vid de referencia de la zona, siempre la misma): con la tijera limpia cortar una hoja adulta y sana de la parte media del dosel (no de la punta ni de hojas sombreadas). Hacer el corte limpio de un golpe. Inmediatamente envolver el peciolo cortado en la bolsita plástica y cerrar.
+31. Fila 5 (100% ETc) — vid F5-068 (vid de referencia de la fila, siempre la misma, planta central marcada con estaca): con la tijera limpia cortar una hoja adulta y sana de la parte media del dosel (no de la punta ni de hojas sombreadas). Hacer el corte limpio de un golpe. Inmediatamente envolver el peciolo cortado en la bolsita plástica y cerrar.
 32. Abrir la cámara Scholander. Introducir la hoja con el peciolo atravesando el orificio del sello de goma. Apretar la tapa hasta que el sello quede hermético (sin apretar de más — verificar que la hoja no quede aplastada).
 33. Abrir la válvula del cilindro de nitrógeno MUY LENTAMENTE (vuelta completa en 10 segundos). La presión debe subir a no más de 0.05 bar por segundo.
 34. Con la lupa apuntada al peciolo cortado: observar el extremo del corte. En cuanto aparezca la primera gotita de savia brillante: cerrar la válvula de nitrógeno de inmediato.
-35. Leer el manómetro. Anotar en la planilla: Zona A · Vid F1-010 · Hora: HH:MM · Ψstem = −X.X bar (el valor es negativo; más negativo = más estrés).
+35. Leer el manómetro. Anotar en la planilla: Fila 5 · Vid F5-068 · Hora: HH:MM · Ψstem = −X.X bar (el valor es negativo; más negativo = más estrés).
 36. Liberar la presión abriendo la válvula de purga. Abrir la cámara, retirar la hoja.
-37. Repetir pasos 31–36 para: Zona B (vid F1-028), Zona C (vid F1-046), Zona D (vid F1-064), Zona E (vid F1-082). Siempre la misma vid de referencia en cada zona, siempre entre las 10:00 y las 13:00hs (ventana de potencial hídrico de tallo estabilizado).
+37. Repetir pasos 31–36 para: Fila 4 (65% ETc, vid F4-068), Fila 3 (40% ETc, vid F3-068), Fila 2 (15% ETc, vid F2-068), Fila 1 (0% ETc, vid F1-068). Siempre la misma vid de referencia de cada fila (planta central ~68), siempre entre las 10:00 y las 13:00hs (ventana de potencial hídrico de tallo estabilizado).
 38. Fotografiar cada hoja medida con el celular junto a la planilla que muestra el valor anotado — respaldo visual del dato.
 
 VENTANA 12hs:
@@ -1772,13 +1777,13 @@ VENTANA 16hs:
 
 CIERRE DE SESIÓN:
 43. Completar la planilla digital en Google Sheets: ingresar los 5 valores de Ψstem con hora exacta, las lecturas de tensiómetros de los 3 momentos y cualquier incidencia (nube durante captura, vid con síntoma inusual, emisor tapado encontrado).
-44. Enviar resumen por WhatsApp a César Schiavoni: "Sesión #N completada. Ψstem: A=−X.X / B=−X.X / C=−X.X / D=−X.X / E=−X.X bar. Sin incidencias / Incidencia: [detalle]."
+44. Enviar resumen por WhatsApp a César Schiavoni: "Sesión #N completada. Ψstem: F5=−X.X / F4=−X.X / F3=−X.X / F2=−X.X / F1=−X.X bar. Sin incidencias / Incidencia: [detalle]."
 45. Guardar el cilindro de nitrógeno en posición vertical en lugar seco. Limpiar la cámara Scholander con paño húmedo y guardar en su estuche.
 
 CRITERIOS DE CANCELACIÓN Y REPROGRAMACIÓN:
 — Lluvia en las últimas 48 horas (> 5mm acumulados): reprogramar a +48hs mínimo.
 — Viento > 25 km/h sostenido durante la ventana de captura: posponer la ventana afectada pero conservar las demás.
-— Temperatura ambiente > 38°C al inicio: verificar que el nodo no supere 45°C de carcasa antes de iniciar capturas (el FLIR pierde calibración por encima de ese límite).
+— Temperatura ambiente > 38°C al inicio: verificar que el nodo no supere 45°C de carcasa antes de iniciar capturas (el MLX90640 pierde calibración por encima de ese límite).
 — Nubosidad densa ≥ 70% durante más de 20 minutos consecutivos: anotar en planilla pero no cancelar — el modelo necesita también imágenes en condiciones de nubosidad parcial.
 
 11B. Relación costo–precisión del sistema comercial
@@ -1832,15 +1837,15 @@ Un dendrómetro es un sensor que mide el diámetro del tronco de la planta con p
 
 Punto clave sobre la interpretación: el dendrómetro no mide Ψstem directamente. Mide el diámetro del tronco, que se convierte en Ψstem a través de una función de calibración de dos parámetros establecida en la Sesión 1 con la bomba de Scholander. Sin calibración, el dendrómetro entrega un número adimensional sin utilidad. Con calibración, es un monitor continuo de estrés que opera los 9 meses sin intervención especializada.
 
-Rango de utilidad por zona hídrica:
+Rango de utilidad por fila hídrica:
 
-Zona A (100% ETc): señal limpia, excelente correlación con Scholander. Proxy confiable.
-Zona B (65% ETc): señal buena, correlación confiable con corrección térmica mínima.
-Zona C (40% ETc): señal usable, requiere corrección de temperatura y de histeresis.
-Zona D (15% ETc): señal distorsionada bajo estrés fuerte. El Scholander sigue siendo indispensable.
-Zona E (sin riego): señal no confiable. Solo Scholander directo en cada sesión.
+Fila 5 (100% ETc): señal limpia, excelente correlación con Scholander. Proxy confiable.
+Fila 4 (65% ETc): señal buena, correlación confiable con corrección térmica mínima.
+Fila 3 (40% ETc): señal usable, requiere corrección de temperatura y de histeresis.
+Fila 2 (15% ETc): señal distorsionada bajo estrés fuerte. El Scholander sigue siendo indispensable.
+Fila 1 (sin riego): señal no confiable. Solo Scholander directo en cada sesión.
 
-Los dendrómetros no reemplazan el Scholander en las zonas de estrés fuerte (D y E), que son las más valiosas para el entrenamiento del modelo. Reemplazan las visitas de Scholander en las zonas A, B y C durante los meses entre sesiones programadas.
+Los dendrómetros no reemplazan el Scholander en las filas de estrés fuerte (filas 1 y 2), que son las más valiosas para el entrenamiento del modelo. Reemplazan las visitas de Scholander en las filas 3, 4 y 5 durante los meses entre sesiones programadas.
 
 Materiales necesarios — kit completo para 6 dendrómetros
 
@@ -1858,10 +1863,10 @@ Instalación paso a paso
 
 El técnico de campo instala los 5 dendrómetros en una sola mañana de trabajo (~2.5 horas). Monteoliva o César Schiavoni verifican la instalación el día de la Sesión 1.
 
-Vides a instrumentar: 1 por fila experimental (Filas 2, 4, 6, 8 y 10) = 5 unidades. Cada dendrómetro se instala en la vid central de la fila (planta ~68), la misma vid donde se posiciona el nodo sensor HydroVision.
+Vides a instrumentar: 1 por fila (10 filas total: 5 de calibración + 5 de producción) = 10 unidades. Cada dendrómetro se instala en la vid central de la fila (planta ~68), la misma vid donde se posiciona el nodo sensor HydroVision.
 
-Paso D1 — Seleccionar la vid representativa de cada fila experimental.
-Criterio: vid ubicada en el centro de la fila (~planta 68), sin síntomas de enfermedad, tronco recto y sin heridas visibles, grosor de tronco entre 3 y 6 cm. Marcar con cinta de colores: Fila 2 = azul (100% ETc), Fila 4 = verde (65% ETc), Fila 6 = amarillo (40% ETc), Fila 8 = rojo (15% ETc), Fila 10 = blanco (0% ETc). Anotar el número de estaca de cada vid elegida en la planilla del proyecto.
+Paso D1 — Seleccionar la vid representativa de cada fila.
+Criterio: vid ubicada en el centro de la fila (~planta 68), sin síntomas de enfermedad, tronco recto y sin heridas visibles, grosor de tronco entre 3 y 6 cm. Marcar con cinta de colores — zona de calibración: Fila 1 = blanco (0% ETc), Fila 2 = rojo (15% ETc), Fila 3 = amarillo (40% ETc), Fila 4 = verde (65% ETc), Fila 5 = azul (100% ETc). Zona de producción: Filas 6–10 = azul (todas 100% ETc, nodos en modo comercial). Anotar el número de estaca de cada vid elegida en la planilla del proyecto.
 Por qué importa: usar siempre la misma vid garantiza que las variaciones medidas reflejan el estado hídrico de esa planta a lo largo del tiempo, y no la variabilidad natural entre individuos distintos. Cambiar de vid entre sesiones invalida la serie temporal de datos.
 
 Paso D2 — Limpiar la corteza en el punto de contacto.
@@ -1954,7 +1959,7 @@ Retirar la tarjeta SD de cada datalogger y copiar los archivos CSV al celular. D
 Por qué importa: la foto del contacto permite al investigador Art. 32 detectar de forma remota si el sensor se desplazó antes de que la deriva contamine semanas de datos. La verificación del rango ADC previene la pérdida silenciosa de datos por saturación sin que nadie lo note.
 
 Acción semanal integrada al protocolo existente:
-El Paso 19 del protocolo de campo (Sección 11A.1) ya incluye el recorrido visual de las 5 filas experimentales. Durante ese recorrido verificar que ninguna abrazadera de dendrómetro se aflojó, que el cable del sensor no está dañado, y que la tapa de la caja estanca no tiene agua adentro. No requiere tiempo adicional.
+El Paso 19 del protocolo de campo (Sección 11A.1) ya incluye el recorrido visual de las 10 filas (calibración + producción). Durante ese recorrido verificar que ninguna abrazadera de dendrómetro se aflojó, que el cable del sensor no está dañado, y que la tapa de la caja estanca no tiene agua adentro. No requiere tiempo adicional.
 
 Flujo de responsabilidades
 
@@ -1968,7 +1973,7 @@ Resultado del sistema combinado
 
 Con los 5 dendrómetros operativos y las 4 sesiones Scholander optimizadas por OED, el proyecto obtiene:
 
-Cobertura continua de Ψstem estimado en las 5 filas experimentales (Filas 2, 4, 6, 8, 10) durante los 9 meses de temporada, con resolución de 10 minutos.
+Cobertura continua de Ψstem estimado en las 10 filas (5 de calibración + 5 de producción) durante los 9 meses de temporada, con resolución de 10 minutos.
 Medición directa Scholander de alta precisión en las 4 sesiones clave, cubriendo los 5 regímenes hídricos (100% ETc a sin riego).
 Un dataset de entrenamiento con 120 mediciones Scholander distribuidas en los momentos de máxima información estadística, más señal continua de dendrómetros para interpolar el modelo entre sesiones.
 Documentación auditada de la deriva y corrección de cada sensor, con verificación cruzada en cada sesión, cumpliendo el requisito mínimo para publicación científica.
@@ -1983,7 +1988,7 @@ El protocolo de muestreo desarrollado en Colonia Caroya está optimizado para Ma
 
 Resumen rápido: qué cambia y qué no cambia
 
-No cambia: la estructura del experimento (5 zonas hídricas, brackets, gimbal, protocolo Scholander, dendrómetros, OED de 4 sesiones, Active Learning). El hardware es idéntico en cualquier viñedo.
+No cambia: la estructura del experimento (5 filas de calibración con regímenes hídricos diferenciados, brackets, gimbal, protocolo Scholander, dendrómetros, OED de 4 sesiones, Active Learning). El hardware es idéntico en cualquier viñedo.
 
 Cambia: los parámetros numéricos del modelo que dependen de la fisiología de la variedad y del clima de la región. Son 6 ajustes, todos realizados por el investigador Art. 32 de forma remota antes o durante la Sesión 1 en el nuevo sitio.
 
@@ -1991,7 +1996,7 @@ Ajuste 1 — Línea base CWSI de la nueva variedad (parámetros a y b)
 
 Qué es: la función que define la temperatura de dosel esperada en una planta sin estrés en función de la VPD (ΔT_LL = a × VPD + b). Cada variedad tiene valores distintos porque difieren en conductancia estomática, densidad foliar y respuesta al déficit de presión de vapor.
 Por qué cambia entre variedades: Malbec tiene alta sensilibilidad estomática — sus estomas se cierran rápido ante VPD elevada, lo que eleva la temperatura del dosel incluso con agua disponible. Cabernet Sauvignon es isohydric con comportamiento similar; Torrontés y Chardonnay son anisohydric y mantienen estomas más abiertos bajo estrés. Un modelo calibrado para Malbec sobreestimaría el estrés en Torrontés con los mismos parámetros.
-Qué datos se necesitan: al menos 8-10 pares (VPD, ΔT_dosel) medidos en plantas sin estrés de la nueva variedad bajo condiciones de alta VPD (VPD > 1.5 kPa). Estos datos se obtienen en la Sesión 1 del nuevo sitio midiendo solo la Zona A (100% ETc) en 3 ventanas horarias distintas.
+Qué datos se necesitan: al menos 8-10 pares (VPD, ΔT_dosel) medidos en plantas sin estrés de la nueva variedad bajo condiciones de alta VPD (VPD > 1.5 kPa). Estos datos se obtienen en la Sesión 1 del nuevo sitio midiendo solo la fila de control (100% ETc) en 3 ventanas horarias distintas.
 Quién lo ajusta: El investigador Art. 32, antes del inicio de la Sesión 2 en el nuevo sitio. Tiempo requerido: 2-4 horas de ajuste del modelo.
 Fuente de referencia: valores publicados para las principales variedades mediterráneas (Jones et al., 2002; Bellvert et al., 2016) pueden usarse como punto de partida, pero siempre deben validarse con datos propios de la Sesión 1 porque los valores cambian también con el portainjerto y el suelo.
 
@@ -2034,7 +2039,7 @@ Tabla resumen de ajustes por sitio nuevo
 
 Ajuste / Quién ajusta / Cuándo / Datos necesarios:
 
-Línea base CWSI (a, b) / Inv. Art. 32 / Antes de Sesión 2 / 8-10 pares (VPD, ΔT) en Zona A de la Sesión 1.
+Línea base CWSI (a, b) / Inv. Art. 32 / Antes de Sesión 2 / 8-10 pares (VPD, ΔT) en fila de control (100% ETc) de la Sesión 1.
 Calendario fenológico de sesiones / Inv. Art. 32 / Antes de iniciar el sitio / Calendario histórico de la variedad en esa región.
 Coeficiente de corrección térmica dendrómetro / Inv. Art. 32 / Antes de procesar Sesión 1 / Temperatura horaria del sitio, 2 semanas previas.
 Umbrales Ψstem por variedad / Monteoliva + Inv. Art. 32 / Antes de etiquetar el dataset / Bibliografía de la variedad + 2 puntos propios de Sesión 1.

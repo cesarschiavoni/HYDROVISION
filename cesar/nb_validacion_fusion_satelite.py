@@ -120,10 +120,11 @@ sc = ax.scatter(grid_lon, grid_lat, c=cwsi_map, cmap="RdYlGn_r",
                 s=50, edgecolors="gray", linewidth=0.3, vmin=0, vmax=1)
 cbar = fig.colorbar(sc, ax=ax, label="CWSI estimado", shrink=0.8)
 
-# Marcar posición de los 5 nodos
-nodo_lats = [-31.2010, -31.2013, -31.2016, -31.2019, -31.2015]
-nodo_lons = [-64.0927, -64.0927, -64.0927, -64.0927, -64.0931]
-nodo_names = ["N1 100%ETc", "N2 75%ETc", "N3 50%ETc", "N4 25%ETc", "N5 SinRiego"]
+# Marcar posición de los 10 nodos (5 calibración + 5 producción)
+nodo_lats = [-31.2010, -31.2013, -31.2016, -31.2019, -31.2022, -31.2025, -31.2028, -31.2031, -31.2034, -31.2037]
+nodo_lons = [-64.0927, -64.0927, -64.0927, -64.0927, -64.0927, -64.0927, -64.0927, -64.0927, -64.0927, -64.0927]
+nodo_names = ["N1 0%ETc", "N2 15%ETc", "N3 40%ETc", "N4 65%ETc", "N5 100%ETc",
+              "N6 Prod", "N7 Prod", "N8 Prod", "N9 Prod", "N10 Prod"]
 ax.scatter(nodo_lons, nodo_lats, c="black", marker="^", s=120, zorder=5,
            label="Nodos HydroVision")
 for lat, lon, name in zip(nodo_lats, nodo_lons, nodo_names):

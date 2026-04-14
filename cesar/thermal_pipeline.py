@@ -3,7 +3,7 @@ Pipeline de procesamiento de imágenes térmicas — HydroVision AG
 MLX90640 (32×24 px) → segmentación de canopeo → CWSI por frame
 
 El pipeline implementa la metodología de captura multi-angular:
-  - 5–6 posiciones de gimbal × 3 ventanas horarias (9h/12h/16h)
+  - 7 posiciones de gimbal × 3 ventanas horarias (9h/12h/16h) — 6 fijas + 1 condicional viento
   - Segmentación foliar por percentiles de temperatura (P20-P75)
   - Filtro morfológico de regiones conectadas ≥ 4×4px
   - CWSI final = promedio ponderado por fracción foliar

@@ -21,7 +21,7 @@
 
 Real-time assessment of vine water status remains a critical challenge for precision irrigation management. We present the HydroVision Stress Index (HSI), a novel composite index that fuses low-cost long-wave infrared (LWIR) thermography with trunk micro-dendrometry using a Physics-Informed Neural Network (PINN) to estimate stem water potential (psi_stem) in grapevine (Vitis vinifera cv. Malbec) under field conditions.
 
-An autonomous sensor node (ESP32-S3 + MLX90640 32x24 px thermal sensor + ADS1231 24-bit strain gauge dendrometer + meteorological sensors) was deployed in an experimental vineyard in Colonia Caroya, Cordoba, Argentina (31.20 S, 64.09 W, 520 m a.s.l.) during the [SEASON] growing season. Four rows of Malbec vines (136 m each, 544 vines) were subjected to five differential irrigation regimes (100% ETc to no irrigation) via drip system with Rain Bird solenoid valves. Ground truth was obtained from [N] pressure chamber (Scholander) measurements of psi_stem following the protocol of [Monteoliva et al.].
+An autonomous sensor node (ESP32-S3 + MLX90640 32x24 px thermal sensor + ADS1231 24-bit strain gauge dendrometer + meteorological sensors) was deployed in an experimental vineyard in Colonia Caroya, Cordoba, Argentina (31.20 S, 64.09 W, 520 m a.s.l.) during the [SEASON] growing season. Ten rows of Malbec vines (136 m each, 1,360 vines) were divided into a calibration zone (Rows 1-5, five differential irrigation regimes from 0% ETc to 100% ETc) and a production zone (Rows 6-10, all 100% ETc with autonomous commercial nodes), via drip system with Rain Bird solenoid valves. Ground truth was obtained from [N] pressure chamber (Scholander) measurements of psi_stem following the protocol of [Monteoliva et al.].
 
 The PINN architecture embeds the CWSI energy balance equation (Jackson et al. 1981) as a physics constraint in the loss function, preventing physically impossible predictions. The model was trained on [1,050,680] images (50,000 public + 1,000,000 synthetic + [680] field-calibrated frames) and validated against [120] independent Scholander measurements.
 
@@ -78,8 +78,10 @@ Results: HSI achieved R^2 = [X.XX] (RMSE = [X.XX] MPa) against Scholander psi_st
 
 - Ubicacion: Colonia Caroya, Cordoba, Argentina (31.20 S, 64.09 W, 520 m a.s.l.)
 - Cultivo: Vitis vinifera cv. Malbec sobre pie americano
-- Diseno: 10 filas x 136 m = 1.360 vides (5 filas experimentales + 5 buffer intercalados)
-- 5 regimenes hidricos (1 por fila experimental): 100% ETc, 65% ETc, 40% ETc, 15% ETc, sin riego
+- Diseno: 10 filas x 136 m = 1.360 vides (5 filas de calibracion + 5 filas de produccion)
+- Zona de calibracion (Filas 1-5): 5 regimenes hidricos — F1=0% ETc (secano), F2=15% ETc, F3=40% ETc, F4=65% ETc, F5=100% ETc (control)
+- Zona de produccion (Filas 6-10): todas 100% ETc, nodos en modo comercial autonomo
+- 10 nodos permanentes (5 calibracion + 5 produccion)
 - Sistema de riego: goteo con solenoides Rain Bird 24VAC controlados por nodo HydroVision
 - Temporada: [MES INICIO] a [MES FIN] 2026/2027
 
@@ -95,7 +97,7 @@ Results: HSI achieved R^2 = [X.XX] (RMSE = [X.XX] MPa) against Scholander psi_st
 | Viento | Anemometro RS485 Modbus | Confianza dinamica CWSI |
 | Radiacion | Piranometro BPW34 ADC | Balance energetico |
 | GPS | u-blox NEO-6M | Geolocalizacion |
-| Gimbal | 2x MG90S, 5 posiciones | Captura multi-angular |
+| Gimbal | 2x MG90S, 7 posiciones (6 fijas + 1 condicional viento) | Captura multi-angular |
 | Referencia termica | Dry Ref (aluminio negro e=0.98) + Wet Ref (feltro hidrofilico) | Calibracion Jones Ig |
 | Comunicacion | SX1276 LoRa 915 MHz | Transmision a gateway |
 | Energia | LiFePO4 6Ah + panel solar 6W + MPPT | Autonomia >72h |
@@ -106,7 +108,7 @@ Results: HSI achieved R^2 = [X.XX] (RMSE = [X.XX] MPa) against Scholander psi_st
 - Protocolo: Dra. M. Monteoliva (INTA-CONICET)
 - Ventana de medicion: 10:00-14:00 hs (maximo estres diurno)
 - Condicion previa: >48h sin lluvia significativa
-- N sesiones: [10] | N mediciones totales: [XXX]
+- N sesiones: [4] (OED D-optimal) | N mediciones totales: [XXX]
 - Variables registradas: psi_stem [MPa], hora, T_air, HR, viento, estadio fenologico
 
 ### 2.4 Modelo PINN -- arquitectura y entrenamiento

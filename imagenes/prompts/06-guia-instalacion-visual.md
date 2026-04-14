@@ -18,7 +18,7 @@ Secuencia de 8 viñetas (paneles) numeradas, dispuestas en 2 filas × 4 columnas
 - ✓ "EN la línea de la hilera, entre 2 plantas"
 - ✗ "NO en el pasillo entre filas"
 
-**Texto:** "Paso 1 — Elegir la planta central de la fila experimental (planta ~68 de 136). Evitar las 5 plantas de cada extremo de la fila (efecto borde)."
+**Texto:** "Paso 1 — Elegir la planta central de la fila (planta ~68 de 136). Cada fila lleva un nodo: 5 en zona de calibración (F1-F5) + 5 en zona de producción (F6-F10). Evitar las 5 plantas de cada extremo de la fila (efecto borde)."
 
 ---
 

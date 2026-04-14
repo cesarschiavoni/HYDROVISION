@@ -22,30 +22,30 @@
 |   Contaduria / rendiciones ANPCyT (trimestral)          | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
 | **ADQUISICION & RECEPCION HARDWARE                     ** |     |     |     |     |     |     |     |     |     |     |     |     |
-|   ESP32-S3 x10 + MLX90640 110° x10 (5 nodos + 5 spare)  | XX |    |    |    |    |    |    |    |    |    |    |    |
+|   ESP32-S3 x10 + MLX90640 110° x10 (10 nodos permanentes) | XX |    |    |    |    |    |    |    |    |    |    |    |
 |   Recepcion ESP32-S3 + MLX90640 (lead time ~2 sem)       | XX |    |    |    |    |    |    |    |    |    |    |    |
-|   SHT31 x10 + GPS u-blox x5 + IMU ICM-42688 x5         | XX |    |    |    |    |    |    |    |    |    |    |    |
-|   SX1276 x10 + ADS1231 x5 + servos MG90S x10           | XX |    |    |    |    |    |    |    |    |    |    |    |
-|   Piranómetro BPW34 x5 + bomba peristáltica x5          | XX |    |    |    |    |    |    |    |    |    |    |    |
+|   SHT31 x10 + GPS u-blox x10 + IMU ICM-42688 x10        | XX |    |    |    |    |    |    |    |    |    |    |    |
+|   SX1276 x10 + ADS1231 x10 + servos MG90S x10          | XX |    |    |    |    |    |    |    |    |    |    |    |
+|   Piranómetro BPW34 x10 + bomba peristáltica x10        | XX |    |    |    |    |    |    |    |    |    |    |    |
 |   Gateway RAK7268 + Starlink Mini kit                   | XX |    |    |    |    |    |    |    |    |    |    |    |
 |   Scholander + tensiómetros x8 + Davis Vantage          | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |   HOBO MX2301 x2 + calibrador cuerpo negro              | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |   Integracion modular DevKit+breakouts (Lucas)          | XX | XX |    |    |    |    |    |    |    |    |    |    |
-|   Montaje 5 nodos en carcasa Hammond IP67 (Lucas)       |    | XX | XX |    |    |    |    |    |    |    |    |    |
+|   Montaje 10 nodos en carcasa Hammond IP67 (Lucas)      |    | XX | XX |    |    |    |    |    |    |    |    |    |
 |   Carcasa IP67 + sistema montaje estaca/bracket         |    | XX | XX |    |    |    |    |    |    |    |    |    |
-|   Drip 440m + solenoides x20 + Rain Bird ESP-ME3        | XX | XX |    |    |    |    |    |    |    |    |    |    |
-|   Brackets acero x32 + paneles emisividad x32           | XX | XX |    |    |    |    |    |    |    |    |    |    |
+|   Drip 1.450m + solenoides x10 + controlador Rain Bird  | XX | XX |    |    |    |    |    |    |    |    |    |    |
+|   Brackets acero x64 + paneles emisividad x64           | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
 | **INSTALACION VINEDO EXPERIMENTAL (Tecnico + Lucas)    ** |     |     |     |     |     |     |     |     |     |     |     |     |
 |   Tendido cinta drip 10 filas x 136m                    | XX | XX |    |    |    |    |    |    |    |    |    |    |
-|   Instalacion 5 solenoides + controlador Rain Bird      | XX | XX |    |    |    |    |    |    |    |    |    |    |
+|   Instalacion 10 solenoides (1/fila) + Rain Bird        | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |   Prueba caudales 5 regimenes hidricos (0-100% ETc)     |    | XX |    |    |    |    |    |    |    |    |    |    |
-|   Instalacion 32 brackets en postes espaldera           |    | XX |    |    |    |    |    |    |    |    |    |    |
-|   Tuneles exclusion lluvia zonas C y D                  |    | XX |    |    |    |    |    |    |    |    |    |    |
+|   Instalacion 64 brackets en postes espaldera           |    | XX |    |    |    |    |    |    |    |    |    |    |
+|   Tuneles exclusion lluvia filas 1 y 2 (0% y 15% ETc)   |    | XX |    |    |    |    |    |    |    |    |    |    |
 |   Instalacion 8 tensiómetros + paneles + estacas        |    | XX |    |    |    |    |    |    |    |    |    |    |
 |   Mantenimiento rutinario vinedo (tecnico campo)        | XX | XX | XX | XX | XX | XX | XX | XX | XX |    |    |    |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
-| **HARDWARE & FIRMWARE (Lucas Bergon + Mario Del Fabro) ** |     |     |     |     |     |     |     |     |     |     |     |     |
+| **HARDWARE & FIRMWARE (Lucas Bergon)                  ** |     |     |     |     |     |     |     |     |     |     |     |     |
 |   Setup entorno desarrollo + Claude Code                | XX |    |    |    |    |    |    |    |    |    |    |    |
 |   Driver MLX90640 I2C (32x24, FOV 110°, filtro P20-P75)  | XX | XX | XX |    |    |    |    |    |    |    |    |    |
 |   Drivers SHT31, GPS u-blox, IMU, DS3231, pluviometro   | XX | XX | XX |    |    |    |    |    |    |    |    |    |

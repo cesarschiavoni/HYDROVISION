@@ -50,7 +50,7 @@ class SpatialAttention(nn.Module):
 # ---------------------------------------------------------------------------
 class LightResBlock(nn.Module):
     """
-    Bloque residual depthwise-separable para inferencia eficiente en RPi Zero 2W.
+    Bloque residual depthwise-separable para inferencia eficiente en ESP32-S3.
     Evita operaciones no soportadas por TFLite Micro INT8.
     """
 
@@ -80,7 +80,7 @@ class HydroVisionPINN(nn.Module):
         Head ΔT  : MLP → temperatura diferencial Tc−Ta [°C]
                    Usado por la física del PINN en el loss
 
-    Parámetros: ~1.05M (objetivo: <2M para INT8 en RPi Zero 2W)
+    Parámetros: ~1.05M (objetivo: <2M para INT8 en ESP32-S3)
     """
 
     def __init__(
@@ -214,13 +214,13 @@ class HydroVisionPINN(nn.Module):
 
 
 # ---------------------------------------------------------------------------
-# Versión edge para RPi Zero 2W (post-cuantización INT8)
+# Versión edge para ESP32-S3 (post-cuantización INT8)
 # ---------------------------------------------------------------------------
 class HydroVisionPINN_Edge(nn.Module):
     """
-    Versión ultraligera para deployment en RPi Zero 2W.
+    Versión ultraligera para deployment en ESP32-S3.
     Sin timm, sin SpatialAttention, < 500K parámetros.
-    Latencia objetivo: < 200ms en RPi Zero 2W.
+    Latencia objetivo: < 200ms en ESP32-S3.
     """
 
     def __init__(self, dropout: float = 0.1):
@@ -285,6 +285,6 @@ if __name__ == "__main__":
     edge = HydroVisionPINN_Edge()
     x_e = torch.randn(1, 1, 120, 160)
     out_e = edge(x_e)
-    print(f"\nPINN Edge (RPi Zero 2W):")
+    print(f"\nPINN Edge (ESP32-S3):")
     print(f"  Parámetros : {edge.count_parameters():,}")
     print(f"  Output     : {tuple(out_e.shape)}")

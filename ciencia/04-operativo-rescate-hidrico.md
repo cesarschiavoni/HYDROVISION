@@ -7,7 +7,7 @@
 
 ## 1. OBJETO Y ALCANCE
 
-Este documento establece el procedimiento de escalada, decisión e intervención ante situaciones de estrés hídrico severo en las zonas D (15% ETc) y E (sin riego) del viñedo experimental. Complementa el §3.5 del Protocolo Scholander formal y es de cumplimiento obligatorio para Javier Schiavoni, Franco Schiavoni y César Schiavoni durante toda la campaña (Mes 4–12).
+Este documento establece el procedimiento de escalada, decisión e intervención ante situaciones de estrés hídrico severo en las filas 2 (15% ETc) y 1 (0% ETc, secano) del viñedo experimental. Complementa el §3.5 del Protocolo Scholander formal y es de cumplimiento obligatorio para Javier Schiavoni, Franco Schiavoni y César Schiavoni durante toda la campaña (Mes 4–12).
 
 **Principio rector:** el experimento sacrifica agua — nunca el viñedo. Las plantas son el patrimonio productivo de la familia Schiavoni y el activo que financia el ensayo. Cualquier criterio de rescate activa riego de emergencia sin necesidad de autorización previa.
 
@@ -19,18 +19,18 @@ Este documento establece el procedimiento de escalada, decisión e intervención
 
 | # | Indicador | Umbral | Quién detecta | Acción inmediata |
 |---|---|---|---|---|
-| R1 | Ψ_stem medido | < −1.5 MPa en zona D o E | Javier/Franco (Scholander) | Riego de emergencia esa zona en ≤ 2 h |
-| R2 | Temperatura foliar | > 42°C sostenida ≥ 30 min con VPD normal | App del nodo (alerta push) | Riego de emergencia esa zona en ≤ 1 h |
-| R3 | Días sin agua | 14 días consecutivos sin lluvia ni riego en zona E (Dic–Feb) | Javier (control manual) | Riego mínimo 6 horas antes de continuar el ciclo |
-| R4 | Síntomas visuales severos | Marchitez persistente a las 8:00 hs en zona D o E | Javier/Franco (inspección) | Rescate inmediato + foto + notificación Monteoliva |
+| R1 | Ψ_stem medido | < −1.5 MPa en fila 2 (15% ETc) o fila 1 (0% ETc) | Javier/Franco (Scholander) | Riego de emergencia esa fila en ≤ 2 h |
+| R2 | Temperatura foliar | > 42°C sostenida ≥ 30 min con VPD normal | App del nodo (alerta push) | Riego de emergencia esa fila en ≤ 1 h |
+| R3 | Días sin agua | 14 días consecutivos sin lluvia ni riego en fila 1 (0% ETc, Dic–Feb) | Javier (control manual) | Riego mínimo 6 horas antes de continuar el ciclo |
+| R4 | Síntomas visuales severos | Marchitez persistente a las 8:00 hs en fila 2 o fila 1 | Javier/Franco (inspección) | Rescate inmediato + foto + notificación Monteoliva |
 
 ### 2.2 Criterio de suspensión del protocolo (consultar a Monteoliva antes de actuar)
 
 | # | Condición | Umbral | Acción pendiente de consulta |
 |---|---|---|---|
-| S1 | Ψ_stem en zona C | < −1.3 MPa (zona de control moderado) | Verificar falla de solenoide C + notificar Monteoliva |
-| S2 | Daño visual en zona A | Cualquier síntoma de marchitez o clorosis en la zona de control | Notificar Monteoliva inmediatamente — revisar falla de riego |
-| S3 | Falla total del sistema Rain Bird | Todas las zonas sin riego por > 48 h en período Nov–Feb | Riego manual de emergencia en todas las zonas + notificar |
+| S1 | Ψ_stem en fila 3 (40% ETc) | < −1.3 MPa (zona de control moderado) | Verificar falla de solenoide fila 3 + notificar Monteoliva |
+| S2 | Daño visual en fila 5 (100% ETc) | Cualquier síntoma de marchitez o clorosis en la fila de control | Notificar Monteoliva inmediatamente — revisar falla de riego |
+| S3 | Falla total del sistema Rain Bird | Todas las filas sin riego por > 48 h en período Nov–Feb | Riego manual de emergencia en todas las filas + notificar |
 
 ---
 
@@ -38,7 +38,7 @@ Este documento establece el procedimiento de escalada, decisión e intervención
 
 Javier y Franco deben reconocer los síntomas progresivos para anticipar el criterio R4 antes de que sea necesario el Scholander:
 
-**Nivel 1 — Estrés moderado (normal en zonas D/E, sin acción):**
+**Nivel 1 — Estrés moderado (normal en filas 1 y 2, sin acción):**
 - Hojas con leve ondulación de bordes al mediodía (13–15 hs)
 - Ángulo del pecíolo más vertical (la hoja "baja")
 - Zarcillos marchitos pero el tallo principal firme
@@ -74,7 +74,7 @@ JAVIER/FRANCO detecta indicador de rescate
                    ▼
     ┌─────────────────────────────────────────────┐
     │  ACCIÓN INMEDIATA:                          │
-    │  1. Abrir solenoide de la zona afectada     │
+    │  1. Abrir solenoide de la fila afectada     │
     │     (override manual en Rain Bird)          │
     │  2. Regar hasta que tensiómetro baje        │
     │     a < 30 centibares (aprox. 3–6 horas)   │
@@ -105,7 +105,7 @@ JAVIER/FRANCO detecta indicador de rescate
 ### 5.1 Mensaje de activación de rescate (copiar y completar)
 
 ```
-🚨 RESCATE ZONA [letra] — [fecha] [hora]
+🚨 RESCATE FILA [número] — [fecha] [hora]
 
 Criterio activado: [R1 / R2 / R3 / R4]
 Ψ_stem medido: −___.__ MPa  (solo si Scholander disponible)
@@ -113,7 +113,7 @@ Temperatura foliar: ___°C  (si R2)
 Días sin agua: ___  (si R3)
 Síntomas visuales: [descripción breve]
 
-Acción tomada: Riego abierto zona [letra] a las [hora]
+Acción tomada: Riego abierto fila [número] a las [hora]
 Duración prevista: [horas]
 
 Foto adjunta: [SÍ / NO]
@@ -122,7 +122,7 @@ Foto adjunta: [SÍ / NO]
 ### 5.2 Mensaje de cierre de rescate (cuando tensiómetro < 30 cb)
 
 ```
-✅ RESCATE ZONA [letra] COMPLETADO — [fecha] [hora]
+✅ RESCATE FILA [número] COMPLETADO — [fecha] [hora]
 
 Duración total del riego: ___h ___min
 Lectura tensiómetro al cierre: ___ cb
@@ -138,7 +138,7 @@ Próxima medición Scholander programada: [fecha]
 Una vez que finaliza el riego de emergencia, el experimento no continúa automáticamente. Javier debe:
 
 **A las 24 hs post-rescate:**
-- Leer tensiómetro de la zona afectada → objetivo: < 30 centibares
+- Leer tensiómetro de la fila afectada → objetivo: < 30 centibares
 - Inspección visual: ¿las hojas recuperaron turgencia nocturna?
 - Si tensiómetro > 40 cb a las 24 h: extender riego hasta alcanzar < 30 cb
 
@@ -151,7 +151,7 @@ Una vez que finaliza el riego de emergencia, el experimento no continúa automá
 - Si persiste síntoma visual en Nivel 2 o superior: **no reiniciar el déficit** hasta consulta con Monteoliva
 
 **Criterio de no-reinicio del ciclo de estrés:**  
-Zona D o E no vuelve a su régimen de déficit hasta que todas las condiciones siguientes sean simultáneas:
+Fila 1 (0% ETc) o fila 2 (15% ETc) no vuelve a su régimen de déficit hasta que todas las condiciones siguientes sean simultáneas:
 1. Tensiómetro < 30 cb
 2. Extensómetro D_max > 90% del histórico del nodo
 3. Inspección visual: sin síntomas de Nivel 2 o superior
@@ -159,16 +159,16 @@ Zona D o E no vuelve a su régimen de déficit hasta que todas las condiciones s
 
 ---
 
-## 7. RESTRICCIÓN ABSOLUTA — ZONA E EN FLORACIÓN
+## 7. RESTRICCIÓN ABSOLUTA — FILA 1 (0% ETc) EN FLORACIÓN
 
 **Período de restricción:** Desde la detección de floración (GDD ≥ 280) hasta el cuaje (GDD ≥ 420), aproximadamente Octubre–Noviembre.
 
 **Durante ese período:**
-- La Zona E NO aplica 0% ETc
-- La Zona E recibe el mismo riego que la Zona D (15% ETc)
+- La Fila 1 NO aplica 0% ETc
+- La Fila 1 recibe el mismo riego que la Fila 2 (15% ETc)
 - El Rain Bird debe reprogramarse manualmente antes del inicio de floración
 
-**Responsable de verificar el estadio fenológico:** César Schiavoni desde el dashboard (alerta automática del motor GDD). Cuando el sistema detecta GDD ≥ 270, envía notificación push al productor: "Brotación avanzada — floración próxima — revisar configuración Zona E".
+**Responsable de verificar el estadio fenológico:** César Schiavoni desde el dashboard (alerta automática del motor GDD). Cuando el sistema detecta GDD ≥ 270, envía notificación push al productor: "Brotación avanzada — floración próxima — revisar configuración Fila 1 (0% ETc)".
 
 **Javier debe confirmar visualmente** la presencia de racimos florales emergentes antes de ejecutar la reprogramación del Rain Bird. Foto de confirmación a César y Monteoliva.
 
@@ -176,15 +176,15 @@ Zona D o E no vuelve a su régimen de déficit hasta que todas las condiciones s
 
 ## 8. ROTACIÓN DE ZONAS DE ESTRÉS ENTRE TEMPORADAS
 
-Para proteger la integridad productiva del viñedo a largo plazo, las zonas de estrés severo (D y E) no se aplican en la misma fila en dos temporadas consecutivas:
+Para proteger la integridad productiva del viñedo a largo plazo, las filas de estrés severo (15% ETc y 0% ETc) no se aplican en la misma fila en dos temporadas consecutivas:
 
-| Temporada | Fila con Zona D (15%) | Fila con Zona E (0%) |
+| Temporada | Fila con 15% ETc | Fila con 0% ETc (secano) |
 |---|---|---|
-| 2026–2027 | Fila 1 | Fila 2 |
-| 2027–2028 | Fila 3 | Fila 4 |
+| 2026–2027 | Fila 2 | Fila 1 |
+| 2027–2028 | Fila 4 | Fila 3 |
 | 2028–2029 | Fila 2 | Fila 1 |
 
-Las filas que estuvieron en Zona E la temporada anterior reciben 100% ETc durante el ciclo siguiente de recuperación.
+Las filas que estuvieron en 0% ETc la temporada anterior reciben 100% ETc durante el ciclo siguiente de recuperación.
 
 ---
 
@@ -192,7 +192,7 @@ Las filas que estuvieron en Zona E la temporada anterior reciben 100% ETc durant
 
 Planilla de registro acumulada (Google Sheets, pestaña "Rescates"):
 
-| Fecha | Zona | Criterio | Ψ_stem | Síntomas | Hora inicio riego | Duración (h) | Tensiómetro final | Recuperación 48h | Aprobó Monteoliva |
+| Fecha | Fila | Criterio | Ψ_stem | Síntomas | Hora inicio riego | Duración (h) | Tensiómetro final | Recuperación 48h | Aprobó Monteoliva |
 |---|---|---|---|---|---|---|---|---|---|
 | | | | | | | | | | |
 

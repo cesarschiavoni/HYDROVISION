@@ -289,8 +289,8 @@ CAMPO (solar, autonomo)              GALPON (red electrica)
 │ Nodo 1  ESP32-S3     │─── LoRa ──►│                      │
 │ Nodo 2  ESP32-S3     │─── LoRa ──►│  RPi4 + LoRa HAT     │
 │ Nodo 3  ESP32-S3     │─── LoRa ──►│  (reemplaza RAK7268) │
-│ Nodo 4  ESP32-S3     │─── LoRa ──►│                      │
-│ Nodo 5  ESP32-S3     │─── LoRa ──►│  - Edge AI (PINN)    │
+│ ...                  │─── LoRa ──►│                      │
+│ Nodo 10 ESP32-S3     │─── LoRa ──►│  - Edge AI (PINN)    │
 │                      │             │  - Dashboard local   │
 │ MicroPython          │             │  - OTA manager       │
 │ I2C / Modbus RTU     │             │  - Data logger       │
@@ -347,7 +347,7 @@ del diseño optico en la PCB y reduce el riesgo de falla en campo.
 2. **Disponibilidad en Argentina.** Buscar en MercadoLibre "MLX90640" — hay vendedores
    importadores. Si no hay stock, importar directo por Correo Internacional (Adafruit
    envia a Argentina, ~USD 15 de envio, 15-25 dias).
-3. **Comprar 7 unidades** (5 nodos + 2 spare). A USD 50 c/u = USD 350 total.
+3. **Comprar 12 unidades** (10 nodos + 2 spare). A USD 50 c/u = USD 600 total.
 
 ### Como se monta el breakout con el tubo colimador
 
@@ -403,4 +403,4 @@ mira a traves de la ventana y el tubo.
 2. **Cesar** prepara el firmware MicroPython base (ciclo de lectura + CWSI + LoRa)
 3. **Lucas arma** el primer prototipo en mesa con cables I2C — verifica que todo lee
 4. **Lucas monta** en carcasa Hammond IP67 con cableado definitivo
-5. **Instalacion** en vinedo fila 2 (control) — primer nodo operativo
+5. **Instalacion** en vinedo fila 5 (control calibración 100% ETc) — primer nodo operativo

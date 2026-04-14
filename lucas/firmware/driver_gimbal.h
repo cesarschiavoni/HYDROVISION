@@ -4,9 +4,11 @@
  * Librería: ESP32 LEDC (arduino-esp32 ≥ 3.0, API nueva)
  *
  * Secuencia de captura multi-angular:
- *   5 posiciones fijas + 1 condicional (viento > 20 km/h = 5.56 m/s)
+ *   6 posiciones fijas + 1 condicional (viento > 20 km/h = 5.56 m/s) = hasta 7 total
  *   En cada posición: esperar GIMBAL_SETTLE_MS + capturar frame MLX90640
  *   Resultado: tc_mean fusionada (promedio de posiciones válidas)
+ *   Nota: el Plan de Trabajo ANPCyT documenta "7 ángulos" — esta implementación
+ *   captura 6 ángulos estándar + 1 condicional (nadir con viento alto), totalizando 7.
  *
  * Referencia de ángulos: Pan 0° = frente, Tilt 0° = horizontal
  * Positivo: Pan = giro derecha, Tilt = inclinación hacia arriba
@@ -73,17 +75,19 @@ struct GimbalPos {
     int8_t tilt;  // grados (relativo a horizontal)
 };
 
-// 5 posiciones fijas
-static const GimbalPos _pos_fijas[5] = {
+// 6 posiciones fijas (totalizan 7 con la condicional — "7 ángulos" del Plan de Trabajo)
+static const GimbalPos _pos_fijas[6] = {
     {  0,   0 },  // 0: Centro (referencia)
     { GIMBAL_PAN_L,  0 },  // 1: Izquierda
     { GIMBAL_PAN_R,  0 },  // 2: Derecha
     {  0, GIMBAL_TILT_UP   },  // 3: Arriba
     {  0, GIMBAL_TILT_DOWN },  // 4: Abajo
+    { GIMBAL_PAN_L, GIMBAL_TILT_UP },  // 5: Diagonal IzquierdaArriba — cubre zona de sombra superior
 };
 
 // 1 posición condicional: nadir (plomada) — para viento > 20 km/h = 5.56 m/s
 // Minimiza error de perspectiva cuando el dosel se mueve
+// Con esta posición: 6 fijas + 1 condicional = 7 ángulos totales (Plan de Trabajo §4.4.2)
 static const GimbalPos _pos_nadir = { 0, -30 };
 
 // ─────────────────────────────────────────
@@ -101,16 +105,16 @@ GimbalFusionResult gimbal_capturar(float wind_ms) {
     GimbalFusionResult result = {0.0f, 0.0f, 0, false};
 
     bool usar_nadir = (wind_ms > 5.56f);  // > 20 km/h
-    uint8_t n_pos = usar_nadir ? 6 : 5;
+    uint8_t n_pos = usar_nadir ? 7 : 6;  // 6 fijas + 1 condicional = 7 total (Plan §4.4.2)
 
     float    sum_tc_mean = 0.0f;
     float    max_tc      = -999.0f;
-    uint32_t sum_pixels  = 0;   // uint32 para sumar hasta 6 frames × 422 px sin overflow
+    uint32_t sum_pixels  = 0;   // uint32 para sumar hasta 7 frames × 422 px sin overflow
     uint8_t  validos     = 0;
 
     for (uint8_t i = 0; i < n_pos; i++) {
         GimbalPos pos;
-        if (i < 5) {
+        if (i < 6) {
             pos = _pos_fijas[i];
         } else {
             pos = _pos_nadir;

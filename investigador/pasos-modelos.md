@@ -220,7 +220,7 @@ python preprocessing.py infer ^
 
 ## Paso 3.6 — Validar el modelo (nuevo)
 
-> **Para qué sirve:** Evalúa el checkpoint entrenado contra el dataset Scholander y genera métricas (MAE, RMSE, R²) + gráficos (scatter CWSI, Bland-Altman, scatter ψ_stem, error por sesión). Target TRL 4: MAE ≤ 0.08, R² > 0.60 vs CWSI real, R² ≥ 0.75 vs ψ_stem.
+> **Para qué sirve:** Evalúa el checkpoint entrenado contra el dataset Scholander y genera métricas (MAE, RMSE, R²) + gráficos (scatter CWSI, Bland-Altman, scatter ψ_stem, error por sesión). Target TRL 4: MAE ≤ 0.08, R² ≥ 0.75 vs CWSI real, R² ≥ 0.75 vs ψ_stem.
 
 ```bat
 C:\Temp\Agro\investigador\venv\Scripts\activate

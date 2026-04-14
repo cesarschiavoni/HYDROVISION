@@ -333,7 +333,7 @@ class FusionEngine:
 
 
 # ---------------------------------------------------------------------------
-# Demo __main__: 5 nodos × 30 días × 3 sesiones diarias
+# Demo __main__: 10 nodos × 30 días × 3 sesiones diarias
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import random
@@ -342,10 +342,10 @@ if __name__ == "__main__":
     random.seed(42)
     tmp = tempfile.mkdtemp()
     print("=" * 70)
-    print("DEMO FusionEngine — 5 nodos × 30 días × 3 sesiones/día")
+    print("DEMO FusionEngine — 10 nodos × 30 días × 3 sesiones/día")
     print("=" * 70)
 
-    nodes = [f"N{i+1:02d}" for i in range(5)]
+    nodes = [f"N{i+1:02d}" for i in range(10)]
     engines = {nid: FusionEngine(nid, storage_dir=tmp) for nid in nodes}
 
     # Simular 30 días con estrés creciente a partir del día 15

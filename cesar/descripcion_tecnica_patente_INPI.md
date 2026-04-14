@@ -51,7 +51,7 @@ Ninguna solucion existente combina termografia foliar + dendrometria de tronco +
 Un dispositivo de hardware autonomo que comprende:
 
 - **Unidad de procesamiento:** microcontrolador ESP32-S3 con conectividad LoRa (SX1276, 915 MHz)
-- **Sensor termico infrarrojo:** MLX90640 (32x24 pixeles, NETD ~100 mK, FOV 110x75 grados, banda LWIR 8-14 um) montado sobre gimbal motorizado de 2 ejes (2x servos MG90S) que captura en 5 posiciones angulares fijas para cobertura multi-angular del canopeo
+- **Sensor termico infrarrojo:** MLX90640 (32x24 pixeles, NETD ~100 mK, FOV 110x75 grados, banda LWIR 8-14 um) montado sobre gimbal motorizado de 2 ejes (2x servos MG90S) que captura en 6–7 posiciones angulares para cobertura multi-angular del canopeo (6 posiciones fijas estándar + 1 posición condicional nadir con viento > 20 km/h = 7 ángulos totales)
 - **Dendrometro de tronco:** sensor strain gauge acoplado a ADC de 24 bits (ADS1231) con resolucion de 1 um y correccion termica mediante sensor DS18B20 (coeficiente de compensacion alpha = 2.5 um/C), montado en abrazadera de aluminio anodizado a 30 cm de altura en la cara norte del tronco
 - **Sensores meteorologicos:** temperatura y humedad relativa del aire (SHT31), anemometro de copas (RS485 Modbus RTU), piranometro (BPW34 ADC), pluviometro de balancin (ISR con debounce), sensor de particulas PM2.5 (PMS5003 UART)
 - **Referencias termicas duales:** panel de referencia seca (Dry Ref: aluminio negro mate, emisividad 0.98) y panel de referencia humeda (Wet Ref: fieltro hidrofilico con micro-bomba peristaltica de recarga) para calibracion del indice de Jones (Ig)
@@ -96,7 +96,7 @@ f(dT, VPD) = (dT - dT_LL(VPD)) / (dT_UL - dT_LL(VPD))
 
 El termino lambda penaliza predicciones que violan el balance energetico foliar. Esto garantiza:
 - Predicciones fisicamente coherentes (CWSI nunca fuera del rango [0, 1])
-- Mejor generalizacion con pocos datos reales de campo (680 frames)
+- Mejor generalizacion con pocos datos reales de campo (800 frames etiquetados: 680 fine-tuning + 120 validacion)
 - Robustez ante condiciones climaticas no vistas en el entrenamiento
 
 **Arquitectura:** MobileNetV3-Tiny backbone con cabeza de regresion, cuantizado a INT8 para inferencia en edge (ESP32-S3).

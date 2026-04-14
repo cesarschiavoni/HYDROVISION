@@ -37,7 +37,7 @@ La innovación específica de HydroVision AG frente al estado del arte reside en
 
 El diseño de fila experimental con 5 regímenes hídricos diferenciales (0%, 15%, 40%, 65% y 100% ETc) aplicado sobre *Vitis vinifera* cv. Malbec en el viñedo familiar Schiavoni (Colonia Caroya, Córdoba, ~700 m s.n.m.) es metodológicamente adecuado para los objetivos del proyecto. El gradiente de estrés cubrirá el rango operativo completo del sistema, desde plantas en óptimo hídrico hasta plantas con estrés severo pre-rescate, generando un dataset de calibración representativo de las condiciones productivas reales.
 
-El protocolo de medición Scholander que he elaborado para este proyecto está basado en metodología estándar internacional, adaptada a las condiciones edafoclimáticas del sitio experimental (suelo franco-limoso, ETP media 850 mm/año, régimen de lluvias convectivas de verano). La ventana de medición 10:00–13:00 hs solar, los criterios de post-lluvia diferenciados por intensidad de precipitación y las vides de referencia fijas por zona garantizan la comparabilidad de los datos entre sesiones a lo largo de los 9 meses del protocolo.
+El protocolo de medición Scholander que he elaborado para este proyecto está basado en metodología estándar internacional, adaptada a las condiciones edafoclimáticas del sitio experimental (suelo franco-limoso, ETP media 850 mm/año, régimen de lluvias convectivas de verano). La ventana de medición 10:00–13:00 hs solar, los criterios de post-lluvia diferenciados por intensidad de precipitación y las vides de referencia fijas por fila garantizan la comparabilidad de los datos entre sesiones a lo largo de los 9 meses del protocolo.
 
 ### Sobre la capacitación del técnico de campo
 
@@ -57,7 +57,7 @@ Me comprometo a capacitar a los técnicos de campo del proyecto (Javier y Franco
 
 4. Mi contribución técnica al proyecto comprende:
    - Diseño y validación del protocolo experimental de medición Scholander
-   - Supervisión científica del protocolo RDI de 5 zonas hídricas
+   - Supervisión científica del protocolo RDI de 5 filas de calibración
    - Participación presencial en las **Sesiones 1 y 2** del protocolo (post-brotación 2026 y pre-envero 2027)
    - Supervisión remota y validación de datos de las Sesiones 3 y 4 (realizadas por técnicos capacitados)
    - Revisión crítica de los resultados de calibración CWSI–Ψ_stem al cierre del experimento

@@ -1,24 +1,29 @@
 
-### 11A. Qué es y para qué sirve cada componente de la fila experimental
+### 11A. Qué es y para qué sirve cada componente de la fila de calibración
 
 El objetivo en una línea
 
 Sacarle fotos térmicas a las vides bajo distintos niveles de sed y al mismo tiempo medir exactamente qué tan sedientas están. Así el modelo aprende a "ver" el estrés hídrico antes de que la planta lo muestre visualmente.
 
-Nota clave sobre los nodos: el viñedo experimental cuenta con 5 nodos permanentes (uno por fila experimental), cada uno montado en estaca de acero inoxidable en la planta central (planta 68) de su fila. Los nodos operan de forma continua 24/7 capturando 7 ángulos gimbal × 96 ciclos/día. Los brackets adicionales (32 en total) son soportes fijos de acero (USD 12 cada uno) que permiten posiciones de captura complementarias. En el producto comercial, el productor instala un solo nodo permanente por zona que opera de forma completamente autónoma.
+Nota clave sobre los nodos: el viñedo experimental cuenta con 10 nodos permanentes (uno por fila), cada uno montado en estaca de acero inoxidable en la planta central (planta 68) de su fila. Las filas de calibración (1–5) tienen nodos en modo experimental; las filas de producción (6–10) tienen nodos en modo comercial autónomo (pipeline completo CWSI → HSI → alerta → recomendación de riego). Los nodos operan de forma continua 24/7 capturando 7 ángulos gimbal × 96 ciclos/día. Los brackets adicionales (64 en total) son soportes fijos de acero (USD 10 cada uno) que permiten posiciones de captura complementarias en la zona de calibración. En el producto comercial, el productor instala un solo nodo permanente por zona que opera de forma completamente autónoma — exactamente como los nodos de producción de las filas 6–10.
 
 Componentes del viñedo experimental y función de cada uno
 
-10 filas de 136m — 5 experimentales + 5 buffer intercalados
+10 filas de 136m — 5 de calibración (filas 1–5) + 5 de producción (filas 6–10)
 
-El viñedo tiene 10 filas de 136 plantas (1.360 vides, espaciado 1 m entre plantas, 3 m entre filas). Cada fila experimental recibe un único régimen hídrico (la fila completa se riega igual). Las filas experimentales se intercalan con filas buffer a 100% ETc que actúan como aislamiento hídrico:
+El viñedo tiene 10 filas de 136 plantas (1.360 vides, espaciado 1 m entre plantas, 3 m entre filas), dividido en dos zonas contiguas:
 
-Fila 2 (Control, 100% ETc): Riego normal completo — planta sana, referencia. CWSI 0.05–0.20.
+**Zona de calibración (filas 1–5)** — cada fila recibe un régimen hídrico diferente:
+
+Fila 1 (0% ETc, secano): Sin riego — estrés máximo. CWSI 0.85–1.00.
+Fila 2 (15% ETc): 15% del riego normal — estrés fuerte. CWSI 0.65–0.85.
+Fila 3 (40% ETc): 40% del riego normal — estrés moderado. CWSI 0.45–0.60.
 Fila 4 (65% ETc): 65% del riego normal — estrés leve. CWSI 0.25–0.40.
-Fila 6 (40% ETc): 40% del riego normal — estrés moderado. CWSI 0.45–0.60.
-Fila 8 (15% ETc): 15% del riego normal — estrés fuerte. CWSI 0.65–0.85.
-Fila 10 (0% ETc, secano): Sin riego — estrés máximo. CWSI 0.85–1.00.
-Filas 1, 3, 5, 7, 9: Buffer a 100% ETc — evitan contaminación lateral entre tratamientos.
+Fila 5 (Control, 100% ETc): Riego normal completo — planta sana, referencia. CWSI 0.05–0.20.
+
+**Zona de producción (filas 6–10)** — todas a 100% ETc, con nodos en **modo producción** (pipeline comercial completo: CWSI → HSI → alerta → recomendación de riego). Simulan exactamente las condiciones de un productor real. La fila 5 (100% ETc) actúa como transición natural: mismo régimen que la zona de producción, eliminando cualquier efecto de borde.
+
+El gradiente decreciente de estrés (fila 1 → fila 5) aleja las condiciones extremas de la zona de producción. Los 5 nodos de producción (filas 6–10) bajo condiciones idénticas demuestran reproducibilidad del sistema (CV < 10% entre nodos). La proximidad a la zona de calibración con Ψ_stem medido por Scholander permite validación cruzada directa del producto contra ground truth científico.
 
 Sin esta variedad de condiciones, el modelo solo vería plantas sanas y no aprendería a detectar ni graduar el estrés.
 
@@ -26,21 +31,21 @@ Protocolo de rescate hídrico — protección del viñedo experimental
 
 El diseño experimental incluye un protocolo de corte obligatorio para prevenir daño permanente al viñedo, definido y supervisado por la Dra. Monteoliva (INTA-CONICET):
 
-Criterios de rescate (cualquiera activa riego de emergencia inmediato en la zona afectada):
-· ψ_stem < −1,5 MPa medido con bomba de Scholander en cualquier planta de Zona D o E.
+Criterios de rescate (cualquiera activa riego de emergencia inmediato en la fila afectada):
+· ψ_stem < −1,5 MPa medido con bomba de Scholander en cualquier planta de fila 2 (15% ETc) o fila 1 (0% ETc).
 · Temperatura foliar > 42°C sostenida por más de 30 minutos en condiciones de VPD normal.
-· 14 días consecutivos sin precipitación ni riego en Zona E durante diciembre–febrero.
+· 14 días consecutivos sin precipitación ni riego en fila 1 (0% ETc) durante diciembre–febrero.
 
 Restricciones permanentes del protocolo:
-· Zona E (sin riego) nunca se aplica durante floración (estadio fenológico GDD 280–420). El aborto floral por estrés severo es irreversible en esa temporada.
-· El período máximo de estrés total (Zona E) es de 14 días entre sesiones de medición. Al completar la sesión, se restablece un riego de recuperación mínimo antes de iniciar el siguiente ciclo de estrés.
-· Las zonas de estrés severo (D y E) rotan entre filas en distintas temporadas para que ninguna fila acumule daño permanente por repetición.
+· La fila 1 (0% ETc, secano) nunca aplica régimen sin riego durante floración (estadio fenológico GDD 280–420). El aborto floral por estrés severo es irreversible en esa temporada.
+· El período máximo de estrés total (fila 1) es de 14 días entre sesiones de medición. Al completar la sesión, se restablece un riego de recuperación mínimo antes de iniciar el siguiente ciclo de estrés.
+· Las filas de estrés severo (filas 1 y 2) rotan entre filas en distintas temporadas para que ninguna línea de plantas acumule daño permanente por repetición.
 
 Base científica: ψ_stem < −1,5 MPa sostenido por más de 3–5 días puede generar embolia en xilema de tejido lignificado (daño parcialmente irreversible). El umbral de corte −1,5 MPa está por encima del rango de daño permanente documentado para Malbec (< −2,0 MPa según Pires et al. 2025 y Chaves et al. 2010). Las mediciones Scholander realizadas por Javier y Franco Schiavoni bajo supervisión de la Dra. Monteoliva son el sistema de alerta temprana que activa el rescate.
 
 Cinta de goteo y solenoides
 
-La cinta de plástico con emisores de 2L/hora corre pegada al suelo a lo largo de toda la fila. Los solenoides son válvulas eléctricas — una por zona, 5 en total — que el controlador Rain Bird abre o cierra automáticamente. Cada zona recibe exactamente la cantidad de agua planificada sin intervención manual.
+La cinta de plástico con emisores de 2L/hora corre pegada al suelo a lo largo de toda la fila. Los solenoides son válvulas eléctricas — una por fila, 10 en total (filas 1–10) — que el controlador Rain Bird abre o cierra automáticamente. Cada fila recibe exactamente la cantidad de agua planificada sin intervención manual.
 
 Tensiómetros
 
@@ -60,11 +65,11 @@ Cada vid tiene un número. Permite rastrear la misma planta a lo largo de los me
 
 Túneles plásticos de exclusión de lluvia
 
-Cubiertas transparentes sobre las zonas C y D. Si llueve, el agua no altera el régimen hídrico controlado de esas zonas. Se retiran 2 horas antes de cada sesión para no afectar la temperatura del dosel.
+Cubiertas transparentes sobre las filas 1 y 2 (0% ETc y 15% ETc). Si llueve, el agua no altera el régimen hídrico controlado de esas filas. Se retiran 2 horas antes de cada sesión para no afectar la temperatura del dosel.
 
 Cómo es una sesión de medición
 
-Los 5 nodos están instalados de forma permanente, uno por zona hídrica — no se mueven en ningún momento del proyecto. El gimbal de cada nodo barre automáticamente 7 ángulos cada 15 minutos, 24/7. El asistente de campo no mueve ni reconfigura los nodos durante las sesiones.
+Los 10 nodos están instalados de forma permanente (5 en zona de calibración, uno por régimen hídrico, y 5 en zona de producción, uno por fila) — no se mueven en ningún momento del proyecto. El gimbal de cada nodo barre automáticamente 7 ángulos cada 15 minutos, 24/7. El asistente de campo no mueve ni reconfigura los nodos durante las sesiones.
 
 Condición previa: lluvia reciente abre los estomas y equilibra el ψ_stem artificialmente hacia cero — la medición dejaría de representar el estrés real del régimen asignado. El pluviómetro del nodo registra la lluvia acumulada automáticamente. Umbral adaptado a Colonia Caroya (pedemonte cordobés, suelo limoso-arenoso, ETP alta, lluvias convectivas de verano):
 — < 5 mm en las últimas 48hs: sin restricción — lluvia no significativa, sesión procede normalmente.
@@ -72,9 +77,9 @@ Condición previa: lluvia reciente abre los estomas y equilibra el ψ_stem artif
 — > 10 mm en las últimas 48hs: reprogramar a +48hs mínimo.
 — > 20 mm en las últimas 48hs: reprogramar a +72hs mínimo independientemente de la temperatura.
 
-La noche anterior: verificar en el dashboard que los 5 nodos tienen D_max registrado (diámetro de tronco en máximo de recuperación nocturna, capturado automáticamente entre 5–6am). Anotar D_max de cada zona en la planilla.
+La noche anterior: verificar en el dashboard que los 10 nodos tienen D_max registrado (diámetro de tronco en máximo de recuperación nocturna, capturado automáticamente entre 5–6am). Anotar D_max de cada zona en la planilla.
 
-Entre 10hs y 14hs — medición Scholander + verificación dendrométrica: el asistente recorre los 5 nodos fijos en secuencia. En cada nodo: (1) verifica en la app que el nodo está activo y el gimbal está capturando; (2) toma la lectura Scholander en la vid de referencia de esa zona (pasos 31–37); (3) anota el D_min parcial del día visible en el dashboard. El frame térmico asociado a cada lectura Scholander es el que el nodo capturó en ese intervalo de 15 min — sincronización automática.
+Entre 10hs y 14hs — medición Scholander + verificación dendrométrica: el asistente recorre los 5 nodos de calibración fijos en secuencia. En cada nodo: (1) verifica en la app que el nodo está activo y el gimbal está capturando; (2) toma la lectura Scholander en la vid de referencia de esa zona (pasos 31–37); (3) anota el D_min parcial del día visible en el dashboard. El frame térmico asociado a cada lectura Scholander es el que el nodo capturó en ese intervalo de 15 min — sincronización automática.
 
 A las 16hs: registrar D_min definitivo de cada nodo en la planilla (MDS del día = D_max − D_min, calculado automáticamente por el nodo y visible en el dashboard).
 
@@ -103,28 +108,27 @@ MODO RIEGO — desde tanque acumulado:
     |
     |--[ Vr ABIERTA ]--[ BOMBA ]--[ PRESOSTATO ]---> HEADER PRINCIPAL
          Vf CERRADA                                        |
-                                          .________________|________________.
-                                          |        |        |               |
-                                     [M1+R1]  [M2+R2]  [M3+R3]        [M4+R4]
-                                       FILA1    FILA2    FILA3           FILA4
-                                          |        |        |               |
-                                     [A][B][C] [A][B][C] [A][B][C]   [A][B][C]
-                                     [D][E]    [D][E]    [D][E]      [D][E]
-                                     solenoides Rain Bird (20 en total)
+         .__________________________________________________|____________________________________________________.
+         |          |          |          |          |          |          |          |          |          |
+      [S1+R1]   [S2+R2]   [S3+R3]   [S4+R4]   [S5+R5]   [S6+R6]   [S7+R7]   [S8+R8]   [S9+R9] [S10+R10]
+       FILA1     FILA2     FILA3     FILA4     FILA5     FILA6     FILA7     FILA8     FILA9    FILA10
+        0%ETc    15%ETc    40%ETc    65%ETc   100%ETc   100%ETc   100%ETc   100%ETc   100%ETc  100%ETc
+      (secano) (RDI sev) (RDI mod) (RDI leve)(control) (prod.)   (prod.)   (prod.)   (prod.)  (prod.)
+                          solenoides Rain Bird (10 en total — 1 por fila)
 
 REFERENCIA RAPIDA — VALVULAS A OPERAR:
 
-  Quiero...                    Abrir          Cerrar
-  -------------------------------------------------------
-  Llenar tanque               Vf + BOMBA     Vr, M1-M4
-  Regar todas las filas       Vr + M1+M2+M3+M4   Vf
-  Regar solo fila 2           Vr + M2        Vf, M1, M3, M4
-  Regar filas 1 y 3           Vr + M1+M3     Vf, M2, M4
-  Mas agua en fila 1          Girar R1 a la izquierda (mas caudal)
-  Menos agua en fila 3        Girar R3 a la derecha (menos caudal)
+  Quiero...                         Abrir                    Cerrar
+  -----------------------------------------------------------------------
+  Llenar tanque                    Vf + BOMBA               Vr
+  Regar todas las filas            Vr (Rain Bird controla)  Vf
+  Regar solo fila 2                Vr + S2 en Rain Bird     Vf
+  Regar filas 1 y 3                Vr + S1+S3 en Rain Bird  Vf
+  Mas agua en fila 1               Girar R1 a la izquierda (mas caudal)
+  Menos agua en fila 3             Girar R3 a la derecha (menos caudal)
 
   NUNCA abrir Vf y Vr al mismo tiempo.
-  El Rain Bird controla los solenoides A-E automaticamente segun el programa.
+  El Rain Bird controla los solenoides S1-S10 automaticamente segun el programa.
 
 
 0a. Instalar tanque australiano 20.000 L en ubicación fija. Conectar válvula de boya para llenado automático.
@@ -138,34 +142,34 @@ REFERENCIA RAPIDA — VALVULAS A OPERAR:
     · Vf (LLENADO): canal → bomba → tanque. Abrir solo durante turno de canal. Tiempo de llenado: ~5.5 hs para 20.000 L.
     · Vr (RIEGO): tanque → bomba → header. Abrir solo durante riego. Nunca abrir Vf y Vr al mismo tiempo.
 0d. Etiquetar claramente ambas válvulas en el tablero: "LLENADO — abrir durante turno de canal" y "RIEGO — abrir para regar". Colocar cartel: "NUNCA ABRIR LAS DOS A LA VEZ".
-0e. Instalar una válvula esfera bronce 1" por fila en los ramales del header (M1, M2, M3, M4). Etiquetar: "FILA 1", "FILA 2", etc. Estas válvulas permiten seleccionar qué filas reciben agua en cada sesión de riego.
-0f. Instalar un regulador de caudal inline 16mm aguas abajo de cada válvula de fila (R1, R2, R3, R4). Marcar la escala con rotulador permanente: posición completamente abierta = 100% caudal.
+0e. Instalar una válvula esfera bronce 1" por fila en los ramales del header (M1–M10, una por fila). Etiquetar: "FILA 1", "FILA 2", ..., "FILA 10". Estas válvulas permiten seleccionar qué filas reciben agua en caso de mantenimiento manual.
+0f. Instalar un regulador de caudal inline 16mm aguas abajo de cada válvula de fila (R1–R10, uno por fila). Marcar la escala con rotulador permanente: posición completamente abierta = 100% caudal.
 
 Semana 1 — Tendido de cinta drip y solenoides:
-1. Identificar las 5 filas experimentales (2, 4, 6, 8, 10) y las 5 filas buffer (1, 3, 5, 7, 9).
+1. Identificar las 5 filas de calibración (1, 2, 3, 4, 5) y las 5 filas de producción (6, 7, 8, 9, 10).
 2. Tender la cinta drip 16mm a lo largo de las 10 filas pegada al pie de las vides, asegurada con ganchos al suelo cada 2 metros.
 3. Conectar cada cinta al ramal de fila aguas abajo del regulador de caudal Ri correspondiente.
-4. Instalar 1 solenoide 24VAC en el inicio de cada fila experimental (5 solenoides total). Etiquetar: F2-100%, F4-65%, F6-40%, F8-15%, F10-0%. Las filas buffer se conectan directo al cabezal sin solenoide (riego permanente 100% ETc).
-5. Conectar el cable de 2 hilos de cada solenoide al controlador Rain Bird en el tablero central. Un canal por fila experimental: canal 1 = F2, canal 2 = F4, canal 3 = F6, canal 4 = F8, canal 5 = F10 (cerrado).
-6. Programar el Rain Bird: F2 = 100% ETc referencia, F4 = 65%, F6 = 40%, F8 = 15%, F10 = cerrado (0%). Duración inicial estimada: consultar con Monteoliva según datos meteorológicos locales del primer mes.
+4. Instalar 1 solenoide 24VAC en el inicio de cada fila (10 solenoides total). Etiquetar: F1-0%, F2-15%, F3-40%, F4-65%, F5-100% ETc (calibración), F6–F10-100% ETc (producción).
+5. Conectar el cable de 2 hilos de cada solenoide al controlador Rain Bird 10 zonas en el tablero central. Un canal por fila: canal 1=F1, canal 2=F2, canal 3=F3, canal 4=F4, canal 5=F5, canales 6–10=F6–F10.
+6. Programar el Rain Bird: F1 = cerrado (0% ETc), F2 = 15%, F3 = 40%, F4 = 65%, F5–F10 = 100% ETc. Duración inicial estimada: consultar con Monteoliva según datos meteorológicos locales del primer mes.
 
 Semana 1 — Prueba de caudales:
-7. Modo riego: abrir Vr, cerrar Vf. Abrir solenoide de Fila 2 durante 10 minutos. Caminar la fila y verificar que cada emisor gotea. Registrar emisores obstruidos → reemplazar.
-8. Repetir paso 7 para las 9 filas restantes (experimentales + buffer).
+7. Modo riego: abrir Vr, cerrar Vf. Abrir solenoide de Fila 5 durante 10 minutos. Caminar la fila y verificar que cada emisor gotea. Registrar emisores obstruidos → reemplazar.
+8. Repetir paso 7 para las 9 filas restantes (calibración + producción).
 9. Verificar presión en el extremo más lejano de cada fila con manómetro portátil. Debe ser ≥ 0.8 bar. Si no: ajustar regulador Ri de esa fila.
-9b. Prueba de riego simultáneo completo: abrir M1+M2+M3+M4, activar Zona A desde el Rain Bird. Verificar que todas las filas gotean con presión uniforme. Si alguna fila recibe notablemente más presión que las otras: reducir su regulador Ri hasta equilibrar.
+9b. Prueba de riego simultáneo completo: abrir M1+M2+M3+M4, activar Fila 5 (zona de control) desde el Rain Bird. Verificar que todas las filas gotean con presión uniforme. Si alguna fila recibe notablemente más presión que las otras: reducir su regulador Ri hasta equilibrar.
 
 Semana 2 — Montaje permanente de nodos, extensómetros y paneles:
-10. Instalar 1 soporte de montaje permanente por fila experimental (5 total, uno por fila 2/4/6/8/10): clavar estaca inox 316 punta cónica **en la línea de la hilera**, entre dos plantas consecutivas (~50 cm de cada tronco), en la planta central (planta 68). La estaca va en la línea de plantación (no hacia el pasillo) para protegerla de la maquinaria agrícola. Verificar verticalidad con nivel de burbuja integrado.
+10. Instalar 1 soporte de montaje permanente por fila (10 total, uno por fila 1–10): clavar estaca inox 316 punta cónica **en la línea de la hilera**, entre dos plantas consecutivas (~50 cm de cada tronco), en la planta central (planta 68). La estaca va en la línea de plantación (no hacia el pasillo) para protegerla de la maquinaria agrícola. Verificar verticalidad con nivel de burbuja integrado. Las filas de calibración (1–5) llevan nodos en modo experimental; las filas de producción (6–10) llevan nodos en modo comercial (pipeline completo CWSI → HSI → alerta).
 11. Montar el nodo en la estaca. Orientar la cámara hacia el dosel a 40° con el inclinómetro de la app. Ajustar bracket angular y apretar tornillos M6 inox. El nodo queda fijo en esta posición por toda la campaña — no se retira entre sesiones.
-12. Instalar extensómetro de tronco en la vid de referencia de cada fila experimental: colocar abrazadera de aluminio anodizado a 30 cm de altura, cara norte, sobre la corteza sin herir. Conectar el cable del strain gauge (ADS1231) y el sensor DS18B20 de temperatura al puerto correspondiente del nodo. Verificar con multímetro que la resistencia base está entre 120–350 Ω. Aguardar 24–48h antes de tomar el primer D_max/D_min como válido (período de estabilización del baseline).
+12. Instalar extensómetro de tronco en la vid de referencia de cada fila (10 total, calibración + producción): colocar abrazadera de aluminio anodizado a 30 cm de altura, cara norte, sobre la corteza sin herir. Conectar el cable del strain gauge (ADS1231) y el sensor DS18B20 de temperatura al puerto correspondiente del nodo. Verificar con multímetro que la resistencia base está entre 120–350 Ω. Aguardar 24–48h antes de tomar el primer D_max/D_min como válido (período de estabilización del baseline).
 13. Clavar un panel de referencia de emisividad (chapa negra mate 15×15cm) en el suelo a 20 cm del nodo, visible en el campo visual del gimbal. Permite corregir derive térmica entre sesiones.
-14. Numerar cada vid con estaca en las 5 filas experimentales: Fila 2 en F2-001 a F2-136, Fila 4 en F4-001, etc. Tomar fotos de referencia de cada vid numerada → compartir en Google Drive del proyecto.
-15. Instalar túneles plásticos de exclusión de lluvia parcial sobre las filas 8 (15% ETc) y 10 (0% ETc), al menos en la zona central alrededor del nodo. Asegurar con estacas metálicas cada 3 metros.
+14. Numerar cada vid con estaca en las 10 filas: Fila 1 en F1-001 a F1-136, Fila 2 en F2-001, etc. Tomar fotos de referencia de cada vid numerada → compartir en Google Drive del proyecto.
+15. Instalar túneles plásticos de exclusión de lluvia parcial sobre las filas 1 (0% ETc) y 2 (15% ETc), al menos en la zona central alrededor del nodo. Asegurar con estacas metálicas cada 3 metros.
 
 Semana 2 — Instalación de tensiómetros:
-16. Enterrar 1 tensiómetro por fila experimental en la planta central (~planta 68), a 20 cm de profundidad junto a la vid más representativa. Etiquetar con el número de fila (5 tensiómetros total).
-17. Registrar lectura inicial de los 5 tensiómetros y D_max/D_min inicial de los 5 extensómetros. Fotografiar y subir a planilla.
+16. Enterrar 1 tensiómetro por fila de calibración en la planta central (~planta 68), a 20 cm de profundidad junto a la vid más representativa. Etiquetar con el número de fila (5 tensiómetros total, filas 1–5).
+17. Registrar lectura inicial de los 5 tensiómetros y D_max/D_min inicial de los 10 extensómetros (calibración + producción). Fotografiar y subir a planilla.
 
 Semana 2 — Verificación de conectividad gateway → nube:
 18. Verificar tipo de conectividad instalada: (A) Router 4G Teltonika RUT241 — confirmar LED de señal celular verde fijo, acceder a panel web 192.168.1.1 y verificar operador y nivel de señal (RSSI > −85 dBm). (B) Starlink Mini X — confirmar LED blanco fijo (conectado), verificar en app Starlink latencia < 100 ms y velocidad > 5 Mbps. Registrar tipo de conectividad y nivel de señal en planilla.
@@ -204,7 +208,7 @@ Tarea diaria (5–10 minutos):
 17. Si hay alarma de riego en el Rain Bird: verificar en campo qué solenoide o válvula de fila falló. Reportar.
 
 Tarea semanal (45–60 minutos):
-18. Recorrer las 5 filas experimentales y leer los 5 tensiómetros. Registrar en planilla compartida (Google Sheets): fecha, hora, fila, lectura en centibares.
+18. Recorrer las 10 filas y leer los 5 tensiómetros (filas de calibración 1–5). Registrar en planilla compartida (Google Sheets): fecha, hora, fila, lectura en centibares. Verificar que los 5 nodos de producción (filas 6–10) reportan lecturas consistentes entre sí.
 19. Inspeccionar visualmente: emisores tapados (reemplazar), túneles rotos (parchar con cinta), estacas caídas (volver a clavar).
 20. Fotografiar 1 plano general de cada zona mostrando el estado de las vides. Subir a carpeta del proyecto.
 21. Flush de la cinta drip: abrir el tapón del extremo de cada fila 30 segundos con el solenoide abierto para limpiar sedimentos.
@@ -218,31 +222,31 @@ DÍA ANTERIOR A LA SESIÓN:
 25. Preparar el kit Scholander: cilindro de nitrógeno (verificar que tenga presión > 50 bar), cámara de presión, lupa 10×, tijera de podar limpia y afilada, bolsitas de plástico zip × 10, planilla impresa, lapicera, linterna.
 
 MAÑANA DE LA SESIÓN — Verificación inicial (8:30–9:00hs):
-26. A las 8:30hs: abrir la app del dashboard. Verificar que los 5 nodos están activos y transmitiendo. Anotar el D_max de cada zona registrado durante la madrugada (valor automático, ya en el dashboard). Si algún nodo no tiene D_max del día: anotar incidencia y notificar a César por WhatsApp.
-27. A las 8:45hs: leer los tensiómetros de las 5 zonas — anotar lecturas de partida en la planilla.
+26. A las 8:30hs: abrir la app del dashboard. Verificar que los 10 nodos están activos y transmitiendo. Anotar el D_max de cada fila de calibración registrado durante la madrugada (valor automático, ya en el dashboard). Verificar que los 5 nodos de producción (filas 6–10) reportan lecturas consistentes entre sí. Si algún nodo no tiene D_max del día: anotar incidencia y notificar a César por WhatsApp.
+27. A las 8:45hs: leer los tensiómetros de las 5 filas de calibración — anotar lecturas de partida en la planilla.
 28. Los nodos capturan automáticamente 7 ángulos cada 15 min — no requieren intervención. Verificar en la app que el gimbal de cada nodo está operando (ícono activo).
 
 MEDICIÓN SCHOLANDER — Ventana 10:00–13:00hs:
-31. Zona A — vid F1-010 (vid de referencia de la zona, siempre la misma): con la tijera limpia cortar una hoja adulta y sana de la parte media del dosel (no de la punta ni de hojas sombreadas). Hacer el corte limpio de un golpe. Inmediatamente envolver el peciolo cortado en la bolsita plástica y cerrar.
+31. Fila 5 (100% ETc) — vid F5-068 (vid de referencia de la fila, siempre la misma, planta central marcada con estaca): con la tijera limpia cortar una hoja adulta y sana de la parte media del dosel (no de la punta ni de hojas sombreadas). Hacer el corte limpio de un golpe. Inmediatamente envolver el peciolo cortado en la bolsita plástica y cerrar.
 32. Abrir la cámara Scholander. Introducir la hoja con el peciolo atravesando el orificio del sello de goma. Apretar la tapa hasta que el sello quede hermético (sin apretar de más — verificar que la hoja no quede aplastada).
 33. Abrir la válvula del cilindro de nitrógeno MUY LENTAMENTE (vuelta completa en 10 segundos). La presión debe subir a no más de 0.05 bar por segundo.
 34. Con la lupa apuntada al peciolo cortado: observar el extremo del corte. En cuanto aparezca la primera gotita de savia brillante: cerrar la válvula de nitrógeno de inmediato.
-35. Leer el manómetro. Anotar en la planilla: Zona A · Vid F1-010 · Hora: HH:MM · Ψstem = −X.X bar (el valor es negativo; más negativo = más estrés).
+35. Leer el manómetro. Anotar en la planilla: Fila 5 · Vid F5-068 · Hora: HH:MM · Ψstem = −X.X bar (el valor es negativo; más negativo = más estrés).
 36. Liberar la presión abriendo la válvula de purga. Abrir la cámara, retirar la hoja.
-37. Repetir pasos 31–36 para: Zona B (vid F1-028), Zona C (vid F1-046), Zona D (vid F1-064), Zona E (vid F1-082). Siempre la misma vid de referencia en cada zona, siempre entre las 10:00 y las 13:00hs (ventana de potencial hídrico de tallo estabilizado).
+37. Repetir pasos 31–36 para: Fila 4 (65% ETc, vid F4-068), Fila 3 (40% ETc, vid F3-068), Fila 2 (15% ETc, vid F2-068), Fila 1 (0% ETc, vid F1-068). Siempre la misma vid de referencia de cada fila (planta central ~68), siempre entre las 10:00 y las 13:00hs (ventana de potencial hídrico de tallo estabilizado).
 38. Fotografiar cada hoja medida con el celular junto a la planilla que muestra el valor anotado — respaldo visual del dato.
 
 VENTANA 12hs:
-39. Leer tensiómetros de las 5 zonas — anotar en planilla.
+39. Leer tensiómetros de las 5 filas de calibración — anotar en planilla.
 40. Revisar en la app el D_min parcial de cada nodo (la contracción máxima suele ocurrir entre 13–14hs — el valor va actualizándose en tiempo real).
 
 VENTANA 16hs:
-41. Registrar D_min definitivo de cada nodo en la planilla — el mínimo del día ya quedó asentado automáticamente. Calcular MDS del día = D_max − D_min para cada zona y anotar.
+41. Registrar D_min definitivo de cada nodo en la planilla — el mínimo del día ya quedó asentado automáticamente. Calcular MDS del día = D_max − D_min para cada fila de calibración y anotar.
 42. Leer tensiómetros finales — anotar en planilla.
 
 CIERRE DE SESIÓN:
 43. Completar la planilla digital en Google Sheets: ingresar los 5 valores de Ψstem con hora exacta, las lecturas de tensiómetros de los 3 momentos y cualquier incidencia (nube durante captura, vid con síntoma inusual, emisor tapado encontrado).
-44. Enviar resumen por WhatsApp a César Schiavoni: "Sesión #N completada. Ψstem: A=−X.X / B=−X.X / C=−X.X / D=−X.X / E=−X.X bar. MDS: A=XXµm / B=XXµm / C=XXµm / D=XXµm / E=XXµm. Sin incidencias / Incidencia: [detalle]."
+44. Enviar resumen por WhatsApp a César Schiavoni: "Sesión #N completada. Ψstem: F5=−X.X / F4=−X.X / F3=−X.X / F2=−X.X / F1=−X.X bar. MDS: F5=XXµm / F4=XXµm / F3=XXµm / F2=XXµm / F1=XXµm. Sin incidencias / Incidencia: [detalle]."
 45. Guardar el cilindro de nitrógeno en posición vertical en lugar seco. Limpiar la cámara Scholander con paño húmedo y guardar en su estuche.
 
 CRITERIOS DE CANCELACIÓN Y REPROGRAMACIÓN:
@@ -305,15 +309,15 @@ Un dendrómetro es un sensor que mide el diámetro del tronco de la planta con p
 
 Punto clave sobre la interpretación: el dendrómetro no mide Ψstem directamente. Mide el diámetro del tronco, que se convierte en Ψstem a través de una función de calibración de dos parámetros establecida en la Sesión 1 con la bomba de Scholander. Sin calibración, el dendrómetro entrega un número adimensional sin utilidad. Con calibración, es un monitor continuo de estrés que opera los 9 meses sin intervención especializada.
 
-Rango de utilidad por zona hídrica:
+Rango de utilidad por fila hídrica:
 
-Zona A (100% ETc): señal limpia, excelente correlación con Scholander. Proxy confiable.
-Zona B (65% ETc): señal buena, correlación confiable con corrección térmica mínima.
-Zona C (40% ETc): señal usable, requiere corrección de temperatura y de histeresis.
-Zona D (15% ETc): señal distorsionada bajo estrés fuerte. El Scholander sigue siendo indispensable.
-Zona E (sin riego): señal no confiable. Solo Scholander directo en cada sesión.
+Fila 5 (100% ETc): señal limpia, excelente correlación con Scholander. Proxy confiable.
+Fila 4 (65% ETc): señal buena, correlación confiable con corrección térmica mínima.
+Fila 3 (40% ETc): señal usable, requiere corrección de temperatura y de histeresis.
+Fila 2 (15% ETc): señal distorsionada bajo estrés fuerte. El Scholander sigue siendo indispensable.
+Fila 1 (sin riego): señal no confiable. Solo Scholander directo en cada sesión.
 
-Los dendrómetros no reemplazan el Scholander en las zonas de estrés fuerte (D y E), que son las más valiosas para el entrenamiento del modelo. Reemplazan las visitas de Scholander en las zonas A, B y C durante los meses entre sesiones programadas.
+Los dendrómetros no reemplazan el Scholander en las filas de estrés fuerte (filas 1 y 2), que son las más valiosas para el entrenamiento del modelo. Reemplazan las visitas de Scholander en las filas 3, 4 y 5 durante los meses entre sesiones programadas.
 
 Materiales necesarios — kit completo para 6 dendrómetros
 
@@ -329,12 +333,12 @@ Costo total del kit de 5 dendrómetros: USD 120-160 según el tipo de sensor ele
 
 Instalación paso a paso
 
-El técnico de campo instala los 5 dendrómetros en una sola mañana de trabajo (~2.5 horas). Monteoliva o César Schiavoni verifican la instalación el día de la Sesión 1.
+El técnico de campo instala los 10 dendrómetros en una sola jornada de trabajo (~5 horas). Monteoliva o César Schiavoni verifican la instalación el día de la Sesión 1.
 
-Vides a instrumentar: 1 por fila experimental (Filas 2, 4, 6, 8 y 10) = 5 unidades. Cada dendrómetro se instala en la vid central de la fila (planta ~68), la misma vid donde se posiciona el nodo sensor HydroVision.
+Vides a instrumentar: 1 por fila (Filas 1–10) = 10 unidades. Cada dendrómetro se instala en la vid central de la fila (planta ~68), la misma vid donde se posiciona el nodo sensor HydroVision.
 
-Paso D1 — Seleccionar la vid representativa de cada fila experimental.
-Criterio: vid ubicada en el centro de la fila (~planta 68), sin síntomas de enfermedad, tronco recto y sin heridas visibles, grosor de tronco entre 3 y 6 cm. Marcar con cinta de colores: Fila 2 = azul (100% ETc), Fila 4 = verde (65% ETc), Fila 6 = amarillo (40% ETc), Fila 8 = rojo (15% ETc), Fila 10 = blanco (0% ETc). Anotar el número de estaca de cada vid elegida en la planilla del proyecto.
+Paso D1 — Seleccionar la vid representativa de cada fila.
+Criterio: vid ubicada en el centro de la fila (~planta 68), sin síntomas de enfermedad, tronco recto y sin heridas visibles, grosor de tronco entre 3 y 6 cm. Marcar con cinta de colores — zona de calibración: Fila 1 = blanco (0% ETc), Fila 2 = rojo (15% ETc), Fila 3 = amarillo (40% ETc), Fila 4 = verde (65% ETc), Fila 5 = azul (100% ETc). Zona de producción: Filas 6–10 = azul (todas 100% ETc, nodos en modo comercial). Anotar el número de estaca de cada vid elegida en la planilla del proyecto.
 Por qué importa: usar siempre la misma vid garantiza que las variaciones medidas reflejan el estado hídrico de esa planta a lo largo del tiempo, y no la variabilidad natural entre individuos distintos. Cambiar de vid entre sesiones invalida la serie temporal de datos.
 
 Paso D2 — Limpiar la corteza en el punto de contacto.
@@ -427,11 +431,11 @@ Retirar la tarjeta SD de cada datalogger y copiar los archivos CSV al celular. D
 Por qué importa: la foto del contacto permite al investigador detectar de forma remota si el sensor se desplazó antes de que la deriva contamine semanas de datos. La verificación del rango ADC previene la pérdida silenciosa de datos por saturación sin que nadie lo note.
 
 Acción semanal integrada al protocolo existente:
-El Paso 19 del protocolo de campo (Sección 11A.1) ya incluye el recorrido visual de las 5 filas experimentales. Durante ese recorrido verificar que ninguna abrazadera de dendrómetro se aflojó, que el cable del sensor no está dañado, y que la tapa de la caja estanca no tiene agua adentro. No requiere tiempo adicional.
+El Paso 19 del protocolo de campo (Sección 11A.1) ya incluye el recorrido visual de las 10 filas. Durante ese recorrido verificar que ninguna abrazadera de dendrómetro se aflojó, que el cable del sensor no está dañado, y que la tapa de la caja estanca no tiene agua adentro. No requiere tiempo adicional.
 
 Flujo de responsabilidades
 
-Técnico de campo: instala los 5 sensores en una mañana (Semana 1). Realiza la descarga mensual (15 min/mes). Realiza la inspección visual semanal durante el recorrido ya planificado. No necesita interpretar los datos.
+Técnico de campo: instala los 10 sensores en una jornada (Semana 1). Realiza la descarga mensual (15 min/mes). Realiza la inspección visual semanal durante el recorrido ya planificado. No necesita interpretar los datos.
 
 el investigador Art. 32: recibe los datos crudos en CSV, aplica la corrección térmica, mantiene actualizadas las 5 funciones de calibración, alimenta el modelo GP con los datos entre sesiones, detecta y corrige derivas, y alerta ante anomalías. Toda esta tarea se ejecuta de forma remota.
 
@@ -439,9 +443,9 @@ Monteoliva: en las Sesiones 1-4 realiza las mediciones Scholander de inicializac
 
 Resultado del sistema combinado
 
-Con los 5 dendrómetros operativos y las 4 sesiones Scholander optimizadas por OED, el proyecto obtiene:
+Con los 10 dendrómetros operativos y las 4 sesiones Scholander optimizadas por OED, el proyecto obtiene:
 
-Cobertura continua de Ψstem estimado en las 5 filas experimentales (Filas 2, 4, 6, 8, 10) durante los 9 meses de temporada, con resolución de 10 minutos.
+Cobertura continua de Ψstem estimado en las 10 filas (5 de calibración + 5 de producción) durante los 9 meses de temporada, con resolución de 10 minutos.
 Medición directa Scholander de alta precisión en las 4 sesiones clave, cubriendo los 5 regímenes hídricos (100% ETc a sin riego).
 Un dataset de entrenamiento con 120 mediciones Scholander distribuidas en los momentos de máxima información estadística, más señal continua de dendrómetros para interpolar el modelo entre sesiones.
 Documentación auditada de la deriva y corrección de cada sensor, con verificación cruzada en cada sesión, cumpliendo el requisito mínimo para publicación científica.
@@ -456,7 +460,7 @@ El protocolo de muestreo desarrollado en Colonia Caroya está optimizado para Ma
 
 Resumen rápido: qué cambia y qué no cambia
 
-No cambia: la estructura del experimento (5 zonas hídricas, brackets, gimbal, protocolo Scholander, dendrómetros, OED de 4 sesiones, Active Learning). El hardware es idéntico en cualquier viñedo.
+No cambia: la estructura del experimento (5 filas de calibración con regímenes hídricos diferenciados, brackets, gimbal, protocolo Scholander, dendrómetros, OED de 4 sesiones, Active Learning). El hardware es idéntico en cualquier viñedo.
 
 Cambia: los parámetros numéricos del modelo que dependen de la fisiología de la variedad y del clima de la región. Son 6 ajustes, todos realizados por el investigador Art. 32 de forma remota antes o durante la Sesión 1 en el nuevo sitio.
 
@@ -464,7 +468,7 @@ Ajuste 1 — Línea base CWSI de la nueva variedad (parámetros a y b)
 
 Qué es: la función que define la temperatura de dosel esperada en una planta sin estrés en función de la VPD (ΔT_LL = a × VPD + b). Cada variedad tiene valores distintos porque difieren en conductancia estomática, densidad foliar y respuesta al déficit de presión de vapor.
 Por qué cambia entre variedades: Malbec tiene alta sensilibilidad estomática — sus estomas se cierran rápido ante VPD elevada, lo que eleva la temperatura del dosel incluso con agua disponible. Cabernet Sauvignon es isohydric con comportamiento similar; Torrontés y Chardonnay son anisohydric y mantienen estomas más abiertos bajo estrés. Un modelo calibrado para Malbec sobreestimaría el estrés en Torrontés con los mismos parámetros.
-Qué datos se necesitan: al menos 8-10 pares (VPD, ΔT_dosel) medidos en plantas sin estrés de la nueva variedad bajo condiciones de alta VPD (VPD > 1.5 kPa). Estos datos se obtienen en la Sesión 1 del nuevo sitio midiendo solo la Zona A (100% ETc) en 3 ventanas horarias distintas.
+Qué datos se necesitan: al menos 8-10 pares (VPD, ΔT_dosel) medidos en plantas sin estrés de la nueva variedad bajo condiciones de alta VPD (VPD > 1.5 kPa). Estos datos se obtienen en la Sesión 1 del nuevo sitio midiendo solo la fila de control (100% ETc) en 3 ventanas horarias distintas.
 Quién lo ajusta: el investigador Art. 32, antes del inicio de la Sesión 2 en el nuevo sitio. Tiempo requerido: 2-4 horas de ajuste del modelo.
 Fuente de referencia: valores publicados para las principales variedades mediterráneas (Jones et al., 2002; Bellvert et al., 2016) pueden usarse como punto de partida, pero siempre deben validarse con datos propios de la Sesión 1 porque los valores cambian también con el portainjerto y el suelo.
 
@@ -507,7 +511,7 @@ Tabla resumen de ajustes por sitio nuevo
 
 Ajuste / Quién ajusta / Cuándo / Datos necesarios:
 
-Línea base CWSI (a, b) / el investigador Art. 32 / Antes de Sesión 2 / 8-10 pares (VPD, ΔT) en Zona A de la Sesión 1.
+Línea base CWSI (a, b) / el investigador Art. 32 / Antes de Sesión 2 / 8-10 pares (VPD, ΔT) en fila de control (100% ETc) de la Sesión 1.
 Calendario fenológico de sesiones / el investigador Art. 32 / Antes de iniciar el sitio / Calendario histórico de la variedad en esa región.
 Coeficiente de corrección térmica dendrómetro / el investigador Art. 32 / Antes de procesar Sesión 1 / Temperatura horaria del sitio, 2 semanas previas.
 Umbrales Ψstem por variedad / Monteoliva + el investigador / Antes de etiquetar el dataset / Bibliografía de la variedad + 2 puntos propios de Sesión 1.

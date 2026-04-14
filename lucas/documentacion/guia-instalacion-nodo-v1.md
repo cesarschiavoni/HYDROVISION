@@ -12,25 +12,28 @@
 **Responsabilidad de Javier:** configurar el riego de cada fila segun el % asignado y hacer
 ajustes durante la temporada segun el nodo y el Scholander.
 
-**Responsabilidad de Lucas:** instalacion fisica de los 5 nodos (estaca, carcasa, sensores,
+**Responsabilidad de Lucas:** instalacion fisica de los 10 nodos (estaca, carcasa, sensores,
 conexiones, firmware). Lucas verifica que cada nodo envie datos al backend.
 
 ### Tu tarea: Configurar el riego por fila
 
-Tienes 10 filas. Cada una recibe un % de agua diferente:
+Tienes 10 filas divididas en dos zonas:
 
-| Fila | % de riego | ¿Tiene nodo? | Tu acción |
-|------|-----------|-------------|-----------|
-| 1 | 100% | No | Riego normal |
-| 2 | 100% | **Sí (Nodo 1)** | Riego normal — es la referencia |
-| 3 | 100% | No | Riego normal |
-| 4 | 75% | **Sí (Nodo 2)** | Riego al 75% de lo normal |
-| 5 | 100% | No | Riego normal |
-| 6 | 50% | **Sí (Nodo 3)** | Riego al 50% de lo normal |
-| 7 | 100% | No | Riego normal |
-| 8 | 25% | **Sí (Nodo 4)** | Riego al 25% de lo normal |
-| 9 | 100% | No | Riego normal |
-| 10 | 0% | **Sí (Nodo 5)** | **Sin riego** (secano total) |
+**Zona de CALIBRACIÓN (Filas 1–5):** cada fila tiene un régimen hídrico distinto para calibrar el sistema.
+**Zona de PRODUCCIÓN (Filas 6–10):** todas al 100% ETc, nodos en modo comercial autónomo (pipeline completo CWSI→HSI→alerta→recomendación de riego).
+
+| Fila | % de riego | Zona | ¿Tiene nodo? | Tu acción |
+|------|-----------|------|-------------|-----------|
+| 1 | 0% | Calibración | **Sí (Nodo 1)** | **Sin riego** (secano total) |
+| 2 | 15% | Calibración | **Sí (Nodo 2)** | Riego al 15% de lo normal |
+| 3 | 40% | Calibración | **Sí (Nodo 3)** | Riego al 40% de lo normal |
+| 4 | 65% | Calibración | **Sí (Nodo 4)** | Riego al 65% de lo normal |
+| 5 | 100% | Calibración | **Sí (Nodo 5)** | Riego normal — es la referencia de calibración |
+| 6 | 100% | Producción | **Sí (Nodo 6)** | Riego normal — modo comercial autónomo |
+| 7 | 100% | Producción | **Sí (Nodo 7)** | Riego normal — modo comercial autónomo |
+| 8 | 100% | Producción | **Sí (Nodo 8)** | Riego normal — modo comercial autónomo |
+| 9 | 100% | Producción | **Sí (Nodo 9)** | Riego normal — modo comercial autónomo |
+| 10 | 100% | Producción | **Sí (Nodo 10)** | Riego normal — modo comercial autónomo |
 
 ### Como se configura el % de riego
 
@@ -44,16 +47,16 @@ Tienes 10 filas. Cada una recibe un % de agua diferente:
    - Convierte a minutos: 2.3 h × 60 = **140 minutos = tiempo base**
 
 2. **Programa cada fila en el controlador Rain Bird:**
-   - Fila 1: 140 min (100%)
-   - Fila 2: 140 min (100%) — **Control, mira el nodo para verificar**
-   - Fila 3: 140 min (100%)
-   - Fila 4: 105 min (75% de 140)
-   - Fila 5: 140 min (100%)
-   - Fila 6: 70 min (50% de 140)
-   - Fila 7: 140 min (100%)
-   - Fila 8: 35 min (25% de 140)
-   - Fila 9: 140 min (100%)
-   - Fila 10: 0 min (0% — solenoide siempre cerrado)
+   - Fila 1: 0 min (0% — solenoide siempre cerrado, secano total)
+   - Fila 2: 21 min (15% de 140)
+   - Fila 3: 56 min (40% de 140)
+   - Fila 4: 91 min (65% de 140)
+   - Fila 5: 140 min (100%) — **Control calibración, mira el nodo para verificar**
+   - Fila 6: 140 min (100%) — modo producción
+   - Fila 7: 140 min (100%) — modo producción
+   - Fila 8: 140 min (100%) — modo producción
+   - Fila 9: 140 min (100%) — modo producción
+   - Fila 10: 140 min (100%) — modo producción
 
 3. **Ajusta semanalmente:**
    - El nodo calcula la ETc cada día con sus sensores
@@ -69,10 +72,10 @@ Cada 2 semanas, durante la sesión Scholander (si hay):
 2. **Observa el CWSI del nodo** en el dashboard (en tiempo real)
 3. **Compara:** si Scholander dice "muy seco" pero el nodo no lo detecta → ajusta
 
-**Ejemplos de ajuste:**
-- Si Fila 4 (75%) está muy seca → baja al 60%
-- Si Fila 8 (25%) está menos seca de lo esperado → prueba al 15%
-- Si Fila 10 (0%) muestra que las plantas aguantan bien → prueba 5% agua de rescate
+**Ejemplos de ajuste (solo zona de calibración, filas 1–5):**
+- Si Fila 4 (65%) está muy seca → baja al 50%
+- Si Fila 2 (15%) está menos seca de lo esperado → prueba al 10%
+- Si Fila 1 (0%) muestra que las plantas sufren demasiado → prueba 5% agua de rescate
 
 Anota todos los cambios en una planilla (fecha, fila, % anterior, % nuevo, razón).
 
@@ -115,28 +118,28 @@ Las secciones siguientes (0-9) describen la instalacion fisica de los nodos.
 
 ### Estructura del vinedo experimental
 
-El vinedo tiene **10 filas de 136m** (136 plantas por fila, espaciado 1m entre plantas, 3m entre filas).
-Cada fila recibe un **unico regimen hidrico** (la fila completa se riega igual). Las filas de
-tratamiento (65%, 40%, 15%, 0%) se intercalan con filas de control (100% ETc) que actuan como
-**buffer hidrico** — evitan que el movimiento lateral de agua en el suelo entre filas contiguas
-contamine los tratamientos.
+El vinedo tiene **10 filas de 136m** (136 plantas por fila, espaciado 1m entre plantas, 3m entre filas),
+divididas en dos zonas:
+
+- **Zona de CALIBRACIÓN (Filas 1–5):** 5 regímenes hídricos distintos (0%, 15%, 40%, 65%, 100% ETc) para calibrar el modelo CWSI/HSI contra Scholander.
+- **Zona de PRODUCCIÓN (Filas 6–10):** todas al 100% ETc, nodos en modo comercial autónomo con pipeline completo CWSI→HSI→alerta→recomendación de riego.
 
 ### Mapa de filas — regimen hidrico y nodos
 
-| Fila | Tratamiento | Tipo | Nodo | Posicion nodo |
+| Fila | Tratamiento | Zona | Nodo | Posicion nodo |
 |------|-------------|------|------|---------------|
-| 1 | 100% ETc | Buffer | — | — |
-| 2 | 100% ETc | **Control** | **Nodo 1** | Planta 68 (centro) |
-| 3 | 100% ETc | Buffer | — | — |
-| 4 | 65% ETc | **Tratamiento** | **Nodo 2** | Planta 68 (centro) |
-| 5 | 100% ETc | Buffer | — | — |
-| 6 | 40% ETc | **Tratamiento** | **Nodo 3** | Planta 68 (centro) |
-| 7 | 100% ETc | Buffer | — | — |
-| 8 | 15% ETc | **Tratamiento** | **Nodo 4** | Planta 68 (centro) |
-| 9 | 100% ETc | Buffer | — | — |
-| 10 | 0% (secano) | **Tratamiento** | **Nodo 5** | Planta 68 (centro) |
+| 1 | 0% (secano) | **Calibración** | **Nodo 1** | Planta 68 (centro) |
+| 2 | 15% ETc | **Calibración** | **Nodo 2** | Planta 68 (centro) |
+| 3 | 40% ETc | **Calibración** | **Nodo 3** | Planta 68 (centro) |
+| 4 | 65% ETc | **Calibración** | **Nodo 4** | Planta 68 (centro) |
+| 5 | 100% ETc | **Calibración** | **Nodo 5** | Planta 68 (centro) |
+| 6 | 100% ETc | **Producción** | **Nodo 6** | Planta 68 (centro) |
+| 7 | 100% ETc | **Producción** | **Nodo 7** | Planta 68 (centro) |
+| 8 | 100% ETc | **Producción** | **Nodo 8** | Planta 68 (centro) |
+| 9 | 100% ETc | **Producción** | **Nodo 9** | Planta 68 (centro) |
+| 10 | 100% ETc | **Producción** | **Nodo 10** | Planta 68 (centro) |
 
-**Total: 5 nodos instalados.** Filas buffer (1, 3, 5, 7, 9) = sin nodo. Riego independiente por fila con solenoides Rain Bird.
+**Total: 10 nodos permanentes (5 calibración + 5 producción).** Riego independiente por fila con solenoides Rain Bird.
 
 ### Regla de ubicacion del nodo dentro de la fila
 
@@ -146,10 +149,10 @@ Cada nodo se instala en la **planta central de la fila** (~planta 68 de 136). La
 - Hay efecto borde por exposicion diferencial al viento y la radiacion
 - El pixel Sentinel-2 (10m) puede mezclar con la cabecera o el pasillo
 
-### Por que 1 nodo por fila de tratamiento y no 1 nodo por planta
+### Por que 1 nodo por fila y no 1 nodo por planta
 
 El objetivo del nodo NO es medir cada planta individualmente — es **caracterizar la respuesta
-hidrica de cada regimen de riego**. Un nodo por nivel de tratamiento es suficiente porque:
+hidrica de cada regimen de riego**. Un nodo por fila es suficiente porque:
 
 1. **Representatividad espacial del sensor.** La camara termica MLX90640 (32x24 px) a 2m del
    canopeo cubre un area de ~3m x 2m con 28+ pixeles foliares. Eso promedia la temperatura
@@ -163,8 +166,8 @@ hidrica de cada regimen de riego**. Un nodo por nivel de tratamiento es suficien
    la diferencia entre tratamientos, que es lo que importa para calibrar el sistema.
 
 3. **Costo vs. informacion.** 1 nodo = USD 149 COGS. 136 nodos por fila x 10 filas = 1.360
-   nodos = USD 202.640 solo en hardware. La informacion adicional de 1.359 nodos extra vs.
-   5 nodos bien ubicados es marginal — el estres se comporta de forma uniforme dentro de
+   nodos = USD 202.640 solo en hardware. La informacion adicional de 1.350 nodos extra vs.
+   10 nodos bien ubicados es marginal — el estres se comporta de forma uniforme dentro de
    cada regimen de riego.
 
 4. **Validacion cruzada.** El protocolo Scholander (bomba de presion) mide 10 plantas/fila
@@ -173,8 +176,8 @@ hidrica de cada regimen de riego**. Un nodo por nivel de tratamiento es suficien
    sesion, se investiga la causa (obstruccion de gotero, raiz enferma, etc.).
 
 5. **Escalabilidad comercial.** En produccion (Tier 1), la densidad es 1 nodo/10 ha.
-   El viñedo experimental ya esta sobre-densificado (5 nodos en 0.37 ha = 1 nodo/0.07 ha)
-   para tener resolucion por tratamiento. Mas nodos no mejoran la calibracion del modelo.
+   El viñedo experimental ya esta sobre-densificado (10 nodos en 0.37 ha = 1 nodo/0.037 ha)
+   para tener resolucion por tratamiento y validacion en modo produccion.
 
 ### Configuracion del porcentaje de riego por fila
 
@@ -188,21 +191,21 @@ El porcentaje de riego se refiere al **% de la ETc** (evapotranspiracion del cul
 Cada fila tiene su propia **valvula solenoide Rain Bird 24VAC** controlada por un
 **controlador Rain Bird de 10 zonas**. El porcentaje se configura ajustando el **tiempo de riego**:
 
-| Fila | Tratamiento | Tiempo de riego | Ejemplo (si 100% = 60 min/dia) |
-|------|-------------|-----------------|-------------------------------|
-| 1, 2, 3, 5, 7, 9 | 100% ETc | T_100 = ETc / caudal_gotero | 60 min/dia |
-| 4 | 65% ETc | T_100 × 0.65 | 39 min/dia |
-| 6 | 40% ETc | T_100 × 0.40 | 24 min/dia |
-| 8 | 15% ETc | T_100 × 0.15 | 9 min/dia |
-| 10 | 0% (secano) | Solenoide cerrado permanente | 0 min/dia |
+| Fila | Tratamiento | Zona | Tiempo de riego | Ejemplo (si 100% = 60 min/dia) |
+|------|-------------|------|-----------------|-------------------------------|
+| 1 | 0% (secano) | Calibración | Solenoide cerrado permanente | 0 min/dia |
+| 2 | 15% ETc | Calibración | T_100 × 0.15 | 9 min/dia |
+| 3 | 40% ETc | Calibración | T_100 × 0.40 | 24 min/dia |
+| 4 | 65% ETc | Calibración | T_100 × 0.65 | 39 min/dia |
+| 5, 6, 7, 8, 9, 10 | 100% ETc | Calib. (F5) / Producción (F6–10) | T_100 = ETc / caudal_gotero | 60 min/dia |
 
 **Calculo del tiempo base T_100:**
 
 La cinta de goteo tiene emisores cada 1m con caudal de 1.5 L/h. Cada planta recibe 1 emisor.
 - Ejemplo: si ETc del dia = 3.5 L/planta, entonces T_100 = 3.5 / 1.5 = 2.3 horas = 140 min.
 - Se programa en el controlador Rain Bird como 2 riegos de 70 min (manana y tarde).
-- Para fila 3 (75%): 140 × 0.75 = 105 min (2 × 52 min).
-- Para fila 6 (50%): 140 × 0.50 = 70 min (1 × 70 min).
+- Para fila 4 (65%): 140 × 0.65 = 91 min (2 × 45 min).
+- Para fila 3 (40%): 140 × 0.40 = 56 min (1 × 56 min).
 
 **Con nodo Tier 3 (automatico):** el nodo calcula ETc en tiempo real a partir de sus propios
 sensores meteorologicos y ajusta el tiempo de riego automaticamente via GPIO → rele SSR →
@@ -210,7 +213,7 @@ solenoide Rain Bird. El productor solo configura el % de ETc deseado en el dashb
 sistema calcula y aplica el tiempo de apertura del solenoide en cada ciclo de riego.
 
 **Frecuencia de actualizacion:** el controlador Rain Bird se reprograma semanalmente segun
-la ETc acumulada de la semana (dato del nodo control, fila 1). En los meses de maxima
+la ETc acumulada de la semana (dato del nodo control, fila 5). En los meses de maxima
 demanda (diciembre-febrero), ETc puede variar de 4 a 7 L/planta/dia — el tiempo de riego
 se ajusta proporcionalmente.
 

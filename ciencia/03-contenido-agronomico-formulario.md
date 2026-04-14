@@ -47,10 +47,10 @@ El sistema usa como punto de partida los coeficientes de Bellvert et al. (2016) 
 **Plan de calibración en TRL 4:**  
 El protocolo experimental de Colonia Caroya generará los primeros coeficientes CWSI calibrados para *Vitis vinifera* cv. Malbec en condiciones de Córdoba (700 m s.n.m., suelo franco-limoso, ETP 850 mm/año, VPD típico 1.8–4.5 kPa en diciembre–febrero). El método de calibración es el estándar NWSB (Non-Water-Stressed Baseline) de Jackson et al. (1981):
 
-1. Medir Ψ_stem de 4–6 plantas de Zona A (100% ETc, sin estrés) en ≥ 30 condiciones distintas de VPD durante la temporada (objetivo: cubrir el rango completo 1.0–5.5 kPa del verano cordobés).
+1. Medir Ψ_stem de 4–6 plantas de Fila 5 (100% ETc, sin estrés) en ≥ 30 condiciones distintas de VPD durante la temporada (objetivo: cubrir el rango completo 1.0–5.5 kPa del verano cordobés).
 2. Registrar simultáneamente (T_foliar, T_aire, VPD) para cada medición.
 3. Ajustar por regresión lineal la línea base ΔT_LL vs. VPD: coeficientes a (intercepto) y b (pendiente).
-4. Verificar que las plantas de Zona A mantienen Ψ_stem > −0.8 MPa durante todas las sesiones (condición de "sin estrés" para la calibración del ΔT_LL).
+4. Verificar que las plantas de Fila 5 mantienen Ψ_stem > −0.8 MPa durante todas las sesiones (condición de "sin estrés" para la calibración del ΔT_LL).
 
 **Varietal vs. Coeficientes provisionales (hasta calibración TRL 4):**
 
@@ -101,7 +101,7 @@ El protocolo experimental de Colonia Caroya generará los primeros coeficientes 
 - **Responsable principal:** Dra. M. Monteoliva (INTA-CONICET)
 - **Co-ejecutores:** César Schiavoni, Javier Schiavoni, Franco Schiavoni
 - **Duración:** 2 días de trabajo en campo (incluye desplazamiento desde Córdoba)
-- **Descripción:** La Dra. Monteoliva conduce la primera sesión de medición Scholander sobre las 5 zonas hídricas del viñedo experimental. Simultáneamente, realiza la calibración inicial de los dendrómetros de tronco (primera lectura de referencia de todos los sensores) y capacita a Javier Schiavoni en el manejo de la bomba de presión para las sesiones posteriores. Se obtienen los primeros pares calibrados (Ψ_stem, CWSI) del dataset de entrenamiento. Los coeficientes CWSI provisionales (Bellvert 2016) se ajustan con los primeros datos de la línea base sin estrés (Zona A, 100% ETc) bajo las condiciones de VPD del pedemonte cordobés.
+- **Descripción:** La Dra. Monteoliva conduce la primera sesión de medición Scholander sobre las 5 filas de calibración del viñedo experimental. Simultáneamente, realiza la calibración inicial de los dendrómetros de tronco (primera lectura de referencia de todos los sensores) y capacita a Javier Schiavoni en el manejo de la bomba de presión para las sesiones posteriores. Se obtienen los primeros pares calibrados (Ψ_stem, CWSI) del dataset de entrenamiento. Los coeficientes CWSI provisionales (Bellvert 2016) se ajustan con los primeros datos de la línea base sin estrés (fila 5, 100% ETc) bajo las condiciones de VPD del pedemonte cordobés.
 - **Entregable:** Dataset de calibración Sesión 1 (5 pares Scholander + frames LWIR sincronizados). Informe de instalación verificada.
 
 ### Mes 8 — Sesión 2 Scholander (pre-envero):
@@ -110,7 +110,7 @@ El protocolo experimental de Colonia Caroya generará los primeros coeficientes 
 - **Responsable principal:** Dra. M. Monteoliva (INTA-CONICET)
 - **Co-ejecutores:** César Schiavoni, Javier Schiavoni
 - **Duración:** 1 día de trabajo en campo
-- **Descripción:** Sesión en la ventana de mayor VPD del ciclo (mediodía de verano, enero). Se obtienen los pares calibrados en el rango de estrés máximo del gradiente (Zonas D y E), el más informativo para el límite superior del CWSI. La Dra. Monteoliva valida visualmente el estado de las vides, verifica el funcionamiento del protocolo de rescate, y ajusta los criterios de los coeficientes ΔT_UL con las mediciones de Zona E bajo condiciones de VPD > 2.0 kPa.
+- **Descripción:** Sesión en la ventana de mayor VPD del ciclo (mediodía de verano, enero). Se obtienen los pares calibrados en el rango de estrés máximo del gradiente (filas 2 y 1, 15% y 0% ETc), el más informativo para el límite superior del CWSI. La Dra. Monteoliva valida visualmente el estado de las vides, verifica el funcionamiento del protocolo de rescate, y ajusta los criterios de los coeficientes ΔT_UL con las mediciones de fila 1 (0% ETc) bajo condiciones de VPD > 2.0 kPa.
 - **Entregable:** Dataset Sesión 2 (5 pares). Ajuste preliminar de coeficientes ΔT_LL / ΔT_UL para Malbec Colonia Caroya. Informe de validación de la línea base NWSB con primeros 15+ pares acumulados.
 
 ### Mes 12 — Validación final:
@@ -135,7 +135,7 @@ El proyecto producirá los primeros coeficientes CWSI (ΔT_LL vs. VPD) calibrado
 Al cierre del proyecto se dispondrá de la función de calibración CWSI = f(Ψ_stem) con su intervalo de confianza, basada en ≥ 50 pares directos (Scholander + frame LWIR sincronizado) cubriendo el rango completo −0.3 a −1.5 MPa. Esta función es la base científica de la precisión del sistema y el argumento principal ante productores y compradores institucionales (INTA, universidades, empresas de riego) que requieran validación experimental para su adopción.
 
 **Protocolo RDI validado para Malbec en Colonia Caroya:**  
-El viñedo experimental habrá completado el ciclo vegetativo completo bajo el protocolo de 5 zonas hídricas con supervisión de la Dra. Monteoliva (INTA-CONICET). Los datos de rendimiento (kg/planta por zona), calidad de mosto (°Brix, acidez total, índice de polifenoles) y estado sanitario de las plantas al final de la temporada constituirán la primera evidencia experimental de la respuesta productiva del cv. Malbec al RDI en el pedemonte cordobés bajo el sistema de riego por goteo.
+El viñedo experimental habrá completado el ciclo vegetativo completo bajo el protocolo de 5 filas de calibración con regímenes hídricos diferenciados, con supervisión de la Dra. Monteoliva (INTA-CONICET). Los datos de rendimiento (kg/planta por fila de calibración), calidad de mosto (°Brix, acidez total, índice de polifenoles) y estado sanitario de las plantas al final de la temporada constituirán la primera evidencia experimental de la respuesta productiva del cv. Malbec al RDI en el pedemonte cordobés bajo el sistema de riego por goteo.
 
 ---
 

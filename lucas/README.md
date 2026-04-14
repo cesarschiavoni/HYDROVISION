@@ -84,7 +84,7 @@ lucas/
 | Pluviómetro | `driver_pluviometro.h` | ISR + debounce, acumula `rain_mm` |
 | Piranómetro BPW34 | `driver_piranometro.h` | ADC1, promedio 8 muestras, retorna `rad_wm2` |
 | Bomba Wet Ref | `driver_bomba_wetref.h` | GPIO, pulso temporizado `BOMBA_PULSO_MS` |
-| Gimbal MG90S | `driver_gimbal.h` | LEDC PWM, 5 pos fijas + 1 nadir condicional, fusión multi-frame con `valid_pixels` promediado |
+| Gimbal MG90S | `driver_gimbal.h` | LEDC PWM, 6 pos fijas + 1 nadir condicional (= 7 ángulos totales), fusión multi-frame con `valid_pixels` promediado |
 | LoRa SX1276 | `driver_lora.h` | `publicar_lora(topic, json)`, encuadre binario, sleep pre-deep-sleep |
 | PMS5003 partículas | `driver_pms5003.h` | UART1 compartido con GPS, PM2.5 → detección automática fumigación/lluvia |
 | ICM-42688-P IMU | `driver_imu.h` | SPI, verifica estabilización gimbal antes de captura, detecta desplazamiento del nodo |
@@ -108,7 +108,7 @@ lucas/
 | 🟡 Media | **Actualizar `driver_mlx90640.h`** para usar `SENSOR_TERM_W/H/ADDR` de config.h en lugar de hardcoded 32/24/0x33 | `firmware/driver_mlx90640.h` | Habilita HW-03 (footprint dual). 15 min de edición. |
 | ~~🟡~~ | ~~**Diseño PCB** 4-layer KiCad~~ | ~~hardware/~~ | **ELIMINADA para TRL4** — arquitectura modular DevKit + breakouts I2C/SPI. Reservada para TRL5+ producción (vol. 500+). |
 | 🟡 Media | **Integración modular** — cableado I2C/SPI en carcasa Hammond IP67 200×150×100mm | hardware/ | Montar DevKit + breakouts con tornillos M2.5 o velcro industrial. Cables Stemma QT/Qwiic. |
-| 🟢 Baja | **Instalación** 5 nodos en viñedo experimental | campo | Mes 4–5 con Javier. Planta central de cada zona hídrica (~14m desde inicio de zona). Evitar 3 plantas cercanas a cada frontera de zona. |
+| 🟢 Baja | **Instalación** 10 nodos en viñedo experimental (5 calibración + 5 producción) | campo | Mes 4–5 con Javier. Planta central de cada fila (planta 68). Filas 1–5: calibración (5 regímenes hídricos). Filas 6–10: producción (100% ETc, modo comercial). |
 | ✅ Hecho | **Riego autonomo en nodo (Tier 3)** — `driver_solenoide.h` integrado en `nodo_main.ino` | firmware/ | El nodo decide localmente cuando regar (HSI >= umbral dinámico por estadio). `SOLENOIDE_CANAL = 0` desactiva la logica de riego en nodos Tier 1-2. |
 | ✅ Hecho | **Control fenológico del riego** — inhibición automática en dormancia/post-cosecha | firmware/ + mvc/ | El solenoide NO se activa durante reposo (Ky ≤ 0.15). Aplica en nodo (Protección 0), backend (/irrigate, /ingest) y dashboard. Umbral HSI dinámico por estadio. Sleep 6h en dormancia. **Ver `documentacion/control-fenologico-riego.md`** |
 
@@ -286,7 +286,7 @@ Con la arquitectura modular TRL4, cambiar de sensor es simplemente desconectar u
 
 ## Energía (decidido)
 
-- Panel solar **6W** policristalino + LiFePO4 6Ah (o LiPo 4Ah)
+- Panel solar **6W** policristalino + LiFePO4 32650 3,2V 6Ah
 - Deep sleep ESP32-S3: ~8 µA
 - Consumo promedio: ~0.18W (pico 0.7W durante captura MLX90640)
 - Autonomía sin sol: **~120 horas** (LiFePO4 6Ah / 0.18W promedio)

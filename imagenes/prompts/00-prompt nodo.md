@@ -18,7 +18,7 @@ Un viñedo de **vid Vitis vinifera cv. Malbec** conducido en sistema de **espald
 
 **Las filas** corren aproximadamente este-oeste. El **pasillo entre filas** tiene ~2,5-3 m de ancho, claramente libre y despejado para el tránsito de maquinaria agrícola (se ven marcas de ruedas de tractor en el suelo). El suelo es **franco-limoso seco**, marrón claro, con una **cinta de riego por goteo negra** visible a lo largo de la base de cada hilera, justo debajo de los troncos.
 
-De fondo se ven **hileras adicionales del viñedo** perdiéndose en la distancia. En la fila adyacente (visible a ~3 m a través del pasillo) NO hay nodo — es una fila "buffer" de riego al 100% ETc. El fondo lejano muestra el paisaje ondulado de las sierras chicas de Córdoba bajo el cielo despejado.
+De fondo se ven **hileras adicionales del viñedo** perdiéndose en la distancia. En la fila adyacente (visible a ~3 m a través del pasillo) hay otro nodo — cada fila tiene un nodo permanente (10 nodos total: 5 en zona de calibración + 5 en zona de producción). El fondo lejano muestra el paisaje ondulado de las sierras chicas de Córdoba bajo el cielo despejado.
 
 ---
 
@@ -132,7 +132,8 @@ Mostrar flechas curvas indicando los rangos de movimiento:
 | 2   | +20° | 0°   | Derecha — exposición máxima     |
 | 3   | 0°   | +15° | Arriba — máx. cobertura foliar   |
 | 4   | 0°   | -10° | Abajo — dosel inferior            |
-| 5*  | 0°   | -30° | *Nadir — solo si viento > 20 km/h |
+| 5   | -20° | +15° | Diagonal IzqArriba — cobertura cruzada |
+| 6*  | 0°   | -30° | *Nadir — solo si viento > 20 km/h |
 
 Secuencia completa: ~8-10 segundos. Tiempo de estabilización entre posiciones: 300 ms (verificado por IMU). PWM 50 Hz, pulso 500-2500 µs. GPIO 20 (PAN), GPIO 21 (TILT).
 
@@ -404,7 +405,7 @@ MCU: ESP32-S3 DevKit + MicroPython
 Cámara: MLX90640 32×24 (Adafruit 4407, BAB 110°)
 Comunicación: LoRaWAN 915 MHz → gateway RAK7268
 Energía: Panel 6W + LiFePO4 6Ah → autonomía ~120h sin sol
-Ciclo: 96 capturas/día (cada 15 min) + gimbal 5+1 posiciones
+Ciclo: 96 capturas/día (cada 15 min) + gimbal 6+1 posiciones (7 ángulos)
 Peso: ~1,6 kg | COGS: USD 149/nodo (lote 50)
 Montaje: en línea de hilera, entre plantas — protegido de maquinaria
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -422,10 +423,10 @@ Montaje: en línea de hilera, entre plantas — protegido de maquinaria
 * `MDS = D_max − D_min (µm)` — contracción diaria del tronco
 
 **7. Texto del viñedo** (superpuesto sutil en la parte inferior de la imagen):
-"Viñedo experimental Malbec — Colonia Caroya, Córdoba, Argentina — 1/3 ha (~3.333 m²), 10 filas × 136 plantas (5 filas experimentales + 5 buffer intercalados), espaldera VSP, ~700 m s.n.m. — 5 nodos (1 por fila experimental) — Regímenes hídricos: 100% / 65% / 40% / 15% / 0% ETc — Riego por goteo con controlador Rain Bird"
+"Viñedo experimental Malbec — Colonia Caroya, Córdoba, Argentina — 1/3 ha (~3.333 m²), 10 filas × 136 plantas (5 filas de calibración + 5 de producción), espaldera VSP, ~700 m s.n.m. — 10 nodos permanentes (5 calibración + 5 producción) — Calibración: F1=0% / F2=15% / F3=40% / F4=65% / F5=100% ETc — Producción: F6-F10 todas 100% ETc — Riego por goteo con controlador Rain Bird"
 
 **8. Pequeño diagrama inset** (esquina inferior izquierda, ~15% del área de la imagen):
-Vista aérea esquemática del viñedo mostrando las 10 filas paralelas (este-oeste). 5 filas experimentales, cada una con un único régimen hídrico (fila completa uniforme): Fila 2 = 100% ETc (azul, control), Fila 4 = 65% ETc (celeste), Fila 6 = 40% ETc (amarillo), Fila 8 = 15% ETc (naranja), Fila 10 = 0% ETc (rojo, secano). 5 filas buffer intercaladas (1, 3, 5, 7, 9) en gris claro — todas a 100% ETc. 5 nodos marcados con ícono circular rojo, uno en el centro de cada fila experimental (planta 68). Título del inset: "Diseño experimental — 5 filas × 1 tratamiento por fila (680 vides exp. + 680 buffer)".
+Vista aérea esquemática del viñedo mostrando las 10 filas paralelas (este-oeste), divididas en dos zonas. **Zona de calibración (Filas 1-5):** gradiente de colores — Fila 1 = 0% ETc (rojo, secano), Fila 2 = 15% ETc (naranja), Fila 3 = 40% ETc (amarillo), Fila 4 = 65% ETc (celeste), Fila 5 = 100% ETc (azul, control). **Zona de producción (Filas 6-10):** color uniforme verde/azul — todas a 100% ETc. Línea divisoria punteada entre Fila 5 y Fila 6. 10 nodos marcados con ícono circular rojo, uno en el centro de cada fila (planta 68). Título del inset: "Diseño experimental — 5 filas calibración (gradiente hídrico) + 5 filas producción (100% ETc) — 10 nodos permanentes".
 
 ---
 

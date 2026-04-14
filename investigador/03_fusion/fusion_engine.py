@@ -498,7 +498,7 @@ class HSIFusionEngine:
 
 
 # ---------------------------------------------------------------------------
-# Demo: 5 nodos × temporada completa simulada
+# Demo: 10 nodos × temporada completa simulada
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import sys
@@ -506,7 +506,7 @@ if __name__ == "__main__":
     from simulator import ThermalSimulator, ETC_REGIMES
     from weather import sample_colonia_caroya
 
-    print("=== Demo HSI Fusion Engine — 5 nodos, temporada simulada ===\n")
+    print("=== Demo HSI Fusion Engine — 10 nodos, temporada simulada ===\n")
 
     rng = np.random.default_rng(42)
     sim = ThermalSimulator(seed=42)

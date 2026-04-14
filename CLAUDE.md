@@ -36,6 +36,8 @@ Cuando hay conflicto entre documentos, prevalece la fuente más específica:
 - **CWSI**: (T_canopy − T_LL) / (T_UL − T_LL)
 - **LoRa**: 915 MHz ISM Argentina
 - **Autonomía solar**: ~120 horas sin sol (sistema completo)
+- **Viñedo experimental**: 10 filas — filas 1–5 calibración (5 regímenes hídricos) + filas 6–10 producción (100% ETc, nodos modo comercial)
+- **Nodos**: 10 permanentes (5 calibración + 5 producción)
 
 ---
 
@@ -90,7 +92,7 @@ python verify_gpu.py                 # verificar CUDA
 | César Schiavoni | Project Leader / Dev IA + Backend | 12 meses | 18.000 |
 | Lucas Bergon | COO / Hardware + Firmware | 12 meses | 15.000 |
 | Dra. Monteoliva | Investigadora INTA-CONICET Art. 32 | ~180 h | 10.800 |
-| Javier Schiavoni | Técnico de Campo | ~208 h, 9 meses | 9.000 |
+| Javier Schiavoni | Técnico de Campo | ~227 h, 9 meses | 9.000 |
 | Inv. Art. 32 (a incorporar) | Validación estadística señales | ~177 h | 6.000 |
 | Matías Tregnaghi | CFO / Contador | 12 meses | 6.000 |
 

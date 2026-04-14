@@ -1,5 +1,5 @@
 # Presupuesto Hardware — ANPCyT TRL 4
-## HydroVision AG — 5 Nodos + 1 Gateway — Proveedores BID-Válidos
+## HydroVision AG — 10 Nodos (5 calibración + 5 producción) + 1 Gateway — Proveedores BID-Válidos
 
 ---
 
@@ -14,7 +14,7 @@
 
 ---
 
-## BOM Completo — 5 Nodos de Campo
+## BOM Completo — 10 Nodos de Campo (5 calibración + 5 producción)
 
 | # | Componente | Modelo / Part# | Qty | Proveedor BID-válido | USD unit | USD total |
 |---|---|---|---|---|---|---|
@@ -26,7 +26,7 @@
 | 4b | Sensor temperatura tronco | DS18B20 waterproof cable | 6 (+2 spare) | **Mouser** 700-DS18B20 · **DigiKey** DS18B20-ND | 3 | 18 |
 | 4c | Strain gauge full-bridge 120Ω | Strain gauge 120Ω full-bridge | 10 (+5 spare) | **Omega Engineering** (USA) dist. AR: omega.com/en-us · o **HBM** (Alemania) contacto: hbm.com | 20 | 200 |
 | 4d | Abrazadera aluminio anodizado | Custom tornería — 30 cm tronco | 6 | **Tornería local AR** (Colonia Caroya / Córdoba) | 15 | 90 |
-| 5 | Anemómetro RS485 IP65 | 0–60 m/s Modbus RTU | 7 (5 nodos + 2 spare) | **Davis Instruments** 6410 (USA) dist. AR · o **Lufft** (Alemania) dist. AR: lufft.com | 55 | 385 |
+| 5 | Anemómetro RS485 IP65 | 0–60 m/s Modbus RTU | 12 (10 nodos + 2 spare) | **Davis Instruments** 6410 (USA) dist. AR · o **Lufft** (Alemania) dist. AR: lufft.com | 55 | 660 |
 | 6 | Pluviómetro báscula | 0,2 mm/pulso IP65 | 6 (+1 spare) | **MercadoLibre AR** — buscar proveedor con factura A (origen nacional o europeo, verificar ficha técnica) · Alt: **Davis Instruments** 7852M | 20 | 120 |
 | 7 | Sensor T/HR | SHT31-DIS-B (±0,3°C ±2% RH) | 6 (+2 spare) | **Mouser** 841-SHT31-DIS-B · **DigiKey** 1649-SHT31-DIS-B2.5KCT-ND | 4 | 24 |
 | 7b | Piranómetro | VEML7700 I2C (preferido sobre BPW34) | 6 (+1 spare) | **Mouser** 841-VEML7700CB-ND · **DigiKey** | 3 | 18 |
@@ -45,12 +45,12 @@
 | 13d | Sensor partículas | PMS5003 Plantower con cable JST 8 pines | 6 (+1 spare) | **Mouser** 992-PMS5003 · **DigiKey** | 16 | 96 |
 | 13e | Actuador piezoeléctrico | Murata MZB1001T02 | 10 (lote) | **Mouser** 81-MZB1001T02 ← único proveedor real | 7 | 70 |
 | 13e | Boost converter | MT3608L (para driver piezo) | 10 (lote) | **Mouser** · **DigiKey** MT3608L | 1 | 10 |
-| 14 | Relé SSR 24VAC (Tier 2-3) | Crydom D2425 o equiv. 24VAC 2A | 5 (solo Tier 2-3) | **Mouser** 280-D2425-ND · **DigiKey** · **Electrocomponentes AR** (dist. Crydom) | 7 | 35 |
-| 15 | Solenoide Rain Bird 24VAC | Rain Bird 24VAC 1" | 5 (solo Tier 2-3) | **Distribuidores Rain Bird AR** — Red Rego, Tecniriego, etc. (producto USA) | 22 | 110 |
+| 14 | Relé SSR 24VAC | Crydom D2425 o equiv. 24VAC 2A | 10 (1 por nodo, todas las filas) | **Mouser** 280-D2425-ND · **DigiKey** · **Electrocomponentes AR** (dist. Crydom) | 7 | 35 |
+| 15 | Solenoide Rain Bird 24VAC | Rain Bird 24VAC 1" | 10 (1 por fila, todas las filas) | **Distribuidores Rain Bird AR** — Red Rego, Tecniriego, etc. (producto USA) | 22 | 110 |
 | 16 | ~~PCB custom~~ | **ELIMINADA para TRL4** — arquitectura modular DevKit + breakouts I2C/SPI | — | — | 0 | 0 |
 | 17 | Carcasa IP67 Hammond | 200×150×100 mm + pasacables M16 IP67 | 6 (+1 spare) | **Hammond Manufacturing** dist. AR (Canadá ✓ BID) · o **MercadoLibre AR** (verificar origen, pedir factura A) | 22 | 132 |
-| 18 | Sistema de montaje | Estaca inox 316 1,5m + bracket Al + conectores M12 IP67 | 5 | **Ferretería industrial AR** (acero inox local) + **Mouser/DigiKey** M12 IP67 | 40 | 200 |
-| | **SUBTOTAL 5 NODOS** | | | | | **~USD 2.685** |
+| 18 | Sistema de montaje | Estaca inox 316 1,5m + bracket Al + conectores M12 IP67 | 10 | **Ferretería industrial AR** (acero inox local) + **Mouser/DigiKey** M12 IP67 | 40 | 400 |
+| | **SUBTOTAL 10 NODOS** | | | | | **~USD 5.000** |
 
 ---
 
@@ -69,13 +69,13 @@
 
 | Ítem | USD |
 |---|---|
-| 5 nodos completos (Tier 2-3 con relé + solenoide) | ~2.685 |
+| 10 nodos completos (todos con relé SSR + solenoide, 1 por fila) | ~5.000 |
 | Gateway + conectividad (año 1) | ~483 |
-| **TOTAL hardware TRL 4** | **~USD 3.168** |
+| **TOTAL hardware TRL 4** | **~USD 5.483** |
 | Límite bienes de capital ANPCyT (30% ANR) | USD 36.000 |
-| **Margen disponible** | **USD 32.832** |
+| **Margen disponible** | **USD 30.517** |
 
-El hardware TRL 4 (~USD 3.168) está muy por debajo del límite de USD 36.000. **Nota:** la eliminación de la PCB custom (−USD 120) compensa el mayor costo de los módulos breakout MLX90640 (+USD 90) y DevKit (+USD 42). Arquitectura modular TRL4 sin necesidad de diseño KiCad ni fabricación de PCB.
+El hardware TRL 4 (~USD 5.483 para 10 nodos) está muy por debajo del límite de USD 36.000. **Nota:** la eliminación de la PCB custom (−USD 120/nodo) compensa el mayor costo de los módulos breakout. Arquitectura modular TRL4 sin necesidad de diseño KiCad ni fabricación de PCB. Todos los nodos (filas 1–10) llevan SSR + solenoide Rain Bird (control automático de riego por fila).
 
 ---
 

@@ -195,7 +195,7 @@ El MDS incrementa su protagonismo de forma gradual — no es un switch on/off. E
 Costo incremental de las 9 capas: USD 9 sobre COGS base (6.5%). Detalle completo en `lucas/documentacion/mitigacion-viento.md`.
 
 ### 4.3 Estrategia de datos y entrenamiento del modelo IA — arquitectura PINN
-Fundamento de la arquitectura PINN: La arquitectura Physics-Informed Neural Network (PINN) fue elegida específicamente porque el CWSI está gobernado por una ecuación física exacta (Jackson et al., 1981) que el modelo no debe violar. A diferencia de un regresor de caja negra, la función de pérdida PINN incorpora un término de residuo físico adicional: L_total = L_datos + λ · L_física. El término L_física penaliza predicciones de ΔT_foliar que no sean consistentes con el balance energético foliar bajo las condiciones meteorológicas medidas en ese instante (T°, VPD, radiación). Esto actúa como regularización física — reduce el espacio de soluciones admisibles y mejora la generalización con pocos datos reales, que es exactamente la condición de TRL 4 (500 frames reales). La factibilidad del enfoque está documentada en literatura reciente de 2024-2025: Ridder et al. (2025) aplican PINN a la absorción radicular con 2% de error en parámetros de estrés hídrico; Benkirane et al. (2025) demuestran PINN con Penman-Monteith para evapotranspiración en contextos de datos limitados; Hu et al. (2025) aplican PINN a estimación de humedad de suelo con Landsat 8 Thermal; y Rouholahnejad et al. (2024) implementan physics-informed yield loss forecasting con Sentinel-2. Ninguno aplica PINN al CWSI calculado desde termografía embebida en campo — ese es el aporte original de HydroVision AG.
+Fundamento de la arquitectura PINN: La arquitectura Physics-Informed Neural Network (PINN) fue elegida específicamente porque el CWSI está gobernado por una ecuación física exacta (Jackson et al., 1981) que el modelo no debe violar. A diferencia de un regresor de caja negra, la función de pérdida PINN incorpora un término de residuo físico adicional: L_total = L_datos + λ · L_física. El término L_física penaliza predicciones de ΔT_foliar que no sean consistentes con el balance energético foliar bajo las condiciones meteorológicas medidas en ese instante (T°, VPD, radiación). Esto actúa como regularización física — reduce el espacio de soluciones admisibles y mejora la generalización con pocos datos reales, que es exactamente la condición de TRL 4 (800 frames reales: 680 fine-tuning + 120 validación independiente). La factibilidad del enfoque está documentada en literatura reciente de 2024-2025: Ridder et al. (2025) aplican PINN a la absorción radicular con 2% de error en parámetros de estrés hídrico; Benkirane et al. (2025) demuestran PINN con Penman-Monteith para evapotranspiración en contextos de datos limitados; Hu et al. (2025) aplican PINN a estimación de humedad de suelo con Landsat 8 Thermal; y Rouholahnejad et al. (2024) implementan physics-informed yield loss forecasting con Sentinel-2. Ninguno aplica PINN al CWSI calculado desde termografía embebida en campo — ese es el aporte original de HydroVision AG.
 
 El modelo de IA se entrena con una estrategia de tres capas que permite alcanzar un dataset efectivo de 1.050.680 imágenes sin necesidad de campañas de captura masivas en campo:
 
@@ -267,7 +267,7 @@ Georreferenciación
 IMU + Gimbal motorizado
 ICM-42688-P + servo pan-tilt 2 ejes (MG90S × 2)
 $18
-Escaneo activo multi-angular del canopeo: 5–9 capturas por ciclo a ±20° horizontal y ±15° vertical. IMU compensa vibración de viento durante cada captura. Inspirado en metodología de termografía UAV.
+Escaneo activo multi-angular del canopeo: 7 capturas por ciclo (6 posiciones fijas + 1 condicional con viento > 20 km/h) a ±20° horizontal y ±15° vertical. IMU compensa vibración de viento durante cada captura. Inspirado en metodología de termografía UAV.
 Panel solar + batería
 Panel policristalino 6W + LiFePO4 6.000mAh + regulador
 $27
@@ -395,8 +395,8 @@ USD 950 (hardware)
 Sin regulación
 ±0.10–0.15
 Nodo con gimbal multi-angular (TRL 4 mejorado)
-32×24px × 5–9 frames fusionados
-5–9 por ciclo
+32×24px × 7 frames fusionados (6 fijos + 1 condicional)
+7 por ciclo
 96/día
 USD 980 (+USD 30 servo)
 Sin regulación

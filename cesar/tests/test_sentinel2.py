@@ -93,7 +93,7 @@ class TestCWSINDWICorrelationModel:
             assert 0.0 <= pred <= 1.0, f"Predicción {pred:.3f} fuera de rango [0,1]"
 
     def test_generalization_on_test_set(self, dataset_labeled, model_calibrated):
-        """R² en test set (datos no vistos) debe ser > 0.60."""
+        """R² en test set (datos no vistos) debe ser > 0.65 (Gate TRL4: R²≥0.75 CWSI en calibración; umbral conservador para test set)."""
         from sklearn.metrics import r2_score
         test_obs = dataset_labeled[80:]
         if len(test_obs) < 5:
@@ -101,7 +101,7 @@ class TestCWSINDWICorrelationModel:
         y_true = np.array([o.cwsi_nodo for o in test_obs])
         y_pred = np.array([model_calibrated.predict_cwsi(o) for o in test_obs])
         r2 = float(r2_score(y_true, y_pred))
-        assert r2 > 0.60, f"R² test = {r2:.3f} < 0.60 — modelo no generaliza bien"
+        assert r2 > 0.65, f"R² test = {r2:.3f} < 0.65 — modelo no generaliza bien"
 
     def test_field_map_generation(self, model_calibrated):
         """Mapa de campo debe tener estadísticas coherentes."""

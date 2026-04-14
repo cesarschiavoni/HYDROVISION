@@ -26,7 +26,7 @@
 | 11 | **MPPT / cargador** | DFR0559 (recomendado) o CN3791 + inductor + caps | 1 | 3–6 (CN3791) / 10–15 (DFR0559) | CN3791: LCSC C5443 · DFR0559: AliExpress "DFR0559 solar power manager" | Gestiona la carga de la batería desde el panel solar con seguimiento del punto de máxima potencia (MPPT). Sin MPPT, el panel opera a voltaje fijo y pierde hasta 30% de eficiencia de carga. | **Recomendado para TRL 4: DFR0559** — módulo completo MPPT + cargador + salidas reguladas 5V y 3.3V. Evita diseñar el circuito de potencia desde cero. CN3791 es la opción chip para producción (menor costo, requiere diseño de circuito con inductor 22µH y capacitores). |
 | 12 | **Batería** | LiFePO4 32650 3,2V 6Ah | 1 | 8–15 | AliExpress "LiFePO4 32650 6Ah" | Almacena energía para operar durante la noche y días nublados. Con el consumo del nodo (~0,18W promedio), 6Ah × 3,2V = 19,2 Wh → autonomía ~4,4 días sin sol. | **LiFePO4 sobre LiPo**: ciclos de vida 2000+ vs. 500 (LiPo), estable a temperaturas altas (interior de carcasa puede llegar a 50°C en verano de Cuyo). Tensión nominal 3.2V — ajustar `BAT_FULL_MV 3600` en config.h si se usa LiFePO4 (no 4200 que es LiPo). Tensión mínima operativa: `BAT_EMPTY_MV 2800` para LiFePO4. |
 | 13 | **MAX485** | MAX485ESA+ (SOIC-8) | 1 | 0,25 | LCSC C7705 | Transceiver que convierte el bus RS485 diferencial del anemómetro al UART del ESP32. El anemómetro Modbus RTU usa RS485 porque el par diferencial es inmune a interferencias a distancias de hasta 100m en campo (el anemómetro puede estar lejos del nodo). | Pedir en lote de 10 — pesan nada. Pin DE (driver enable): GPIO 3, HIGH para transmitir, LOW para recibir. Protocolo Modbus RTU 9600 baud. No requiere librería externa — implementado en `driver_anemometro.h` con CRC16. |
-| 13b | **IMU + Gimbal** | ICM-42688-P breakout + 2× servo MG90S (metal gear) | 1 conjunto | 8–18 | ICM-42688-P: AliExpress "ICM-42688-P breakout" o SparkFun DEV-19764 · MG90S: AliExpress "MG90S servo metal gear" ×2 | El gimbal mueve la cámara MLX90640 a 5-6 posiciones angulares antes de cada captura (pan ±20°, tilt ±15°). Esto aumenta la cobertura efectiva del canopeo y reduce el error CWSI de ±0.10 a ±0.07 (equivalente a un drone térmico de baja altitud). La IMU verifica que el gimbal se estabilizó antes de capturar (sin vibración > 0,5 m/s²) y detecta si el nodo fue golpeado o movido. | SPI: CS=22, INT1=23 (bus compartido con LoRa en MOSI=34/MISO=33/SCLK=32). Servos: LEDC PWM GPIO 20 (PAN) y 21 (TILT). **Comprar MG90S metálico** — los SG90 plásticos se deforman con temperatura. `GIMBAL_SETTLE_MS 300` en config.h. Librería: SparkFun ICM-42688-P. Driver: `driver_imu.h` + `driver_gimbal.h`. |
+| 13b | **IMU + Gimbal** | ICM-42688-P breakout + 2× servo MG90S (metal gear) | 1 conjunto | 8–18 | ICM-42688-P: AliExpress "ICM-42688-P breakout" o SparkFun DEV-19764 · MG90S: AliExpress "MG90S servo metal gear" ×2 | El gimbal mueve la cámara MLX90640 a 6–7 posiciones angulares antes de cada captura (pan ±20°, tilt ±15°): 6 posiciones fijas estándar (Centro, Izquierda, Derecha, Arriba, Abajo, Diagonal IzqArriba) + 1 posición condicional nadir con viento > 20 km/h = 7 ángulos totales (Plan de Trabajo §4.4.2). Esto aumenta la cobertura efectiva del canopeo y reduce el error CWSI de ±0.10 a ±0.07 (equivalente a un drone térmico de baja altitud). La IMU verifica que el gimbal se estabilizó antes de capturar (sin vibración > 0,5 m/s²) y detecta si el nodo fue golpeado o movido. | SPI: CS=22, INT1=23 (bus compartido con LoRa en MOSI=34/MISO=33/SCLK=32). Servos: LEDC PWM GPIO 20 (PAN) y 21 (TILT). **Comprar MG90S metálico** — los SG90 plásticos se deforman con temperatura. `GIMBAL_SETTLE_MS 300` en config.h. Librería: SparkFun ICM-42688-P. Driver: `driver_imu.h` + `driver_gimbal.h`. |
 | 13c | **Paneles Dry/Wet Ref** | Al anodizado negro (Dry) + fieltro hidrofílico + bomba peristáltica 6V + reservorio 10L (Wet) | 1 conjunto | 15–22 | Aluminio negro: ferretería industrial + pintura Rust-Oleum negro mate alta temp · Fieltro: tlapalería · Bomba: AliExpress "peristaltic pump 6V" · Reservorio: ferretería local | Los paneles de referencia son el mecanismo de auto-calibración física del CWSI. El panel Dry (aluminio negro, ε ≈ 0,98) tiene temperatura conocida = T_aire + offset solar → sirve como Tc_dry de referencia física. El panel Wet (fieltro empapado) tiene temperatura próxima a Tc_wet → âncora el límite inferior del CWSI. La bomba recarga el fieltro húmedo automáticamente (pulso de 3 seg cada ciclo). El ISO_nodo compara la temperatura medida del Dry Ref contra la esperada para detectar lente sucio. | Posición en el frame MLX: filas/columnas calibradas en campo con `mlx_calibrar_iso_nodo()` (ver pendientes README). Autonomía del reservorio de agua: 90-120 días. `BOMBA_PULSO_MS 3000` en config.h. Driver ISO_nodo integrado en `driver_mlx90640.h`. |
 | 13d | **Sensor partículas** | PMS5003 (Plantower) — PM1.0/PM2.5/PM10 | 1 | 10–14 | LCSC C2660761 · AliExpress "PMS5003 particulate sensor" (pedir con cable JST 8 pines) | Detecta automáticamente eventos de fumigación (PM2.5 > 200 µg/m³) y lluvia con aerosol. Cuando detecta fumigación, el firmware invalida las capturas térmicas de las siguientes 4h (el aerosol contamina el lente MLX90640). Sin este sensor, el sistema requeriría que el productor informe manualmente cada fumigación — inviable en operación autónoma. Además detecta lluvia por PM elevado antes de que el pluviómetro registre acumulación. | UART1 compartido con GPS (RX=12, TX=13 desde boot 1 en adelante — GPS usa GPIO 5 solo en boot 0). Protocolo propietario Plantower de 32 bytes — implementado en `driver_pms5003.h` sin librería externa. `PMS_WARMUP_MS 3000` (3s calentamiento láser). Umbrales: fumigación PM2.5 > 200, lluvia > 80 en config.h. |
 | 13e | **Limpieza piezoeléctrica** | Murata MZB1001T02 + driver boost MT3608L | 1 | 4–6 | Murata MZB1001T02: Mouser Part# 81-MZB1001T02 · MT3608L boost: LCSC C84818 | El actuador piezoeléctrico vibra el lente del MLX90640 durante 500ms antes de cada captura para desprender polvo, rocío y residuos de fumigación. Sin limpieza activa, la acumulación gradual de polvo reduce la transmitancia del lente y degrada el ISO_nodo progresivamente hasta invalidar las mediciones. Elimina la necesidad de mantenimiento manual del lente (cada 2-4 semanas en campo). Reivindicación técnica #1 de la patente en trámite. | GPIO 24 (`PIN_PIEZO_CLEANER`). El MT3608L eleva 3,7V (batería) a 20Vpp para excitar el piezo (rango de operación del MZB1001T02: 15-30Vpp). Pulso: 500ms cada ciclo de captura. `PIEZO_PULSO_MS 500` en config.h. **Solo Mouser/DigiKey** — no está en AliExpress. Pedir en lote de 10. |
@@ -41,7 +41,7 @@
 | 17 | **Carcasa IP67** | **Hammond 1554W o Gewiss GW44210** — ABS/PC **200×150×100mm** + pasacables M16 IP67 | 1 | 15–25 | MercadoLibre AR "caja estanca IP67 200x150" · Hammond distribuidores · AliExpress "IP67 enclosure 200x150x100" · Pasacables: AliExpress "cable gland M16 IP67" | Protege la electrónica del campo: polvo, rocío, fumigaciones, lluvia, temperaturas extremas (−5°C a +60°C). **Dimensiones aumentadas a 200×150×100mm** para alojar holgadamente los módulos breakout, DevKit, batería y cableado I2C/SPI. Más robusta que la versión anterior (150×100×70mm). IP67 = sellado contra polvo + inmersión temporal. | Comprar con membrana de ventilación (GORE-Tex o similar) para evitar condensación interior. 6-7 pasacables M16 por carcasa. Espacio interior suficiente para gestión térmica pasiva sin aleta externa (el ESP32-S3 DevKit genera poco calor). |
 | **TOTAL COGS Tier 1-2 (base)** | | | | **USD ~149** (lote 50) / **~USD 121** (lote 500+) | | Incluye tubo colimador + termopar foliar + shelter SHT31. Sin relé ni solenoide. Arquitectura TRL4: DevKit + breakouts + sin PCB custom. | **Arquitectura modular TRL4:** DevKit (+$6.50) + breakout MLX (+$16) + Hammond IP67 (+$6) − PCB custom (−$27.50) = delta neto ~+$1/nodo. A vol. 500+: se revierte a bare chip + PCB custom → COGS similar. |
 | **TOTAL COGS Tier 1-2 (con v2 wind)** | | | | **USD ~158-163** (lote 50) | | Todo lo base + segundo termopar (13h, +$4-8) + placas Muller (13i, +$1-2) + reservorio capilar Wet Ref (ya en 13c). Sin ultrasónico (fila 5b es upgrade opcional, +$12-35 adicional). | **Mejoras v2 viento:** COGS incremental +$5-10/nodo (sin ultrasónico) o +$17-45/nodo (con ultrasónico). Las mejoras de software (B1-B6, C1-C6) no tienen costo de hardware. |
-| **TOTAL COGS Tier 3** | | | | **USD ~165** (lote 50) / **~USD 137** (lote 500+) | | Todo lo anterior + relé SSR + solenoide Rain Bird integrado. | El costo incremental de Tier 3 vs Tier 1-2 es ~USD 16-25 (relé + cableado). El solenoide Rain Bird ya existe en campo. |
+| **TOTAL COGS Tier 3** | | | | **USD ~165** (lote 50) / **~USD 137** (lote 500+) | | Todo lo anterior + relé SSR + solenoide Rain Bird integrado. | El costo incremental de Tier 3 vs Tier 1-2 es ~USD 16-25 (relé + cableado). Todos los nodos (filas 1–10) son Tier 3 — solenoides incluidos en [B] del presupuesto. |
 
 ---
 
@@ -166,13 +166,14 @@ hydrovision/{node_id}/alert          → alertas urgentes (HSI > umbral configur
 - Cobertura térmica: ~60 plantas/sesión (4.6% de muestra) es suficiente para calibrar Sentinel-2.
 - Consistente con el argumento comercial "1 nodo/10 ha".
 
-**Experimento TRL 4: 5 nodos** (1 por zona hídrica).
-- El diseño experimental requiere medir CWSI y MDS en cada uno de los 5 tratamientos
-  hídricos independientes (100% ETc → sin riego) para validar que el sistema detecta
-  el gradiente de estrés inducido.
-- Sin 1 nodo por zona, no se puede comparar HSI predicho vs. ψ_stem Scholander
-  con tratamiento controlado como variable independiente.
-- Los 5 nodos TRL 4 son las primeras 5 unidades del producto.
+**Experimento TRL 4: 10 nodos** (1 por fila, 5 calibración + 5 producción).
+- El viñedo se divide en zona de calibración (filas 1–5, 5 regímenes hídricos: 0%→100% ETc)
+  y zona de producción (filas 6–10, todas 100% ETc, nodos en modo comercial autónomo).
+- Los 5 nodos de calibración miden CWSI y MDS en cada tratamiento hídrico para validar
+  que el sistema detecta el gradiente de estrés inducido, con Scholander como ground truth.
+- Los 5 nodos de producción ejecutan el pipeline comercial completo (CWSI → HSI → alerta)
+  bajo riego normal, demostrando reproducibilidad (CV < 10%) y validando el producto final.
+- Los 10 nodos TRL 4 son las primeras 10 unidades del producto.
 
 ### Identificación única del nodo (Node ID)
 
@@ -231,15 +232,15 @@ hydrovision/{node_id}/alert          → alertas urgentes (HSI > umbral configur
 | G1 | Gateway RAK7268 | RAKwireless (HK) | ❌ | **RAK tiene distribuidores USA** (RAKwireless.com → order en USD, envío USA) — verificar certificado de origen | USD 260–300 | +10–50 |
 | G2a | Router Teltonika RUT241 | Dist. AR | ✓ Lituania (UE) | Sin cambio | — | 0 |
 
-### Estimación de delta de costo total (5 nodos + 1 gateway)
+### Estimación de delta de costo total (10 nodos + 1 gateway)
 
-| Escenario | COGS/nodo | Total 5 nodos | Gateway | Total hardware |
+| Escenario | COGS/nodo | Total 10 nodos | Gateway | Total hardware |
 |---|---|---|---|---|
-| BOM TRL4 modular (DevKit + breakouts) | ~USD 149 | ~USD 745 | ~USD 440 | ~USD 1.185 |
-| BOM BID-compliant (Mouser/DigiKey/Adafruit) | ~USD 180–215 | ~USD 900–1.075 | ~USD 480–510 | ~USD 1.380–1.585 |
-| **Delta vs. fuentes económicas** | +USD 31–66 | **+USD 155–330** | +USD 40–70 | **+USD 195–400** |
+| BOM TRL4 modular (DevKit + breakouts) | ~USD 149 | ~USD 1.490 | ~USD 440 | ~USD 1.930 |
+| BOM BID-compliant (Mouser/DigiKey/Adafruit) | ~USD 180–215 | ~USD 1.800–2.150 | ~USD 480–510 | ~USD 2.280–2.660 |
+| **Delta vs. fuentes económicas** | +USD 31–66 | **+USD 310–660** | +USD 40–70 | **+USD 350–730** |
 
-El delta (~USD 195–400 sobre el total de hardware TRL 4) es absorbible dentro del presupuesto ANPCyT sin modificar hitos. El ítem "Bienes de Capital" en el presupuesto cubre este rango. **Nota:** la eliminación de la PCB custom (−$20-35/nodo) compensa parcialmente el mayor costo de los módulos breakout.
+El delta (~USD 350–730 sobre el total de hardware TRL 4 para 10 nodos) es absorbible dentro del presupuesto ANPCyT sin modificar hitos. El ítem "Bienes de Capital" en el presupuesto cubre este rango. **Nota:** la eliminación de la PCB custom (−$20-35/nodo) compensa parcialmente el mayor costo de los módulos breakout.
 
 ### ~~Componente crítico: PCB~~ — ELIMINADA para TRL4
 
@@ -506,37 +507,37 @@ El conjunto más difícil de la BOM. No existe como módulo integrado — hay qu
 
 ---
 
-### Orden de compra recomendado — lote TRL 4 (5 nodos) — Arquitectura modular
+### Orden de compra recomendado — lote TRL 4 (10 nodos) — Arquitectura modular
 
 > **Nota:** la arquitectura TRL4 usa DevKit + módulos breakout. No se necesita PCB custom ni componentes SMD sueltos para soldar.
 
 **Pedido 1 — Adafruit / SparkFun** (módulos breakout BID-compliant, via transenvios.com):
-- MLX90640 breakout Adafruit 4407 ×7 (5 nodos + 2 spare — **verificar FOV 110° BAB**)
-- SparkFun ICM-42688-P breakout ×7
-- Murata MZB1001T02 ×15 (agregar desde Mouser al mismo pedido)
+- MLX90640 breakout Adafruit 4407 ×12 (10 nodos + 2 spare — **verificar FOV 110° BAB**)
+- SparkFun ICM-42688-P breakout ×12
+- Murata MZB1001T02 ×25 (agregar desde Mouser al mismo pedido)
 
 **Pedido 2 — AliExpress** (módulos y sensores):
-- ESP32-S3 DevKit N4 ×7
-- EBYTE E32-900T20D ×7 (LoRa 915 MHz)
-- SHT31 breakout I2C ×7
-- NEO-6M GPS módulo ×7
-- DS3231 RTC módulo ×7
-- MAX485 módulo RS485 ×7
-- PMS5003 ×7
-- ADS1231 módulo o chip ×10
-- Anemómetro RS485 Modbus IP65 ×7
-- Pluviómetro báscula 0.2mm ×7
-- MG90S servo metálico ×15
-- LiFePO4 32650 6Ah ×7
-- Panel solar 6V 6W ×7
-- DFR0559 Solar Power Manager ×7
-- MT3608L boost módulo ×10
-- DS18B20 waterproof ×10
-- Strain gauge 120Ω full-bridge ×15
-- Cables Stemma QT/Qwiic 100mm ×20 + dupont hembra-hembra ×50
+- ESP32-S3 DevKit N4 ×12
+- EBYTE E32-900T20D ×12 (LoRa 915 MHz)
+- SHT31 breakout I2C ×12
+- NEO-6M GPS módulo ×12
+- DS3231 RTC módulo ×12
+- MAX485 módulo RS485 ×12
+- PMS5003 ×12
+- ADS1231 módulo o chip ×14
+- Anemómetro RS485 Modbus IP65 ×12
+- Pluviómetro báscula 0.2mm ×12
+- MG90S servo metálico ×25
+- LiFePO4 32650 6Ah ×12
+- Panel solar 6V 6W ×12
+- DFR0559 Solar Power Manager ×12
+- MT3608L boost módulo ×15
+- DS18B20 waterproof ×14
+- Strain gauge 120Ω full-bridge ×25
+- Cables Stemma QT/Qwiic 100mm ×30 + dupont hembra-hembra ×80
 
 **Pedido 3 — Local / MercadoLibre**:
-- Carcasa Hammond IP67 200×150×100mm ×7 + pasacables M16 IP67 ×50
+- Carcasa Hammond IP67 200×150×100mm ×12 + pasacables M16 IP67 ×85
 - Panel solar 6V 6W (si urgís)
 - Abrazaderas de aluminio (tornería local)
 - Pintura negro mate alta temp. + tubo PVC 110mm (ferretería industrial)
@@ -546,11 +547,11 @@ El conjunto más difícil de la BOM. No existe como módulo integrado — hay qu
 - AliExpress: 25-45 días (Correo Argentino) / 10-15 días (AliExpress Standard)
 - Local/MeLi: 1-3 días
 
-**Presupuesto total estimado lote 5 nodos + spare:**
-- Adafruit/Mouser: USD 350-420 + USD 25 flete
-- AliExpress: USD 250-350
-- Local/MeLi: USD 80-120
-- **Total aproximado: USD 700-915 para 5 nodos con repuestos**
+**Presupuesto total estimado lote 10 nodos + spare:**
+- Adafruit/Mouser: USD 700-840 + USD 40 flete
+- AliExpress: USD 500-700
+- Local/MeLi: USD 150-220
+- **Total aproximado: USD 1.390-1.800 para 10 nodos con repuestos**
 
 ---
 

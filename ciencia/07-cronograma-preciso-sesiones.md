@@ -44,14 +44,14 @@ Este documento establece:
 
 | Campo | Detalle |
 |---|---|
-| **Objetivo científico** | Establecer ΔT_LL baseline con plantas en plena hidratación (zona A, Ψ_stem > −0.5 MPa) |
+| **Objetivo científico** | Establecer ΔT_LL baseline con plantas en plena hidratación (fila 5 — 100% ETc, Ψ_stem > −0.5 MPa) |
 | **Estadio requerido** | 4–6 hojas desplegadas. GDD: 150–200 acumulados desde 1 ago |
 | **Fecha tentativa** | **Lunes 5 de octubre de 2026** |
 | **Ventana objetivo** | 29 de septiembre — 12 de octubre de 2026 |
 | **Fecha de respaldo** | **Lunes 12 de octubre de 2026** (2° respaldo: 19 oct) |
 | **Presencia Monteoliva** | **Presencial — obligatoria** (capacitación Scholander a Javier y Franco) |
 | **Horario** | Llegada 8:30 hs. Medición 10:00–13:00 hs. Revisión de datos 14:00–16:00 hs |
-| **n plantas** | ≥ 5 por zona (25 plantas total) |
+| **n plantas** | ≥ 5 por fila de calibración (25 plantas total en filas 1–5) |
 | **Actividades adicionales** | Capacitación 4–6 h en manejo de bomba Scholander |
 | **Trigger automático** | Notificación push del nodo cuando GDD ≥ 140 AND pronóstico SMN = sin lluvia 48h |
 | **Criterio de cancelación** | Lluvia > 2 mm en las 24 h previas → reprogramar a fecha de respaldo |
@@ -77,7 +77,7 @@ Este documento establece:
 | **Fecha de respaldo** | **Miércoles 14 de enero de 2027** (2° respaldo: 21 ene) |
 | **Presencia Monteoliva** | **Presencial — obligatoria** (primera sesión de campo real con estrés diferencial) |
 | **Horario** | Llegada 8:00 hs. Medición 10:00–13:00 hs. El VPD típico en enero supera 3.5 kPa antes de las 12:30 hs en Córdoba — iniciar puntualmente |
-| **n plantas** | ≥ 5 por zona (25 plantas total). Priorizar zonas D y E si hay limitación de tiempo |
+| **n plantas** | ≥ 5 por fila de calibración (25 plantas total). Priorizar filas 1 y 2 si hay limitación de tiempo |
 | **Actividades adicionales** | Primera comparación cuantitativa CWSI (dashboard nodo) vs. Ψ_stem medido. Ajuste preliminar de coeficientes si el residuo > 0.15 unidades CWSI |
 | **Trigger automático** | Notificación push cuando GDD ≥ 470 AND pronóstico SMN = sin lluvia 48h AND T_max > 28°C (alta demanda evaporativa) |
 | **Criterio de cancelación** | Lluvia > 3 mm en las 48 h previas → reprogramar. Recordar: post-lluvia 3–10 mm = esperar 24–36 h; >10 mm = esperar 48–72 h |
@@ -97,7 +97,7 @@ Este documento establece:
 | **Fecha de respaldo** | **Jueves 18 de febrero de 2027** |
 | **Presencia Monteoliva** | **Remota** (Javier y Franco ejecutan autónomamente. Monteoliva disponible por videollamada durante la sesión) |
 | **Horario** | Medición 10:00–13:00 hs solar. Javier reporta en tiempo real via WhatsApp los valores de Ψ_stem |
-| **n plantas** | ≥ 5 por zona (25 plantas). Si el tiempo es limitado: n=3 por zona = 15 plantas mínimo |
+| **n plantas** | ≥ 5 por fila de calibración (25 plantas). Si el tiempo es limitado: n=3 por fila = 15 plantas mínimo |
 | **Validación remota** | César Schiavoni envía a Monteoliva el CSV del nodo (últimas 48 h) antes de las 9:00 hs del día de la sesión. Monteoliva confirma condiciones adecuadas para proceder |
 | **Trigger automático** | Notificación push cuando GDD ≥ 660 AND pronóstico SMN = sin lluvia 48h |
 
@@ -107,13 +107,13 @@ Este documento establece:
 
 | Campo | Detalle |
 |---|---|
-| **Objetivo científico** | Completar el dataset con el estadio de madurez (máximo °Brix, Ψ_stem en zona A ≈ −0.8 a −1.0 MPa bajo RDI moderado). Cerrar la regresión CWSI–Ψ_stem con n ≥ 80 pares totales |
-| **Estadio requerido** | Pre-cosecha. GDD: 830–890. °Brix zona A: 22–24 (verificar con refractómetro) |
+| **Objetivo científico** | Completar el dataset con el estadio de madurez (máximo °Brix, Ψ_stem en fila 5 — 100% ETc — ≈ −0.8 a −1.0 MPa bajo RDI moderado). Cerrar la regresión CWSI–Ψ_stem con n ≥ 80 pares totales |
+| **Estadio requerido** | Pre-cosecha. GDD: 830–890. °Brix fila 5 (100% ETc): 22–24 (verificar con refractómetro) |
 | **Fecha tentativa** | **Martes 16 de marzo de 2027** |
 | **Ventana objetivo** | 8–25 de marzo de 2027 |
 | **Fecha de respaldo** | **Martes 23 de marzo de 2027** |
 | **Presencia Monteoliva** | **Remota** (idéntico procedimiento a S3) |
-| **Actividades adicionales** | Medición de °Brix en ≥ 10 bayas por zona (refractómetro Javier) + foto del estado del canopeo por zona. Estos datos se incluirán en la tabla de resultados del paper (correlación CWSI–calidad enológica) |
+| **Actividades adicionales** | Medición de °Brix en ≥ 10 bayas por fila de calibración (refractómetro Javier) + foto del estado del canopeo por fila. Estos datos se incluirán en la tabla de resultados del paper (correlación CWSI–calidad enológica) |
 | **Trigger automático** | Notificación push cuando GDD ≥ 810 AND pronóstico SMN = sin lluvia 48h |
 | **Cierre del experimento** | Dentro de los 7 días post-sesión 4: exportar el dataset completo al pipeline de el investigador Art. 32 para análisis estadístico final |
 
@@ -129,7 +129,7 @@ AGO 2026   SEP 2026          OCT 2026         NOV 2026
 │          │                 │                │
 │          │          [S1 tentativa: 5-oct] ──►│
 │          │                 │                │
-│          │                 │          [RESTRICCIÓN ZONA E]
+│          │                 │          [RESTRICCIÓN FILA 1 (0% ETc)]
 │                                              │ 28-oct – 20-nov
 │
 DIC 2026         ENE 2027          FEB 2027          MAR 2027
@@ -184,7 +184,7 @@ Si se pierden 2 de las 4 sesiones sin posibilidad de recuperación, notificar a 
 | Nodo HydroVision AG funcionando (batería, comunicación) | César Schiavoni | 72 h antes de cada sesión |
 | Tensiómetros de zona leídos y operativos | Javier Schiavoni | Semana previa a la sesión |
 | Monteoliva con agenda libre (S1 y S2) | Monteoliva | Confirmar 21 días antes |
-| Solenoides zonas D y E funcionando (verificar no hay falla electromecánica) | César Schiavoni | 72 h antes |
+| Solenoides filas 1 y 2 funcionando (verificar no hay falla electromecánica) | César Schiavoni | 72 h antes |
 
 ### 6.2 Sincronización con otros hitos del proyecto
 

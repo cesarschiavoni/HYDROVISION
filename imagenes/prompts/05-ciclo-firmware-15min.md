@@ -68,7 +68,8 @@ Cada fase es un bloque rectangular de color sobre la línea de tiempo, con durac
 | P2 | +20° | 0° | Derecha — exposición | ~1,3s |
 | P3 | 0° | +15° | Arriba — cobertura foliar | ~1,3s |
 | P4 | 0° | -10° | Abajo — dosel inferior | ~1,3s |
-| P5* | 0° | -30° | Nadir — solo si viento >20 km/h | ~1,3s |
+| P5 | -20° | +15° | Diagonal IzqArriba — cobertura cruzada | ~1,3s |
+| P6* | 0° | -30° | Nadir — solo si viento >20 km/h | ~1,3s |
 
 - "Cada posición: mover servo (300 ms estabilización verificada por IMU) → captura frame 32×24 → clasificar píxeles foliares"
 - Ícono: cámara térmica con flechas de movimiento

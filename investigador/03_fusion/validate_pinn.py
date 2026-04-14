@@ -11,9 +11,9 @@ Evalúa el checkpoint entrenado sobre el dataset Scholander y genera:
     - Resumen estadístico: metrics.json + metrics_summary.txt
 
 Target TRL 4:
-    MAE  < 0.10  (CWSI vs CWSI_real)
-    R²   > 0.60  (CWSI vs CWSI_real)
-    R²   > 0.75  (CWSI vs ψ_stem Scholander, post-finetune)
+    MAE  ≤ 0.08  (CWSI vs CWSI_real)
+    R²   ≥ 0.75  (CWSI vs CWSI_real)
+    R²   ≥ 0.75  (CWSI vs ψ_stem Scholander, post-finetune)
 
 Uso:
     # Desde investigador/ o desde investigador/03_fusion/
@@ -128,8 +128,8 @@ def compute_metrics(
         "std_diff": round(std_diff, 5),
         "loa_upper": round(loa_upper, 5),
         "loa_lower": round(loa_lower, 5),
-        "within_target_mae": bool(mae < 0.10),
-        "within_target_r2": bool(r2 > 0.60),
+        "within_target_mae": bool(mae <= 0.08),
+        "within_target_r2": bool(r2 >= 0.75),
     }
 
 
@@ -389,7 +389,7 @@ def plot_scatter_psi(
         "slope_psi_cwsi": round(float(slope), 4),
         "intercept_psi_cwsi": round(float(intercept), 4),
         "n_psi": int(valid.sum()),
-        "within_target_r2_psi": bool(r2_psi > 0.75),
+        "within_target_r2_psi": bool(r2_psi >= 0.75),
     }
 
 
@@ -466,8 +466,8 @@ def plot_error_by_session(
         boxprops=dict(facecolor="#BBDEFB"),
         medianprops=dict(color="#1976D2", linewidth=2),
     )
-    ax.axhline(0.10, color="#F44336", linestyle="--", linewidth=1.2,
-               label="Target MAE = 0.10")
+    ax.axhline(0.08, color="#F44336", linestyle="--", linewidth=1.2,
+               label="Target MAE = 0.08")
     ax.set_xlabel("Sesión Scholander", fontsize=12)
     ax.set_ylabel("|CWSI_pred − CWSI_real|", fontsize=12)
     ax.set_title("Error absoluto CWSI por sesión", fontsize=13)
@@ -579,9 +579,9 @@ def main():
         f"n evaluados  : {len(preds)}",
         f"",
         f"CWSI pred vs CWSI real:",
-        f"  MAE  = {metrics_cwsi['mae']:.4f}  {'✓ OK (<0.10)' if metrics_cwsi['within_target_mae'] else '✗ REVISAR (>0.10)'}",
+        f"  MAE  = {metrics_cwsi['mae']:.4f}  {'✓ OK (≤0.08)' if metrics_cwsi['within_target_mae'] else '✗ REVISAR (>0.08)'}",
         f"  RMSE = {metrics_cwsi['rmse']:.4f}",
-        f"  R²   = {metrics_cwsi['r2']:.4f}  {'✓ OK (>0.60)' if metrics_cwsi['within_target_r2'] else '✗ REVISAR (<0.60)'}",
+        f"  R²   = {metrics_cwsi['r2']:.4f}  {'✓ OK (≥0.75)' if metrics_cwsi['within_target_r2'] else '✗ REVISAR (<0.75)'}",
         f"  Sesgo = {metrics_cwsi['bias']:+.4f}",
         f"  LoA  = [{metrics_cwsi['loa_lower']:+.3f}, {metrics_cwsi['loa_upper']:+.3f}]",
     ]
@@ -590,7 +590,7 @@ def main():
             f"",
             f"CWSI pred vs ψ_stem Scholander:",
             f"  R    = {metrics_psi['r_cwsi_psi']:.4f}",
-            f"  R²   = {metrics_psi['r2_cwsi_psi']:.4f}  {'✓ OK (>0.75)' if metrics_psi.get('r2_cwsi_psi', 0) > 0.75 else '✗ REVISAR (<0.75)'}",
+            f"  R²   = {metrics_psi['r2_cwsi_psi']:.4f}  {'✓ OK (≥0.75)' if metrics_psi.get('r2_cwsi_psi', 0) >= 0.75 else '✗ REVISAR (<0.75)'}",
         ]
     summary_lines.append("=" * 55)
 

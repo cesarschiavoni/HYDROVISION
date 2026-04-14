@@ -7,7 +7,7 @@
 **Especialidad:** Fisiología vegetal bajo estrés abiótico — Relaciones hídricas en cultivos  
 **Publicación de referencia:** Espinosa Herlein, M.A.; Monteoliva, M.I. (2025). Estado hídrico. En: *Abordajes fisiológicos para el estudio del estrés abiótico en cultivos*. Editorial UCC, Córdoba.  
 **Viñedo experimental:** Predio familiar Schiavoni, Colonia Caroya, Córdoba (31°12' S, 64°05' O, ~700 m s.n.m.)  
-**Cultivo:** *Vitis vinifera* L. cv. Malbec en espaldera — 1/3 ha — fila de 136 m dividida en 5 regímenes hídricos  
+**Cultivo:** *Vitis vinifera* L. cv. Malbec en espaldera — 1/3 ha — 10 filas de 136 m (1.360 vides): filas 1–5 de calibración (5 regímenes hídricos) + filas 6–10 de producción (100% ETc)  
 **Versión:** 1.0 — Abril 2026
 
 ---
@@ -41,24 +41,38 @@ La correlación CWSI–Ψ_stem reportada en vid oscila entre R² = 0.49–0.67 p
 
 El protocolo aplica el paradigma de Riego Deficitario Regulado (RDI, Regulated Deficit Irrigation) documentado en la literatura vitivinícola argentina y chilena para la obtención de datos de entrenamiento del modelo IA con gradiente completo de estrés.
 
-El viñedo experimental tiene 10 filas de 136 m (1.360 vides, espaciado 1 m entre plantas, 3 m entre filas). Se asigna un **único régimen hídrico por fila completa** (la fila entera se riega igual), controlado por solenoides independientes Rain Bird 24 VAC (1 solenoide por fila experimental). Las 5 filas experimentales se intercalan con 5 filas buffer a 100% ETc que evitan contaminación lateral del estrés hídrico entre tratamientos:
+El viñedo experimental tiene 10 filas de 136 m (1.360 vides, espaciado 1 m entre plantas, 3 m entre filas), dividido en dos zonas contiguas con funciones complementarias:
 
-| Fila | Régimen | ETc aplicada | Tipo | Rango CWSI esperado | Función experimental |
+- **Zona de calibración (filas 1–5):** 5 regímenes hídricos controlados por solenoides independientes Rain Bird 24 VAC (1 solenoide por fila). Cada fila recibe un **único régimen hídrico** (la fila entera se riega igual). Los regímenes se ordenan con el estrés máximo en el extremo (fila 1) y el control pleno en la fila 5, que actúa como transición natural hacia la zona de producción.
+- **Zona de producción (filas 6–10):** 5 filas a 100% ETc (riego normal) con nodos configurados en **modo producción** — ejecutando el pipeline comercial completo (CWSI → HSI → alerta → recomendación de riego) de forma autónoma, exactamente como lo haría un productor real.
+
+| Fila | Régimen | ETc aplicada | Zona | Rango CWSI esperado | Función |
 |---|---|---|---|---|---|
-| 2 | Control pleno | 100% ETc | Experimental | 0.05–0.20 | Referencia — línea base sin estrés |
-| 4 | RDI leve | 65% ETc | Experimental | 0.25–0.40 | Estrés incipiente — máxima sensibilidad del sistema |
-| 6 | RDI moderado | 40% ETc | Experimental | 0.45–0.60 | Umbral de alerta agronómica |
-| 8 | RDI severo | 15% ETc | Experimental | 0.65–0.85 | Zona de impacto productivo |
-| 10 | Sin riego | 0% ETc | Experimental | 0.85–1.00 | Estrés máximo — límite del sistema |
-| 1, 3, 5, 7, 9 | Control pleno | 100% ETc | Buffer | — | Aislamiento hídrico entre tratamientos |
+| 1 | Sin riego | 0% ETc | Calibración | 0.85–1.00 | Estrés máximo — límite del sistema |
+| 2 | RDI severo | 15% ETc | Calibración | 0.65–0.85 | Zona de impacto productivo |
+| 3 | RDI moderado | 40% ETc | Calibración | 0.45–0.60 | Umbral de alerta agronómica |
+| 4 | RDI leve | 65% ETc | Calibración | 0.25–0.40 | Estrés incipiente — máxima sensibilidad del sistema |
+| 5 | Control pleno | 100% ETc | Calibración | 0.05–0.20 | Referencia — línea base sin estrés. Transición natural hacia zona de producción |
+| 6–10 | Riego normal | 100% ETc | Producción | 0.05–0.20 | Validación del producto final — nodos en modo comercial autónomo |
 
-El gradiente de 5 niveles en 5 filas independientes permite obtener pares calibrados (Ψ_stem, CWSI) que cubren el rango operativo completo del sistema en una sola sesión de medición. Cada nodo (1 por fila experimental, planta central ~68) monitorea un régimen hídrico uniforme, eliminando variabilidad intra-fila.
+**Diseño del gradiente:** el gradiente de estrés decreciente (fila 1 → fila 5) minimiza el riesgo de contaminación hídrica lateral entre la zona de calibración y la zona de producción. La fila 5 (100% ETc) comparte el mismo régimen que las filas 6–10, eliminando cualquier efecto de borde entre zonas. El riego por goteo localizado (cinta drip) limita la migración lateral de agua entre filas adyacentes dentro de la zona de calibración.
+
+El gradiente de 5 niveles en la zona de calibración permite obtener pares calibrados (Ψ_stem, CWSI) que cubren el rango operativo completo del sistema en una sola sesión de medición. Cada fila de calibración lleva un nodo permanente (planta central ~68) que monitorea un régimen hídrico uniforme, eliminando variabilidad intra-fila.
+
+**Validación dual — calibración científica + producto final en el mismo viñedo:**
+
+La zona de producción (filas 6–10) opera como banco de prueba del producto comercial. Los 5 nodos de producción ejecutan el pipeline completo de forma autónoma bajo riego normal (100% ETc). Esto permite:
+
+1. **Validación cruzada directa:** los nodos de producción generan recomendaciones de riego que se contrastan con el Ψ_stem medido en la zona de calibración adyacente (fila 5 al mismo régimen 100% ETc). El nodo de producción dice "CWSI = 0.12, sin estrés"; la fila 5 de calibración (con Scholander) confirma cuantitativamente esa lectura.
+2. **Reproducibilidad del sistema:** 5 nodos idénticos bajo las mismas condiciones (100% ETc) demuestran la consistencia del producto — las lecturas de los 5 nodos deben concordar (CV < 10%), evidencia directa de que el prototipo es reproducible y escalable.
+3. **Demostración de producto para TRL 4:** los nodos de producción generan alertas, dashboards y recomendaciones reales durante toda la campaña, sin intervención humana — evidencia directa del TRL 4 ("prototipo escalable, con ventajas competitivas medibles").
+4. **Separación limpia de datos:** los nodos de calibración (filas 1–5) generan el dataset científico (800 frames + Scholander); los nodos de producción (filas 6–10) generan datos de validación operativa independientes, con `node_id` separados.
 
 ### 2.2 Varietal y fenología del viñedo experimental
 
 **Cultivo:** *Vitis vinifera* L. cv. Malbec  
 **Sistema de conducción:** Espaldera doble con carga de poda de 8–12 yemas por planta  
-**Marco de plantación:** ~2.5 m entre filas × 1.5 m entre plantas  
+**Marco de plantación:** 3,0 m entre filas × 1,0 m entre plantas  
 **Portainjerto:** No especificado (planta propia en suelo franco-limoso)  
 **Altitud:** ~700 m s.n.m. — precipitación media anual ~700 mm concentrada en verano (Nov–Mar)  
 **Temperatura media anual:** 17°C — amplitud térmica diaria en verano: 12–18°C  
@@ -90,7 +104,7 @@ Los siguientes umbrales se utilizan tanto para la definición de los regímenes 
 | Estrés crítico | < −1.5 MPa | > 0.80 | **Protocolo de rescate** — riego de emergencia — notificar a Monteoliva |
 | Daño irreversible | < −2.0 MPa | — | Embolia xilemática documentada en Malbec (Schultz 2003) — evitar en todo caso |
 
-**Umbral de rescate del protocolo:** Ψ_stem < −1.5 MPa en cualquier planta de Zona D o E activa el protocolo de riego de emergencia automático. Este umbral tiene un margen de seguridad de 0.5 MPa sobre el umbral de daño irreversible documentado para Malbec en condiciones de Cuyo y Córdoba.
+**Umbral de rescate del protocolo:** Ψ_stem < −1.5 MPa en cualquier planta de fila 2 (15% ETc) o fila 1 (0% ETc) activa el protocolo de riego de emergencia automático. Este umbral tiene un margen de seguridad de 0.5 MPa sobre el umbral de daño irreversible documentado para Malbec en condiciones de Cuyo y Córdoba.
 
 ---
 
@@ -139,7 +153,7 @@ La hoja para Ψ_stem debe cumplir todos los criterios siguientes:
 - Hoja adulta completamente expandida, sin daño físico ni síntomas de enfermedad
 - Ubicada en la parte media del dosel (evitar hojas terminales y basales extremas)
 - Expuesta a radiación solar directa o semisombra durante al menos 30 min previos al corte (no hoja sombreada profunda — su Ψ no refleja el estado hídrico del tallo)
-- Misma vid de referencia en cada sesión: vid de la posición central de cada zona (marcada con estaca numerada desde la Semana 2 de instalación)
+- Misma vid de referencia en cada sesión: vid de la posición central de cada fila de calibración (~planta 68 de cada fila, marcada con estaca numerada desde la Semana 2 de instalación)
 
 **Procedimiento paso a paso:**
 
@@ -166,7 +180,7 @@ Con la lupa 10× apuntada al extremo cortado del pecíolo, observar el corte en 
 
 **Paso 6 — Lectura y registro:**  
 Leer el manómetro con el eje visual perpendicular al dial (evitar error de paralaje). Anotar inmediatamente en la planilla:
-- Zona (A / B / C / D / E)
+- Fila de calibración (1 = 0% ETc / 2 = 15% / 3 = 40% / 4 = 65% / 5 = 100% ETc)
 - Número de vid (ej. F1-046)
 - Hora exacta (HH:MM)
 - Valor de Ψ_stem en MPa (convertir si el manómetro está en bar: 1 bar = 0.1 MPa; si está en PSI: 1 PSI = 0.00689 MPa)
@@ -181,36 +195,36 @@ Fotografiar cada hoja medida junto a la planilla con el valor anotado visible. C
 
 ### 3.4 Secuencia de medición por sesión
 
-Medir en orden: Zona A → B → C → D → E. Siempre la misma vid de referencia:
+Medir en orden: Fila 5 → Fila 4 → Fila 3 → Fila 2 → Fila 1 (de menor a mayor estrés). Siempre las mismas vides de referencia (plantas 28 y 68 de cada fila):
 
-| Zona | Fila 1 | Fila 2 | Ventana horaria |
+| Fila | Tratamiento | Plantas ref. | Ventana horaria |
 |---|---|---|---|
-| A (100% ETc) | F1-010 | F2-010 | 10:00–10:20 |
-| B (65% ETc) | F1-028 | F2-028 | 10:25–10:45 |
-| C (40% ETc) | F1-046 | F2-046 | 10:50–11:10 |
-| D (15% ETc) | F1-064 | F2-064 | 11:15–11:35 |
-| E (sin riego) | F1-082 | F2-082 | 11:40–12:00 |
+| 5 (100% ETc — control) | Sin estrés | F5-028, F5-068 | 10:00–10:20 |
+| 4 (65% ETc) | RDI leve | F4-028, F4-068 | 10:25–10:45 |
+| 3 (40% ETc) | RDI moderado | F3-028, F3-068 | 10:50–11:10 |
+| 2 (15% ETc) | RDI severo | F2-028, F2-068 | 11:15–11:35 |
+| 1 (0% ETc — secano) | Estrés máximo | F1-028, F1-068 | 11:40–12:00 |
 
 Si el cronograma se desfasa por más de 20 minutos, anotar la hora real de cada medición con precisión de ±2 min — los frames térmicos del nodo se sincronizarán con la hora exacta del dato Scholander en el procesamiento posterior.
 
 ### 3.5 Protocolo de rescate hídrico — criterios obligatorios
 
-El diseño experimental induce estrés hídrico severo en las Zonas D y E. Para garantizar la integridad del viñedo experimental durante los 9 meses del protocolo, se establecen los siguientes criterios de rescate de aplicación obligatoria e inmediata:
+El diseño experimental induce estrés hídrico severo en las filas 2 (15% ETc) y 1 (0% ETc, secano). Para garantizar la integridad del viñedo experimental durante los 9 meses del protocolo, se establecen los siguientes criterios de rescate de aplicación obligatoria e inmediata:
 
 **Criterio 1 — Ψ_stem crítico:**  
-Ψ_stem < −1.5 MPa medido en cualquier planta de Zona D o E → activar riego de emergencia en esa zona en las siguientes 2 horas. Notificar a Monteoliva y Schiavoni por WhatsApp con el valor y la hora.
+Ψ_stem < −1.5 MPa medido en cualquier planta de fila 2 o fila 1 → activar riego de emergencia en esa fila en las siguientes 2 horas. Notificar a Monteoliva y Schiavoni por WhatsApp con el valor y la hora.
 
 **Criterio 2 — Temperatura foliar extrema:**  
-Temperatura foliar > 42°C sostenida > 30 min en condiciones de VPD normal (verificar en dashboard del nodo) → riego de emergencia inmediato en la zona afectada.
+Temperatura foliar > 42°C sostenida > 30 min en condiciones de VPD normal (verificar en dashboard del nodo) → riego de emergencia inmediato en la fila afectada.
 
 **Criterio 3 — Plazo máximo sin agua:**  
-14 días consecutivos sin precipitación ni riego en Zona E durante Diciembre–Febrero → riego de recuperación mínimo de 24 h antes de continuar el protocolo, independientemente del Ψ_stem medido.
+14 días consecutivos sin precipitación ni riego en fila 1 (0% ETc) durante Diciembre–Febrero → riego de recuperación mínimo de 24 h antes de continuar el protocolo, independientemente del Ψ_stem medido.
 
-**Restricción permanente — Zona E en floración:**  
-La Zona E (sin riego) **no se aplica durante el estadio de floración** (GDD 280–420 para Malbec, aprox. Oct–Nov). El aborto floral por estrés severo en floración es irreversible para esa temporada. Durante la floración, la Zona E recibe 15% ETc (mismo régimen que Zona D en condiciones normales).
+**Restricción permanente — Fila 1 (0% ETc) en floración:**  
+La fila 1 (0% ETc, secano) **no aplica régimen sin riego durante el estadio de floración** (GDD 280–420 para Malbec, aprox. Oct–Nov). El aborto floral por estrés severo en floración es irreversible para esa temporada. Durante la floración, la fila 1 recibe 15% ETc (mismo régimen que la fila 2 en condiciones normales).
 
-**Rotación de zonas de estrés entre temporadas:**  
-Las zonas D y E rotan entre distintas filas en temporadas sucesivas para que ninguna línea de plantas acumule daño permanente por la repetición del protocolo.
+**Rotación de filas de estrés entre temporadas:**  
+Las filas 1 y 2 (estrés severo) rotan entre distintas filas del viñedo en temporadas sucesivas para que ninguna línea de plantas acumule daño permanente por la repetición del protocolo.
 
 ---
 
@@ -222,32 +236,32 @@ Fecha: ___/___/2026    Sesión #: ___    Hora inicio: ___:___    Operador: _____
 
 CONDICIONES PREVIAS:
   Lluvia últimas 48h: ___ mm (app nodo)    Viento al inicio: ___ km/h    T° ambiente 9:30hs: ___°C
-  D_max registrado anoche (extensómetros):  A=___µm  B=___µm  C=___µm  D=___µm  E=___µm
+  D_max registrado anoche (extensómetros):  F5=___µm  F4=___µm  F3=___µm  F2=___µm  F1=___µm
   Observaciones condición previa: __________________________________________________
 
 LECTURAS TENSIÓMETROS (8:45hs):
-  Zona A: ___ cb    B: ___ cb    C: ___ cb    D: ___ cb    E: ___ cb
+  Fila 5: ___ cb    F4: ___ cb    F3: ___ cb    F2: ___ cb    F1: ___ cb
 
 MEDICIONES Ψ_stem (10:00–13:00hs):
-  ┌───────┬─────────────┬──────────┬────────────────┬──────────────────────────────────┐
-  │ Zona  │ Vid (F-N°)  │ Hora     │ Ψ_stem (MPa)   │ Observaciones                    │
-  ├───────┼─────────────┼──────────┼────────────────┼──────────────────────────────────┤
-  │  A    │ F1-010      │ ___:___  │ −___.___ MPa   │                                  │
-  │  B    │ F1-028      │ ___:___  │ −___.___ MPa   │                                  │
-  │  C    │ F1-046      │ ___:___  │ −___.___ MPa   │                                  │
-  │  D    │ F1-064      │ ___:___  │ −___.___ MPa   │ ¿>−1.5?: RESCATE ___ □           │
-  │  E    │ F1-082      │ ___:___  │ −___.___ MPa   │ ¿>−1.5?: RESCATE ___ □           │
-  └───────┴─────────────┴──────────┴────────────────┴──────────────────────────────────┘
+  ┌────────────────────────┬─────────────┬──────────┬────────────────┬──────────────────────────────────┐
+  │ Fila / Régimen         │ Vid (F-N°)  │ Hora     │ Ψ_stem (MPa)   │ Observaciones                    │
+  ├────────────────────────┼─────────────┼──────────┼────────────────┼──────────────────────────────────┤
+  │ Fila 5 (100% ETc)      │ F5-068      │ ___:___  │ −___.___ MPa   │                                  │
+  │ Fila 4 (65% ETc)       │ F4-068      │ ___:___  │ −___.___ MPa   │                                  │
+  │ Fila 3 (40% ETc)       │ F3-068      │ ___:___  │ −___.___ MPa   │                                  │
+  │ Fila 2 (15% ETc)       │ F2-068      │ ___:___  │ −___.___ MPa   │ ¿>−1.5?: RESCATE ___ □           │
+  │ Fila 1 (0% ETc)        │ F1-068      │ ___:___  │ −___.___ MPa   │ ¿>−1.5?: RESCATE ___ □           │
+  └────────────────────────┴─────────────┴──────────┴────────────────┴──────────────────────────────────┘
 
 LECTURAS TENSIÓMETROS (12:00hs):
-  Zona A: ___ cb    B: ___ cb    C: ___ cb    D: ___ cb    E: ___ cb
+  Fila 5: ___ cb    F4: ___ cb    F3: ___ cb    F2: ___ cb    F1: ___ cb
 
 D_min del día (16:00hs — leer en app):
-  A=___µm    B=___µm    C=___µm    D=___µm    E=___µm
-  MDS calculado:  A=___µm  B=___µm  C=___µm  D=___µm  E=___µm
+  F5=___µm    F4=___µm    F3=___µm    F2=___µm    F1=___µm
+  MDS calculado:  F5=___µm  F4=___µm  F3=___µm  F2=___µm  F1=___µm
 
 LECTURAS TENSIÓMETROS (16:00hs):
-  Zona A: ___ cb    B: ___ cb    C: ___ cb    D: ___ cb    E: ___ cb
+  Fila 5: ___ cb    F4: ___ cb    F3: ___ cb    F2: ___ cb    F1: ___ cb
 
 CIERRE:
   Fotos subidas a Drive: SÍ □ / NO □ (motivo: _______________)

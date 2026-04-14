@@ -18,7 +18,7 @@ El núcleo del sistema es un nodo autónomo que:
 
 Como señal complementaria, el nodo incorpora un extensómetro de tronco (dendrómetro) que registra la variación de diámetro entre sesiones térmicas.
 
-El proyecto cuenta con financiamiento ANPCyT por **USD 120.000 ANR** + contrapartida privada, y dispone de un viñedo experimental propio en Colonia Caroya (5 filas experimentales de Malbec + 5 buffer, 5 regímenes hídricos controlados, 1 tratamiento uniforme por fila).
+El proyecto cuenta con financiamiento ANPCyT por **USD 120.000 ANR** + contrapartida privada, y dispone de un viñedo experimental propio en Colonia Caroya (5 filas de calibración con 5 regímenes hídricos + 5 filas de producción a 100% ETc, 10 nodos permanentes, 1 tratamiento uniforme por fila).
 
 ---
 

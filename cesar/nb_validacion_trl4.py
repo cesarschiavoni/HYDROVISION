@@ -4,7 +4,7 @@ Validación TRL 4 — HSI vs ψ_stem Scholander
 HydroVision AG | César #6 — Notebooks de validación TRL 4
 
 Genera los 4 gráficos de validación requeridos para Gate 3 (TRL 4):
-  1. HSI vs ψ_stem Scholander — scatter + R² (target: R² >= 0.70)
+  1. HSI vs ψ_stem Scholander — scatter + R² (target: R² >= 0.80)
   2. Mapa de estrés hídrico por zona (5 zonas del campo demo)
   3. Curvas de calibración extensómetro (MDS vs ψ_stem)
   4. Comparación satélite vs nodo (NDWI Sentinel-2 vs CWSI nodo)
@@ -119,14 +119,14 @@ def plot_hsi_vs_psi_stem(data):
     ax.set_ylabel("ψ_stem [MPa] (Scholander)", fontsize=12)
     ax.set_title(f"Validación TRL 4: HSI vs ψ_stem Scholander\n"
                  f"R²={r2:.3f} | RMSE={rmse:.3f} MPa | n={len(hsi)} | "
-                 f"Target: R² ≥ 0.70", fontsize=13)
+                 f"Target: R² ≥ 0.80", fontsize=13)
     ax.legend(title="Zona")
     ax.grid(True, alpha=0.3)
 
-    status = "PASS" if r2 >= 0.70 else "FAIL"
-    ax.text(0.02, 0.02, f"{status}: R² = {r2:.3f} {'≥' if r2 >= 0.70 else '<'} 0.70",
+    status = "PASS" if r2 >= 0.80 else "FAIL"
+    ax.text(0.02, 0.02, f"{status}: R² = {r2:.3f} {'≥' if r2 >= 0.80 else '<'} 0.80",
             transform=ax.transAxes, fontsize=11, fontweight="bold",
-            color="green" if r2 >= 0.70 else "red",
+            color="green" if r2 >= 0.80 else "red",
             bbox=dict(boxstyle="round", facecolor="white", alpha=0.8))
 
     fig.tight_layout()
@@ -317,5 +317,5 @@ if __name__ == "__main__":
 
     print(f"\nTodos los gráficos guardados en: {OUTPUT_DIR}")
     print(f"\nResumen Gate 3:")
-    print(f"  HSI vs ψ_stem: R² = {r2_hsi:.3f} {'PASS' if r2_hsi >= 0.70 else 'FAIL'} (target ≥ 0.70)")
+    print(f"  HSI vs ψ_stem: R² = {r2_hsi:.3f} {'PASS' if r2_hsi >= 0.80 else 'FAIL'} (target ≥ 0.80)")
     print(f"  Satélite vs Nodo: R² = {r2_sat:.3f}")

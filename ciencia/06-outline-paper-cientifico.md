@@ -55,7 +55,7 @@
 
 - **Background**: Estado del arte: limitación de termografía UAV ocasional vs. monitoreo continuo. Gap: no existe sistema comercial de nodo fijo LWIR con extensometría de tronco en vid a escala de campo.
 - **Objective**: Calibrar CWSI usando nodo fijo LWIR+extensómetro bajo 5 niveles de déficit hídrico (RDI 0–100% ETc) en Malbec, Córdoba, Argentina.
-- **Methods**: Viñedo experimental Colonia Caroya, 5 zonas RDI, nodo HydroVision AG (MLX90640 LWIR 32×24, extensómetro 24 bits, SHT31, pluviómetro). 4 sesiones Scholander (Ψ_stem, cámara de presión). Ajuste lineal CWSI–Ψ_stem, R² y RMSE.
+- **Methods**: Viñedo experimental Colonia Caroya, 5 filas de calibración (RDI 0–100% ETc), nodo HydroVision AG (MLX90640 LWIR 32×24, extensómetro 24 bits, SHT31, pluviómetro). 4 sesiones Scholander (Ψ_stem, cámara de presión). Ajuste lineal CWSI–Ψ_stem, R² y RMSE.
 - **Key results** (a completar post-experimento): R²=X.XX entre CWSI y Ψ_stem; CWSI_alerta = X.XX corresponde a Ψ_stem = −X.X MPa.
 - **Conclusion**: Primera calibración CWSI para Malbec argentina con monitoreo continuo fijo.
 - **Keywords**: CWSI · stem water potential · Malbec · regulated deficit irrigation · LWIR · trunk diameter variation
@@ -84,11 +84,11 @@
 - Suelo: franco-limoso, capacidad de campo ~0.28 m³/m³, PMP ~0.12 m³/m³
 - Clima: templado semi-árido, ETo media anual 850 mm, precipitación 600–700 mm (distribución estival)
 
-**2.2 Experimental design — 5-zone RDI**
-- 5 zonas de riego: A=100%, B=65%, C=40%, D=15%, E=0% ETc
-- Rain Bird controller, solenoides por zona, tensiómetros a 30 cm
+**2.2 Experimental design — 5 calibration rows RDI**
+- 5 filas de calibración: Fila 5=100%, Fila 4=65%, Fila 3=40%, Fila 2=15%, Fila 1=0% ETc
+- Rain Bird 10 zonas, solenoides por fila, tensiómetros a 30 cm (filas 1–5)
 - ETo calculada por Penman-Monteith (datos SMN Córdoba + estación local)
-- Tabla de zonas con número de plantas y replicas
+- Tabla de filas con número de plantas y replicas
 
 **2.3 HydroVision AG monitoring node**
 - Componentes: MCU ESP32-S3, cámara LWIR MLX90640 (32×24 px, NETD<0.1°C), extensómetro lineal 24 bits (resolución 1 μm), T+HR SHT31, pluviómetro basculante, anemómetro
@@ -99,7 +99,7 @@
 **2.4 CWSI calculation**
 - Fórmula Jackson 1981: CWSI = (ΔT_medido − ΔT_LL) / (ΔT_UL − ΔT_LL)
 - Línea base inferior: ΔT_LL = a + b·VPD (coeficientes calibrados en temporada)
-- Línea base superior: ΔT_UL = media histórica de planta bajo estrés máximo (zona E)
+- Línea base superior: ΔT_UL = media histórica de planta bajo estrés máximo (fila 1 — 0% ETc, secano)
 - Segmentación foliar: máscara por rango de temperatura (exclusión suelo/madera)
 - Filtro de viento: rampa gradual 4-18 m/s (14-65 km/h) → peso CWSI se reduce linealmente de 35% a 0%. Frames con v_viento ≥ 18 m/s (65 km/h) → descartados del análisis CWSI (ponderación HSI = 0 para termografía)
 
@@ -119,14 +119,14 @@
 - Bomba de presión PMS Instrument Co. (Santa Barbara, CA)
 - Ψ_stem: hoja penúltima madura, equilibrada en cámara de papel de aluminio 90 min antes de la medición
 - Ventana: 10:00–13:00 hs solar
-- n ≥ 5 plantas por zona por sesión
+- n ≥ 5 plantas por fila de calibración por sesión
 - 4 sesiones: Sep–Oct 2026, Ene 2027, Feb 2027, Mar 2027 (OED D-óptimo)
 - Restricciones post-lluvia: <2 mm → sin restricción; 3–10 mm → esperar 24–36 h; >10 mm → esperar 48–72 h
 
 **2.8 Statistical analysis**
 - Regresión lineal simple y múltiple: Ψ_stem ~ CWSI, Ψ_stem ~ HSI
 - R², RMSE, MAE para ambos modelos
-- Comparación de pendientes por zona RDI (ANCOVA)
+- Comparación de pendientes por fila de calibración (ANCOVA)
 - Software: R 4.x (lm, ggplot2) o Python (statsmodels, sklearn)
 
 ### 4.4 Results (2.000–2.500 palabras)
@@ -136,7 +136,7 @@
 - Distribución de condiciones de viento y % de frames válidos para CWSI
 
 **3.2 CWSI baseline calibration**
-- Figura 1: ΔT_LL vs. VPD para 5 zonas — punto de corte zona A (plena hidratación)
+- Figura 1: ΔT_LL vs. VPD para 5 filas de calibración — punto de corte fila 5 (100% ETc, plena hidratación)
 - Tabla 1: Coeficientes a, b de la línea base inferior con IC 95%
 - Resultado esperado: ΔT_LL_Malbec = −0.55 − 0.95·VPD (valores tentativos basados en bibliografía; a confirmar con datos)
 
@@ -169,7 +169,7 @@
 
 **Párrafo 3:** La fusión HSI recupera la capacidad predictiva en condiciones de viento → relevancia práctica para regiones con viento Zonda (Mendoza) y viento Norte (Córdoba).
 
-**Párrafo 4:** Limitaciones del trabajo: resolución espacial del MLX90640 (32×24 pixels → ¿suficiente para Malbec en espaldera?), n de plantas por zona, una sola variedad y sitio. Proyección a otras variedades (§5 — tabla de adaptación, doc 05).
+**Párrafo 4:** Limitaciones del trabajo: resolución espacial del MLX90640 (32×24 pixels → ¿suficiente para Malbec en espaldera?), n de plantas por fila de calibración, una sola variedad y sitio. Proyección a otras variedades (§5 — tabla de adaptación, doc 05).
 
 **Párrafo 5:** Implicancias prácticas — ahorro de agua vs. monitoreo Scholander manual. Costo-beneficio del sistema HydroVision AG para el productor. *[PRECAUCIÓN: no mencionar cifras de ahorro de m³ sin el análisis del doc 08 — verificar consistencia]*
 
@@ -216,9 +216,9 @@
 
 | Figura | Descripción | Datos fuente | Software |
 |---|---|---|---|
-| Fig. 1 | Diagrama esquemático del nodo y diseño experimental de las 5 zonas | Ilustración | Inkscape / Python matplotlib |
+| Fig. 1 | Diagrama esquemático del nodo y diseño experimental de las 5 filas de calibración | Ilustración | Inkscape / Python matplotlib |
 | Fig. 2 | ΔT_LL vs. VPD — línea base inferior calibrada para Malbec Córdoba | Datos sesión 1+2 | Python seaborn |
-| Fig. 3 | Dispersión CWSI vs. Ψ_stem — todos los pares, coloreados por zona RDI | Datos 4 sesiones | R ggplot2 |
+| Fig. 3 | Dispersión CWSI vs. Ψ_stem — todos los pares, coloreados por fila de calibración | Datos 4 sesiones | R ggplot2 |
 | Fig. 4 | Comparación R² CWSI vs. HSI por condición de viento | Datos 4 sesiones | Python matplotlib |
 | Fig. 5 | Umbral de riesgo — P(Ψ<−1.5 MPa) ~ CWSI con bandas de confianza | Modelo logístico | R |
 | Fig. 6 | Modulation de pendiente CWSI–Ψ_stem por estadio fenológico (GDD) | Datos 4 sesiones | Python |

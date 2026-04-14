@@ -178,8 +178,8 @@
 #define PIN_BAT_ADC         40   // ADC libre — sin conflicto SPI/UART
 #define BAT_R1              100000  // ohm (resistor hacia Vbat)
 #define BAT_R2              47000   // ohm (resistor hacia GND)
-#define BAT_FULL_MV         4200    // LiFePO4 llena (usar 3600 si se cambia a LiFePO4)
-#define BAT_EMPTY_MV        3000    // mínimo operativo
+#define BAT_FULL_MV         3600    // LiFePO4 llena (3.6V carga completa)
+#define BAT_EMPTY_MV        2800    // LiFePO4 mínimo operativo (2.8V)
 
 // ─────────────────────────────────────────
 // Sensor de partículas PMS5003 (UART1, compartido con GPS)

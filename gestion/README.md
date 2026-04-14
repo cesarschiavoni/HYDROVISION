@@ -33,9 +33,9 @@ Proyecto ANPCyT STARTUP 2025 TRL 3-4 | Plataforma Autonoma de Inteligencia Agron
 | Contrapartida equipo | USD 30.000 | 01, 05, 08 |
 | Total proyecto | USD 150.000 | 01, 05 |
 | Zonas hidricas | 5 | 02, 04, 09 |
-| Filas experimentales | 5 (+ 5 buffer) | 02, 09 |
-| Vides experimento | 680 | 02, 05 |
-| Error CWSI objetivo | < +/-0.10 | 02, 06 |
+| Filas experimentales | 5 calibración + 5 producción (10 total) | 02, 09 |
+| Vides experimento | 1.360 (10 filas × 136 plantas) | 02, 05 |
+| Error CWSI objetivo | < +/-0.008 (28 px promediados) | 02, 06 |
 | Nodo precio Tier 1 | USD 950-1.000 | 01, 06 |
 | Break-even | 800 ha | 01, 06 |
 | TRL actual / objetivo | TRL 3 -> TRL 4 | 01, 02, 08 |

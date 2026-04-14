@@ -133,7 +133,7 @@ frame MLX90640 (32×24 px) → segmentación de canopeo → CWSI por frame → C
 6. CWSI de sesión = promedio ponderado por fracción foliar entre ángulos
 
 **Metodología multi-angular:**
-5–6 posiciones de gimbal × 3 ventanas horarias (9h / 12h / 16h).
+7 posiciones de gimbal × 3 ventanas horarias (9h / 12h / 16h) (6 fijas + 1 condicional viento).
 Flag `alta_variabilidad_angular` si std(CWSI entre ángulos) > 0.12.
 Campo `canopy_side` registra cara norte/sur del canopeo (Pires 2025, Zhou 2022).
 
@@ -325,8 +325,8 @@ python combined_stress_index.py
 
 **Resultado esperado:**
 ```
-  Zona A: Control        CWSI=0.xxx  MDS=55um   psi_HSI=-0.xx MPa  SIN_ESTRES
-  Zona E: Sin riego      CWSI=0.xxx  MDS=440um  psi_HSI=-x.xx MPa  ESTRES_CRITICO [RESCATE]
+  Fila 5 (Control 100% ETc):  CWSI=0.xxx  MDS=55um   psi_HSI=-0.xx MPa  SIN_ESTRES
+  Fila 1 (Sin riego 0% ETc):  CWSI=0.xxx  MDS=440um  psi_HSI=-x.xx MPa  ESTRES_CRITICO [RESCATE]
   HSI fusion: R2 ~0.90-0.95  vs  CWSI-solo ~0.65  vs  MDS-solo ~0.85
 ```
 
@@ -438,7 +438,7 @@ Dataclass de resultado con: hsi, cwsi, mds_um, mds_norm, psi_stem_mpa, w_cwsi, w
 **Demo integrado:**
 ```bash
 python ML\ Engineer/03_fusion/fusion_engine.py
-# Simula 5 nodos × 30 días × 3 sesiones/día
+# Simula 10 nodos × 30 días × 3 sesiones/día
 # Muestra curva de R² de regresión, evolución de offset de baseline y HSI por zona
 ```
 

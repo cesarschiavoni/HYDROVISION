@@ -171,6 +171,16 @@ COGS incremental: USD 9/nodo
 
 ---
 
+### NOTA DE VALIDACIÓN — Zona de producción
+
+En el viñedo experimental, las 9 capas se validan simultáneamente en dos zonas:
+- **Zona de calibración (filas 1–5):** 5 regímenes hídricos (0%–100% ETc) con Scholander como ground truth. Valida la precisión absoluta del CWSI bajo viento.
+- **Zona de producción (filas 6–10):** 5 nodos en modo comercial autónomo (100% ETc, pipeline completo CWSI → HSI → alerta). Valida que las 9 capas funcionan en condiciones reales de producto. Los 5 nodos bajo condiciones idénticas demuestran reproducibilidad (CV < 10%).
+
+Esta validación dual permite demostrar que las mitigaciones no solo reducen el error en el laboratorio sino que funcionan en el producto final.
+
+---
+
 ### LO QUE NO DEBE INCLUIR
 
 * No incluir las 14 mejoras v2 adicionales — solo las 9 capas base

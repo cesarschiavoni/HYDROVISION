@@ -1331,9 +1331,9 @@ antes del primer contrato pagante.
 
 ```
 Diseño: viñedo Colonia Caroya, temporada 2026-2027
-- Zona A (5 plantas): CWSI solo (cámara MLX90640 sin extensómetro)
-- Zona B (5 plantas): HSI = CWSI + MDS (sistema completo)
-- Zona C (5 plantas): MDS solo (extensómetro sin térmica)
+- Grupo 1 (5 plantas): CWSI solo (cámara MLX90640 sin extensómetro)
+- Grupo 2 (5 plantas): HSI = CWSI + MDS (sistema completo)
+- Grupo 3 (5 plantas): MDS solo (extensómetro sin térmica)
 - Control: medición Scholander manual cada 3 días (Mariela Monteoliva)
 Métrica: tasa de falsas alarmas (evento generado cuando ψ_stem > -1.0 MPa)
 Umbral de éxito: HSI tiene < 50% de las falsas alarmas que CWSI solo

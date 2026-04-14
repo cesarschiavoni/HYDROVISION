@@ -61,18 +61,18 @@ def _load_pinn_model():
     if not _TORCH_OK:
         return
 
-    _ALEXIS = Path(__file__).parent.parent / "investigador"
+    _INVESTIGADOR_PATH = Path(__file__).parent.parent / "investigador"
     model_paths = [
-        _ALEXIS / "models" / "edge" / "hydrovision_cwsi_int8.tflite",
-        _ALEXIS / "models" / "checkpoints" / "best_finetune.pt",
-        _ALEXIS / "models" / "checkpoints" / "best_synthetic.pt",
+        _INVESTIGADOR_PATH / "models" / "edge" / "hydrovision_cwsi_int8.tflite",
+        _INVESTIGADOR_PATH / "models" / "checkpoints" / "best_finetune.pt",
+        _INVESTIGADOR_PATH / "models" / "checkpoints" / "best_synthetic.pt",
     ]
 
     for mp in model_paths:
         if mp.exists():
             try:
-                if str(_ALEXIS / "02_modelo") not in sys.path:
-                    sys.path.insert(0, str(_ALEXIS / "02_modelo"))
+                if str(_INVESTIGADOR_PATH / "02_modelo") not in sys.path:
+                    sys.path.insert(0, str(_INVESTIGADOR_PATH / "02_modelo"))
                 from pinn_model import HydroVisionPINN
 
                 if mp.suffix == ".pt":

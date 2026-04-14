@@ -46,14 +46,15 @@
           .----.----.----.----.----.----.----.----.----.----+
           |    |    |    |    |    |    |    |    |    |
          F1   F2   F3   F4   F5   F6   F7   F8   F9  F10
-        BUF  CTRL  BUF  65%  BUF  40%  BUF  15%  BUF  0%
-         |   [SV1]  |  [SV2]  |  [SV3]  |  [SV4]  |  [SV5]
-         |    |     |    |    |    |     |    |    |    |
+         0%  15%  40%  65% 100% 100% 100% 100% 100% 100%
+        [SV1][SV2][SV3][SV4][SV5][SV6][SV7][SV8][SV9][SV10]
+         |    |    |    |    |    |    |    |    |    |
         136m drip por fila — cinta 16mm 1.5L/h@1bar — 136 emisores/fila
 
-     Filas buffer (1,3,5,7,9): sin solenoide, riego directo 100% ETc
-     Filas experimentales (2,4,6,8,10): solenoide Rain Bird 24VAC 1" cada una
-     canal Rain Bird: 1=F2(100%) 2=F4(65%) 3=F6(40%) 4=F8(15%) 5=F10(0%,cerrado)
+     Zona CALIBRACIÓN (F1–F5): 5 regímenes hídricos (0%, 15%, 40%, 65%, 100% ETc)
+     Zona PRODUCCIÓN (F6–F10): todas 100% ETc, nodos en modo comercial autónomo
+     canal Rain Bird: 1=F1(0%,cerrado) 2=F2(15%) 3=F3(40%) 4=F4(65%) 5=F5(100%)
+                      6=F6(100%) 7=F7(100%) 8=F8(100%) 9=F9(100%) 10=F10(100%)
 ```
 
 ---
@@ -69,15 +70,18 @@ MEDIDOR EPEC (220V / 50Hz)
                                 |                       |
                     [Q2 TERMOMAG 10A]         [TRAFO 24VAC 40VA]
                                 |                       |
-                    [PS PRESOSTATO]           [CTRL RAIN BIRD 6 ZONAS]
+                    [PS PRESOSTATO]           [CTRL RAIN BIRD 10 ZONAS]
                      set: 1.5 bar ON                    |
-                          3.0 bar OFF          canal 1 --+-- SV-F2  (100% ETc, control)
-                                |              canal 2 --+-- SV-F4  (65% ETc)
-                    [MOTOR BOMBA 1HP]          canal 3 --+-- SV-F6  (40% ETc)
-                     220V / 4.5A FLA          canal 4 --+-- SV-F8  (15% ETc)
-                     cos φ ≈ 0.85             canal 5 --+-- SV-F10 (0%, cerrado permanente)
-                     I arranque ≈ 25A (1s)    canal 6     reserva
-                     IP54 — exterior
+                          3.0 bar OFF          canal 1  --+-- SV-F1  (0%, cerrado permanente)
+                                |              canal 2  --+-- SV-F2  (15% ETc)
+                    [MOTOR BOMBA 1HP]          canal 3  --+-- SV-F3  (40% ETc)
+                     220V / 4.5A FLA          canal 4  --+-- SV-F4  (65% ETc)
+                     cos φ ≈ 0.85             canal 5  --+-- SV-F5  (100% ETc, control calib.)
+                     I arranque ≈ 25A (1s)    canal 6  --+-- SV-F6  (100% ETc, producción)
+                     IP54 — exterior          canal 7  --+-- SV-F7  (100% ETc, producción)
+                                              canal 8  --+-- SV-F8  (100% ETc, producción)
+                                              canal 9  --+-- SV-F9  (100% ETc, producción)
+                                              canal 10 --+-- SV-F10 (100% ETc, producción)
 ```
 
 ---
@@ -89,13 +93,13 @@ MEDIDOR EPEC (220V / 50Hz)
 | Parámetro | Valor | Fuente |
 |-----------|-------|--------|
 | Caudal por fila (136 emisores) | 3.4 L/min | 136 × 1.5 L/h ÷ 60 |
-| Caudal buffer permanente (5 filas) | 17.0 L/min | 5 filas sin solenoide, riego directo |
-| Caudal máximo simultáneo (9 filas) | 30.6 L/min | 9 filas activas (F10 = 0%, cerrada) |
+| Caudal producción permanente (5 filas F6–F10) | 17.0 L/min | 5 filas zona producción a 100% ETc |
+| Caudal máximo simultáneo (9 filas) | 30.6 L/min | 9 filas activas (F1 = 0%, cerrada) |
 | Presión de trabajo en header | 1.5–2.0 bar | presostato set point |
 | Presión mínima extremo de fila | ≥ 0.8 bar | verificar con manómetro portátil |
 | Pérdida de carga cinta drip 16mm / 136m | ~0.15 bar | cálculo Hazen-Williams |
 | Tiempo llenado tanque 20.000 L | ~5.5 hs | 60 L/min bomba caudal libre |
-| Autonomía tanque (solo buffer 5 filas) | ~19.6 hs | 20.000 L ÷ 17.0 L/min |
+| Autonomía tanque (solo producción 5 filas) | ~19.6 hs | 20.000 L ÷ 17.0 L/min |
 | Autonomía tanque (máx 9 filas) | ~10.9 hs | 20.000 L ÷ 30.6 L/min |
 
 ### Eléctrica
@@ -220,4 +224,4 @@ Nodos Tier 1-2 (solo sensor) no tienen rele: `SOLENOIDE_CANAL = 0` en config.h.
 3. **Modo llenado y riego son mutuamente excluyentes**: nunca abrir Vf y Vr simultáneamente. Instalar cartel en tablero.
 4. **Cinta drip envejecida**: la bomba está sobredimensionada (1HP en lugar de 3/4HP) para mantener presión adecuada con cintas de 2+ temporadas que tienen mayor pérdida de carga por incrustaciones.
 5. **Purga mensual**: abrir tapón extremo de cada fila 30 segundos para eliminar sedimentos de la cinta.
-6. **Solenoides en paralelo**: los 4 solenoides de cada zona (F1-A, F2-A, F3-A, F4-A) van en paralelo al mismo canal Rain Bird. Corriente total por canal: ~1A — dentro del límite del transformador 40VA.
+6. **Solenoides**: cada fila tiene su propio solenoide en un canal Rain Bird independiente (10 canales total). Corriente por canal: ~250 mA — dentro del límite del transformador 40VA.
