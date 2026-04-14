@@ -5,7 +5,7 @@
 
 ## A0) OBJETIVO:
 
-Desarrollar y validar en campo (TRL 4) el prototipo integrado del nodo HydroVision AG: un sistema autónomo de detección temprana de estrés hídrico en cultivos de alto valor (vid, olivo, pistacho, cerezo, nogal) que combina termografía infrarroja (índice CWSI), dendrometría de tronco (índice MDS) y fusión satelital multi-fuente (Sentinel-2 / SAOCOM 1A-1B CONAE Argentina / Sentinel-1 / Planet) en un nodo permanente de campo con procesamiento 100% edge sin internet, generando el índice HSI (HydroVision Stress Index, R²=0.90–0.95) con alertas automáticas de rescate hídrico en tiempo real. El protocolo experimental se ejecutará en el viñedo propio de Colonia Caroya (Córdoba, 1/3 ha Malbec) bajo supervisión de la Dra. Mariela Monteoliva (INTA-CONICET), produciendo el dataset de calibración propio (≥800 frames térmicos con potencial hídrico de tallo medido simultáneamente por bomba de Scholander) requerido para el entrenamiento final del modelo PINN embebido (MobileNetV3-Tiny INT8) y para la validación comercial del motor de propuesta automatizada R15 con productores en Mendoza y San Juan.
+Desarrollar y validar en campo (TRL 4) el prototipo integrado del nodo HydroVision AG: un sistema autónomo de detección temprana de estrés hídrico en cultivos de alto valor (vid, olivo, pistacho, cerezo, nogal) que combina termografía infrarroja (índice CWSI), dendrometría de tronco (índice MDS) y fusión satelital multi-fuente (Sentinel-2 / SAOCOM 1A-1B CONAE Argentina / Sentinel-1 / Planet) en un nodo permanente de campo con procesamiento 100% edge sin internet, generando el índice HSI (HydroVision Stress Index, R²=0.90–0.95) con alertas automáticas de rescate hídrico en tiempo real. El protocolo experimental se ejecutará en el viñedo propio de Colonia Caroya (Córdoba, 1/3 ha Malbec) bajo supervisión de la Dra. Mariela Monteoliva (INTA-CONICET), produciendo el dataset de calibración propio (≥800 frames térmicos con potencial hídrico de tallo medido simultáneamente por bomba de Scholander) requerido para el entrenamiento final del modelo PINN embebido (MobileNetV3-Tiny INT8). La validación comercial formal con productores en Mendoza y San Juan (R10, R15) es TRL 5.
 
 ---
 
@@ -137,7 +137,7 @@ Sí. La demanda está validada en dos dimensiones:
 
 **Cuantitativa:** ~447.700 ha de cultivos de alto valor con riego tecnificado en Argentina (vid 200.000 ha · citrus 130.000 ha · olivo 70.000 ha · pistacho 25.000 ha · nogal 15.000 ha · otros 7.700 ha), más ~307.000 ha en Chile. Ninguna cuenta con monitoreo hídrico foliar autónomo. El valor de producción en riesgo supera USD 498 millones anuales. La solución israelí más avanzada (Phytech/Netafim) no penetró el mercado latinoamericano por precio prohibitivo, barreras de importación, dependencia de internet en zonas rurales y ausencia de soporte local — dejando el segmento mediano (20–200 ha) sin cobertura.
 
-**Cualitativa:** entrevistas preliminares con productores de vid en Colonia Caroya y Mendoza confirman disposición a pagar por detección de estrés antes del síntoma visible. El principal freno identificado es el costo de implementación — que el modelo de fusión satelital con densidad híbrida reduce sustancialmente. El plan de validación comercial (Resultado R10) incluye entrevistas estructuradas con al menos 5 productores en Mendoza y San Juan durante la ejecución, más un motor de propuesta automatizado (R15) que genera el mapa de nodos y ROI del cliente en < 5 minutos con solo las coordenadas GPS del campo.
+**Cualitativa:** entrevistas preliminares con productores de vid en Colonia Caroya confirman disposición a pagar por detección de estrés antes del síntoma visible. El principal freno identificado es el costo de implementación — que el modelo de fusión satelital con densidad híbrida reduce sustancialmente. En TRL 4 se ejecuta un contacto inicial en campaña Bodega Las Cañitas (R10 — template de entrevistas listo). Las entrevistas formales con ≥5 productores en Mendoza y San Juan y el motor R15 son TRL 5.
 
 ---
 
@@ -210,8 +210,8 @@ Inversores objetivo post-TRL 4: The Yield Lab LATAM (fondo AgTech LAC), Innventu
 - Validación del índice HSI en campo: coherencia entre CWSI medido y MDS dendrométrico en las 10 filas (5 de calibración + 5 de producción). Protocolo de desacuerdo de señales verificado con eventos de viento Zonda simulado.
 
 **Validación comercial (TRL 4 — paralela a la técnica):**
-- Entrevistas estructuradas con ≥5 productores de vid y olivo en Mendoza y San Juan (Resultado R10).
-- Motor de propuesta automatizada (R15): análisis multi-satélite histórico de ≥3 campos de productores candidatos — Landsat 8/9 (10 años de variabilidad NDVI) + Sentinel-2 (últimas 3 temporadas) para estratificar homogeneidad del lote por zonas, calcular densidad híbrida recomendada y estimar ROI personalizado. Generación de mapa de nodos + propuesta en PDF en < 5 minutos. Validación del pipeline de pre-venta con al menos 2 productores candidatos en Mendoza y San Juan.
+- Contacto inicial con productores en campaña Bodega Las Cañitas (Resultado R10 — template de entrevistas estructuradas listo, primeras conversaciones). Las entrevistas formales con ≥5 productores en Mendoza y San Juan son TRL 5.
+- Motor de propuesta automatizada (R15 — TRL 5): análisis multi-satélite histórico de ≥3 campos de productores candidatos — Landsat 8/9 (10 años de variabilidad NDVI) + Sentinel-2 (últimas 3 temporadas) para estratificar homogeneidad del lote por zonas, calcular densidad híbrida recomendada y estimar ROI personalizado. Generación de mapa de nodos + propuesta en PDF en < 5 minutos.
 - Instalación del sistema en el viñedo propio como caso de demostración para visitas de potenciales clientes. Objetivo: 2 visitas de productores documentadas antes del Mes 12.
 
 ---
@@ -356,10 +356,7 @@ El proyecto tiene una duración de 12 meses (Octubre 2026 – Septiembre 2027). 
 | Validación simulador vs. datos Scholander reales | | | | | | | XX | XX | XX | | | |
 | Co-autoría publicación científica | | | | | | | | | | XX | XX | XX |
 | **CAMPAÑAS EXTERNAS (César + Lucas)** | | | | | | | | | | | | |
-| Campaña Mendoza 1 (Valle de Uco / vinculación) | | | | | V1 | | | | | | | |
-| Campaña Mendoza 2 (multi-varietal Cab/Torrentes) | | | | | | | | V2 | | | | |
-| Campaña Bodega Las Cañitas (Gabriel Campaña) | | | | | | | | | | | V3 | |
-| Campaña San Juan (olivo/pistacho) | | | | | | | | | | | | V4 |
+| Campaña Bodega Las Cañitas (Gabriel Campana) | | | | | | | | | | | V1 | |
 | **PROPIEDAD INTELECTUAL (Ximena Crespo)** | | | | | | | | | | | | |
 | Búsqueda formal anterioridad INPI+EPO+USPTO | XX | XX | XX | | | | | | | | | |
 | Redacción reivindicaciones + descripción técnica | | | | | | | | | XX | XX | XX | |

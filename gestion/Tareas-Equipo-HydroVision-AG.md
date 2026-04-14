@@ -33,7 +33,7 @@
 | 12 | Interlocución ANPCyT: rendiciones, hitos, comunicación oficial con el organismo | Mes 1–12 |
 | 13 | Coordinación con Matías Tregnaghi: presupuesto ejecutivo mensual, rendiciones | Mes 1–12 |
 | 14 | ~~R10: Informe de validación comercial~~ → **Diferido TRL 5** — template pre-generado con Claude Code en `cesar/template_entrevistas_productores_R10.md` | TRL 5 |
-| 15 | **Campañas externas** (4 viajes) — César + Lucas Bergon: Mendoza ×2, San Juan ×1, Bodega Las Cañitas ×1. Validación geográfica del modelo + entrevistas R10 + vinculación productores TRL 5 | Mes 7–12 |
+| 15 | **Campaña externa** — César + Lucas Bergon: Bodega Las Cañitas ×1 (Gabriel Campana). Validación del sistema en viñedo externo, entrevistas R10 + vinculación productores TRL 5. Las campañas Mendoza/San Juan son TRL 5+ | Mes 11 |
 | 16 | **Co-autoría publicación científica** con Dra. Monteoliva e Inv. Art. 32 — resultados HSI vs ψ_stem en Malbec. Draft generado con Claude Code; César aporta datos y análisis estadístico | Mes 10–12 |
 | 17 | **Descripción técnica para patente INPI** — **✓ Claude Code** en `cesar/descripcion_tecnica_patente_INPI.md`. Entregado a Ximena Crespo para redacción de reivindicaciones legales | Mes 8–9 |
 | 18 | **Documentación ANPCyT para presentación** — **✓ Claude Code**: carta compromiso (`anpcyt/doc-presentar/carta-compromiso-cesar.md`), carta acompañamiento Monteoliva (`anpcyt/doc-presentar/carta-acompanamiento-monteoliva.md`), draft publicación (`cesar/draft_publicacion_cientifica.md`). César coordina firmas | Mes 1–2 |
@@ -91,7 +91,7 @@
 | 12 | Firmware OTA: actualizaciones over-the-air, corrección de bugs detectados en campo | Mes 7–12 |
 | 13 | Soporte técnico a Javier: diagnóstico remoto por dashboard ISO_nodo, reemplazo de componentes | Mes 7–9 |
 | 14 | ~~Documentación técnica definitiva~~ → **✓ Claude Code** (estructura) — `lucas/documentacion/guia-instalacion-nodo-v1.md` (guía completa de instalación). **Lucas revisa, valida y agrega fotos reales del nodo instalado** | Mes 4–6 |
-| 15 | **Campañas externas** con César — 4 viajes (Mendoza ×2, San Juan ×1, Las Cañitas ×1): instalación temporal de nodo en viñedos externos, soporte HW en campo, diagnóstico de conectividad LoRa | Mes 7–12 |
+| 15 | **Campaña externa** con César — Bodega Las Cañitas ×1 (Gabriel Campana): instalación temporal de nodo en viñedo externo, soporte HW en campo, diagnóstico de conectividad LoRa. Las campañas Mendoza/San Juan son TRL 5+ | Mes 11 |
 | 16 | ~~Documentación complementaria~~ → **✓ Claude Code**: diagrama hidráulico-eléctrico (`lucas/hardware/diagrama-hidraulico-electrico.md`), control fenológico de riego (`lucas/documentacion/control-fenologico-riego.md`), diagrama de interacción MVC (`mvc/diagrama-interaccion.md`) | — |
 
 ---

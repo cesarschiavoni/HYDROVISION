@@ -101,10 +101,7 @@
 |   Co-autoria publicacion cientifica                     |    |    |    |    |    |    |    |    |    | XX | XX | XX |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
 | **CAMPANAS EXTERNAS (César + Lucas)                    ** |     |     |     |     |     |     |     |     |     |     |     |     |
-|   Campaña Mendoza 1 (Valle de Uco / vinculacion)        |     |     |     |     |  V1  |     |     |     |     |     |     |     |
-|   Campaña Mendoza 2 (multi-varietal Cab/Torrentes)      |     |     |     |     |     |     |     |  V2  |     |     |     |     |
-|   Campaña Bodega Las Canitas (Gabriel Campana)          |     |     |     |     |     |     |     |     |     |     |  V3  |     |
-|   Campaña San Juan (olivo/pistacho)                     |     |     |     |     |     |     |     |     |     |     |     |  V4  |
+|   Campaña Bodega Las Canitas (Gabriel Campana)          |     |     |     |     |     |     |     |     |     |     |  V1  |     |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
 | **PROPIEDAD INTELECTUAL (Ximena Crespo)                ** |     |     |     |     |     |     |     |     |     |     |     |     |
 |   Busqueda formal anterioridad INPI+EPO+USPTO           | XX | XX | XX |    |    |    |    |    |    |    |    |    |

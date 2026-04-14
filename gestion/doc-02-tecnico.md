@@ -213,7 +213,7 @@ Imágenes sintéticas — simulador físico propio
 Fine-tuning específico para Malbec bajo condiciones de Cuyo. Permite entrenar con variedad de condiciones climáticas extremas sin depender de eventos naturales ni campañas de campo.
 3
 Frames reales calibrados — protocolo Monteoliva
-800 frames de imágenes térmicas de plantas de Malbec bajo 5 regímenes hídricos controlados, capturados en al menos 2 estadios fenológicos y 2 regiones (Colonia Caroya + Mendoza). Cada frame etiquetado con CWSI verificado por potencial hídrico de tallo medido con bomba de Scholander. Split: 680 frames para fine-tuning + 120 frames para validación independiente (no vistos durante entrenamiento). Anclaje fisiológico real del modelo.
+800 frames de imágenes térmicas de plantas de Malbec bajo 5 regímenes hídricos controlados, capturados en al menos 2 estadios fenológicos en Colonia Caroya. Cada frame etiquetado con CWSI verificado por potencial hídrico de tallo medido con bomba de Scholander. Split: 680 frames para fine-tuning + 120 frames para validación independiente (no vistos durante entrenamiento). Anclaje fisiológico real del modelo.
 Calibración final del modelo a condiciones reales de campo. Con el backbone ya pre-entrenado en 50.000 imágenes públicas y 1.000.000 sintéticas, los 680 frames de fine-tuning son suficientes para una calibración precisa sobre Malbec en condiciones de Cuyo.
 Total entrenamiento
 1.050.680 imágenes (50.000 + 1.000.000 + 680) · Validación independiente: 120 frames reales
@@ -322,7 +322,7 @@ TOTAL NODO TIER 3 (+ control riego SSR + solenoide)
 
 
 
-Figura 2 — Nodo HydroVision AG instalado en viñedo de Malbec, Mendoza. Panel solar 6W, carcasa IP67 Hammond, relé SSR integrado para control autónomo de solenoide Rain Bird, líneas de goteo, gateway LoRaWAN + router 4G (o Starlink Mini en zonas sin cobertura celular) al fondo. El nodo Tier 2-3 decide autónomamente cuándo regar según HSI local. Andes al fondo. Simulación fotorrealista de condiciones reales de campo TRL 5.
+Figura 2 — Nodo HydroVision AG instalado en viñedo de Malbec, Colonia Caroya. Panel solar 6W, carcasa IP67 Hammond, relé SSR integrado para control autónomo de solenoide Rain Bird, líneas de goteo, gateway LoRaWAN + router 4G (o Starlink Mini para prueba de conectividad dual) al fondo. El nodo Tier 2 decide autónomamente cuándo regar según HSI local. Simulación fotorrealista de condiciones reales de campo TRL 4.
 
 #### 4.4.1 Balance energético del nodo — autonomía solar
 ESP32-S3 con deep sleep RTC DS3231: Consumo activo ~0.5W, deep sleep 8µA (~0.03mW). Con ciclo de captura cada 15 minutos (90s activo + 810s dormido) incluyendo MLX90640, gimbal, sensores y LoRa, el consumo promedio ponderado es ~0.18W. Batería LiFePO4 6.000mAh a 3.2V = 19.2Wh. Autonomía sin sol: ~120 horas (~5 días). Panel 6W con 6h de sol efectivo/día genera 36Wh/día vs. consumo diario ~4.3Wh — balance energético positivo con amplio margen. El ESP32-S3 consume ~85% menos que RPi4 en el mismo ciclo de trabajo.

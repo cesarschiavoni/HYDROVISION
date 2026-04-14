@@ -109,7 +109,7 @@ wandb: Enter your choice:
 
 ## Paso 3 — Fine-tuning con datos reales (GPU, cuando haya datos Scholander)
 
-> **Para qué sirve:** Se ajusta el modelo entrenado en sintético usando imágenes reales del campo junto con mediciones de potencial hídrico (cámara de presión Scholander). Con unos pocos cientos de ejemplos reales el modelo se calibra a las condiciones reales: variedad específica, suelo local, condiciones de luz de Mendoza/San Juan. Sin este paso el modelo funciona, pero con menos precisión. Es el equivalente a la práctica de campo después de estudiar el libro.
+> **Para qué sirve:** Se ajusta el modelo entrenado en sintético usando imágenes reales del campo junto con mediciones de potencial hídrico (cámara de presión Scholander). Con unos pocos cientos de ejemplos reales el modelo se calibra a las condiciones reales: variedad específica, suelo local, condiciones de luz de Colonia Caroya. Sin este paso el modelo funciona, pero con menos precisión. Es el equivalente a la práctica de campo después de estudiar el libro.
 
 ```bat
 C:\Temp\Agro\investigador\venv\Scripts\activate
