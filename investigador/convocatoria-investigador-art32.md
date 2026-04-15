@@ -82,9 +82,9 @@ El análisis combina las tres señales (CWSI, MDS, Ψstem) con regresión, corre
 | Ítem | Detalle |
 |------|---------|
 | **Honorarios** | USD 6.000 — USD 500/mes × 12 meses, financiados íntegramente por ANR ANPCyT (~USD 34/hora) |
-| **Dedicación** | ~4–5 horas/semana promedio (~177 horas totales en 12 meses) |
+| **Dedicación** | ~5 horas/semana promedio (~177 horas totales en 12 meses) |
 | **Modalidad** | Mayormente remota + 4 jornadas de campo en Colonia Caroya (Mes 4–9) |
-| **Publicación** | Co-autoría garantizada en revista indexada Q1/Q2 — APC ya presupuestado (Agricultural Water Management / Biosystems Engineering) |
+| **Publicación** | Co-autoría garantizada en revista indexada Q1/Q2 — APC ya presupuestado (Agricultural Water Management / Biosystems Engineering / Computers and Electronics in Agriculture) |
 | **Inicio estimado** | Octubre 2026 (sujeto a aprobación ANPCyT) |
 
 ---
@@ -155,9 +155,9 @@ Yo, **___________________________**, DNI ____________, declaro:
 - Afiliación institucional / grupo de investigación: ___________________________
 - Publicaciones o ponencias relevantes: ___________________________
 
-**3.** Que mis compromisos en el proyecto son: calibración experimental de la línea base CWSI con datos Scholander (Mes 4–6), diseño experimental óptimo (OED) para las sesiones de campo, análisis estadístico de correlaciones CWSI↔MDS↔Ψstem (Mes 5–9), calibración de sensores dendrómetro por regresión, validación de métricas TRL 4 (R²≥0.75 CWSI vs Ψstem) y co-autoría en publicación científica.
+**3.** Que mis compromisos en el proyecto son: calibración experimental de la línea base CWSI con datos Scholander (Mes 4–6), diseño experimental óptimo (OED) para las sesiones de campo, análisis estadístico de correlaciones CWSI↔MDS↔Ψstem (Mes 5–9), calibración de sensores dendrómetro por regresión, validación de métricas TRL 4 (R²≥0.75 y MAE≤0.08 CWSI vs Ψstem) y co-autoría en publicación científica.
 
-**4.** Que mi dedicación es de aproximadamente **4–5 horas semanales promedio (~177 horas)** en 12 meses, compatible con mi actividad actual.
+**4.** Que mi dedicación es de aproximadamente **~5 horas semanales promedio (~177 horas)** en 12 meses, compatible con mi actividad actual.
 
 **5.** Que la propuesta técnica es, a mi criterio, metodológicamente sólida y científicamente fundada.
 
