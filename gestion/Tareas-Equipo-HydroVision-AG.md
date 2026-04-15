@@ -257,6 +257,7 @@
 | Hardware — 10 nodos ESP32-S3 + MLX90640 (5 calibración + 5 producción) | 7.500 | Incluye repuestos, prototipo testing, herramientas banco |
 | Gateway RAK7268 + conectividad dual (4G + Starlink Mini X) | 847 | RAK7268 + Teltonika RUT241 + chip M2M + Starlink Mini X + plan |
 | Instrumentos referencia (Scholander, Davis, HOBO, etc.) | 5.642 | Nota: calibrador cuerpo negro e instrumental portátil provistos por lab INTA-CONICET |
+| Infraestructura riego experimental [A] (tanque, bomba, cañería, drip 1.450m) | 2.858 | Tanque australiano 20.000L + bomba 0,5HP + cañería PE + cinta drip 1.450m + accesorios |
 | Equipamiento campo experimental [B] (solenoides x10, brackets x64, paneles ref. x64, etc.) | 3.300 | Solenoides Rain Bird x10 (1/fila — todas las filas) + controlador 10 zonas + brackets + paneles ref. + túneles + estacas + cableado + malla antigranizo + canaleta UV |
 | Infraestructura cloud + herramientas desarrollo | 500 | Colab Pro (César) + Cloudflare R2 + dominio. VPS: Oracle Free Tier. Licencias: free tiers suficientes para TRL 3-4 |
 | Claude Code Max (2 devs × 12 meses, USD 100/mes neto) | 2.400 | Art. 21g — IVA e Impuesto PAIS no elegibles (Art. 22j/22k) |
@@ -268,7 +269,7 @@
 | Difusión científica + congresos + vinculación | 2.700 | Congreso SAFV (todo incluido) + publicación open access + informe técnico productores + congreso AgTech (todo incluido) |
 | Capacitación del equipo (Art. 21f) | 1.900 | TinyML Lucas (Edge Impulse/Coursera) + workshop termografía equipo + gestión ANPCyT Matías + bibliografía técnica |
 | Bienes de consumo y materiales campo (Art. 21d) | 2.500 | Consumibles electrónicos, lab, campo, EPP |
-| Imprevistos y contingencias (~16,1%) | 19.353 | Reposición campo, tipo de cambio, sesiones Scholander adicionales, contingencias operativas |
+| Imprevistos y contingencias (~13,8%) | 16.553 | Reposición campo, tipo de cambio, sesiones Scholander adicionales, contingencias operativas |
 | **TOTAL ANR** | **USD 120.000** | **Suma verificada — todos los límites Art. 21 cumplidos** |
 
 > **Nota scope software:** TRL 3-4 no incluye dashboard comercial, app móvil, API comercial, SaaS, onboarding QR ni alertas push. El entregable de software es: (1) **MVC funcional** — backend FastAPI que recibe payloads del nodo vía LoRa/MQTT, los persiste en PostgreSQL y permite visualizar datos básicos (el MVC se deploya en el VPS del presupuesto cloud); (2) modelo PINN validado + notebooks de validación científica (R² vs Scholander); (3) motor de alertas agronómicas (reglas Python). Dashboard comercial, app React Native y onboarding QR son TRL 5.

@@ -82,8 +82,6 @@ Este documento establece:
 | **Trigger automático** | Notificación push cuando GDD ≥ 470 AND pronóstico SMN = sin lluvia 48h AND T_max > 28°C (alta demanda evaporativa) |
 | **Criterio de cancelación** | Lluvia > 3 mm en las 48 h previas → reprogramar. Recordar: post-lluvia 3–10 mm = esperar 24–36 h; >10 mm = esperar 48–72 h |
 
-**Alerta San Juan — enero:** si se programa visita paralela al viñedo San Juan, coordinar con las fechas de esta sesión para optimizar el viaje.
-
 ---
 
 ### SESIÓN 3 — Post-envero / Estrategia RDI enológica

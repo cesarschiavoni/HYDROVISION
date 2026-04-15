@@ -286,9 +286,9 @@ El proyecto tiene una duración de 12 meses (Octubre 2026 – Septiembre 2027). 
 | Seguros (RC + equipos + ART campo) | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX |
 | Contaduría / rendiciones ANPCyT (trimestral) | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX |
 | **ADQUISICIÓN & RECEPCIÓN HARDWARE** | | | | | | | | | | | | |
-| Pedido MLX90640 breakout Adafruit 4407 ×7 | XX | | | | | | | | | | | |
+| Pedido MLX90640 breakout Adafruit 4407 ×10 | XX | | | | | | | | | | | |
 | Recepción MLX90640 breakout (lead time ~2-4 sem) | XX | XX | | | | | | | | | | |
-| ESP32-S3 DevKit ×7 + LoRa SX1276 ×7 | XX | | | | | | | | | | | |
+| ESP32-S3 DevKit ×10 + LoRa SX1276 ×10 | XX | | | | | | | | | | | |
 | Sensores: SHT31, GPS u-blox, IMU, SX1276 (EBYTE E32-900T20D) | XX | | | | | | | | | | | |
 | Gateway RAK7268 + Router 4G Teltonika RUT241 + Starlink Mini X kit | XX | | | | | | | | | | | |
 | Scholander + tensiómetros ×5 + Davis Vantage | XX | XX | | | | | | | | | | |
@@ -350,9 +350,9 @@ El proyecto tiene una duración de 12 meses (Octubre 2026 – Septiembre 2027). 
 | **SESIONES SCHOLANDER (Monteoliva + Técnico campo)** | | | | | | | | | | | | |
 | Diseño protocolo experimental (Monteoliva) | XX | XX | XX | | | | | | | | | |
 | Sesión 1 — Brotación \| VPD<1.5kPa \| 60 vides | S1 | | | | | | | | | | | |
-| Sesión 2 — Envero \| VPD>2kPa \| 20–25 vides AL | | | S2 | | | | | | | | | |
-| Sesión 3 — Pre-cosecha \| validación \| AL | | | | S3 | | | | | | | | |
-| Sesión 4 — Pre-cosecha final \| validación | | | | | S4 | | | | | | | |
+| Sesión 2 — Pre-envero \| VPD>2kPa \| 25 vides AL | | | | S2 | | | | | | | | |
+| Sesión 3 — Post-envero \| validación RDI \| AL | | | | | S3 | | | | | | | |
+| Sesión 4 — Pre-cosecha \| cierre dataset | | | | | | S4 | | | | | | |
 | Validación simulador vs. datos Scholander reales | | | | | | | XX | XX | XX | | | |
 | Co-autoría publicación científica | | | | | | | | | | XX | XX | XX |
 | **CAMPAÑAS EXTERNAS — TRL 5+** | | | | | | | | | | | | |

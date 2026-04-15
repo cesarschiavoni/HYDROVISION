@@ -60,9 +60,13 @@ Inmediatamente debajo del anemómetro. Un **panel solar policristalino de 6W**, 
 
 Montado sobre un **bracket de inclinación ajustable** de aluminio (perfil en L con ranura de ajuste y mariposa M6) fijado con abrazadera de acero a la estaca. El panel está inclinado **~30° respecto a la horizontal**, con la cara activa orientada mirando hacia el **NORTE** (orientación óptima para captar máxima radiación solar en el hemisferio sur, latitud ~31°S).
 
+**Visualización de la trayectoria solar:** dibujar un **arco punteado amarillo-dorado** en el cielo de la escena que represente la trayectoria del sol de **ESTE a OESTE pasando por el NORTE** (hemisferio sur). El arco cruza por delante del panel solar (lado norte). Mostrar un **ícono de sol** (círculo amarillo con rayos) en la posición de mediodía (~45-50° de elevación sobre el horizonte norte en verano, ~35° en invierno). Desde el sol, dibujar **rayos amarillos semi-transparentes** que inciden perpendicularmente sobre la superficie del panel (demostrando que la inclinación de 30° maximiza la captación a latitud ~31°S). Anotar el ángulo entre los rayos y la normal del panel: **"~perpendicular al mediodía solar — inclinación = latitud ≈ 31°"**.
+
+Mostrar una **cota angular de 30°** entre la superficie del panel y la horizontal, con un arco acotado y la etiqueta "30°".
+
 Un cable bipolar (rojo/negro, sección 0,75 mm²) sale de la caja de conexiones trasera del panel y baja por la estaca hasta la carcasa principal, entrando a través de un **pasacable IP67 de plástico negro** (PG7) marcado con la etiqueta "SOLAR" en relieve.
 
-**Etiquetar:** "Panel solar 6W policristalino — 200×170 mm, 6V nominal, orientado al norte, inclinación ~30°. Balance energético: genera 24-36 Wh/día en Córdoba vs. consumo 4,3 Wh/día → excedente +20-32 Wh/día."
+**Etiquetar:** "Panel solar 6W policristalino — 200×170 mm, 6V nominal, orientado al norte (trayectoria solar hemisferio sur), inclinación ~30° (≈ latitud 31°S). Balance energético: genera 24-36 Wh/día en Córdoba vs. consumo 4,3 Wh/día → excedente +20-32 Wh/día."
 
 ---
 
@@ -217,7 +221,7 @@ El extremo exterior del tubo (el que apunta al canopeo) está abierto, mostrando
 
 **IMPORTANTE:** el tubo es de PVC, **NO de metal**. Anotar: "PVC (no metal) — el metal se calienta al sol y emite IR que contamina la lectura."
 
-**Etiquetar:** "Tubo colimador IR — PVC Ø110×250mm, interior negro mate. Concéntrico con lente MLX90640. Apunta al canopeo (abajo/este, sotavento del Zonda). Reduce error CWSI por movimiento de hoja: de ±0,04 a ±0,01."
+**Etiquetar:** "Tubo colimador IR — PVC Ø110×250mm, interior negro mate. Concéntrico con lente MLX90640. Apunta al canopeo (abajo/SSW, sotavento del viento dominante NNE). Reduce error CWSI por movimiento de hoja: de ±0,04 a ±0,01."
 
 ---
 
@@ -298,7 +302,7 @@ En la base de la estaca, apoyado en el suelo, un **bidón de plástico translúc
 En el canopeo de la vid, en una **hoja representativa** de la planta más cercana a la estaca (~50 cm). La hoja seleccionada es:
 
 * Madura, sana, verde oscuro, sin manchas, sin daño mecánico ni enfermedad
-* Orientada al **mismo lado que la cámara (ESTE / sotavento del Zonda)**
+* Orientada al **mismo lado que la cámara (SSW / sotavento del viento dominante NNE)**
 * No en la periferia del canopeo (las hojas periféricas están más expuestas al viento)
 * A la altura de la cámara (~1,5 m)
 
@@ -322,7 +326,7 @@ Combinado con el tubo colimador, reduce el error total CWSI por viento de ±0,12
 
 **Mantenimiento mensual:** verificar que la hoja sigue viva y sana. Si se marchitó o desprendió, reemplazar por otra hoja representativa y recolocar el clip.
 
-**Etiquetar:** "Termopar tipo T (Cu-Constantán) — Ø0,1mm (AWG 40, <0,01g), clip en envés de hoja, lado este (sotavento Zonda). Ground truth T_foliar por contacto, inmune a viento. Corrección IR: T_corr = T_IR + 0,6×(T_tc − T_IR). Reduce error CWSI por viento de ±0,08 a ±0,02. Amplificador MAX31855 (SPI) en carcasa. Conector M12 'TC'."
+**Etiquetar:** "Termopar tipo T (Cu-Constantán) — Ø0,1mm (AWG 40, <0,01g), clip en envés de hoja, lado SSW (sotavento viento dominante NNE). Ground truth T_foliar por contacto, inmune a viento. Corrección IR: T_corr = T_IR + 0,6×(T_tc − T_IR). Reduce error CWSI por viento de ±0,08 a ±0,02. Amplificador MAX31855 (SPI) en carcasa. Conector M12 'TC'."
 
 ---
 
@@ -378,14 +382,22 @@ Un **cable blindado** (malla de cobre + funda negra, Ø3 mm, con conector M12 IP
 * "~50 cm" entre la estaca y el tronco derecho
 * "~2,5-3 m" indicando el ancho del pasillo entre filas, con anotación: "**Pasillo libre — tránsito de maquinaria agrícola** (tractores, pulverizadoras, desmalezadoras)"
 * Flecha indicando la dirección de la fila de plantación (E-O)
+* **Flecha de viento dominante en la escena 3D:** una flecha grande semi-transparente de color rojo/naranja que entra desde la esquina NNE de la escena, pasando por encima del canopeo a la altura del anemómetro (~2,4 m), indicando la dirección del viento dominante. Etiquetada: **"Viento dominante NNE — 20% freq., meses con hojas"**. La flecha debe mostrar visualmente que el viento llega desde atrás-izquierda (NNE) del nodo, y la cámara/colimador apuntan en la dirección opuesta (SSW, sotavento). Opcionalmente, líneas de flujo de aire curvándose alrededor del canopeo para mostrar la atenuación natural (~60-70%) que las plantas proveen
 
-**3. Rosa de los vientos** (esquina inferior derecha):
+**3. Rosa de los vientos con indicador de viento dominante** (esquina inferior derecha):
 
-* **N** apuntando hacia el lado del panel solar/shelter
-* **S** hacia el canopeo donde apunta la cámara
-* **E** hacia la dirección del termopar foliar y la cámara (sotavento)
-* **O** (de donde viene el viento Zonda dominante)
-* Anotación junto a la rosa: "Cámara y termopar → ESTE (sotavento Zonda). Las plantas actúan como barrera natural, reduciendo ~60-70% el enfriamiento convectivo."
+Rosa de 16 sectores con una **flecha gruesa roja/naranja desde NNE hacia el centro** indicando la dirección del viento dominante. La flecha debe ser prominente y claramente etiquetada **"Viento dominante NNE (20%)"**. A su lado, texto pequeño: *"Fuente: Open-Meteo ERA5, filtrado por meses con hojas (Sep-May), franja diurna 6-20 hs, 3 años de datos."*
+
+Orientación del nodo respecto al viento:
+
+* **NNE** — flecha de viento dominante roja gruesa apuntando hacia el nodo (barlovento)
+* **N** — lado del panel solar (orientado al norte para máxima radiación) y shelter SHT31
+* **SSW** — dirección hacia donde apuntan la cámara MLX90640, el tubo colimador y el termopar foliar (**sotavento** del viento dominante NNE)
+* **S** — cara de la carcasa donde está la ventana HDPE (la cámara mira al canopeo desde el sotavento)
+
+Anotación junto a la rosa: **"Orientación del nodo basada en viento dominante NNE (ERA5). Cámara, colimador y termopar → SSW (sotavento). Las plantas del canopeo entre el viento y la cámara actúan como barrera natural, atenuando ~60-70% del enfriamiento convectivo sobre las hojas medidas."**
+
+Incluir una segunda anotación técnica: "A ≥18 m/s → HSI usa 100% MDS (fusión). Rampa viento 4-18 m/s: peso CWSI se reduce linealmente."
 
 **4. Cono de visión del MLX90640:**
 Proyectado como un cono translúcido amarillo-anaranjado claro desde el tubo colimador hacia el canopeo. Ángulo de apertura: 110° horizontal × 75° vertical. Dentro del cono, sobre las hojas del canopeo iluminadas, anotar:
@@ -395,7 +407,13 @@ Proyectado como un cono translúcido amarillo-anaranjado claro desde el tubo col
 * "~28 px foliares → error CWSI ±0,008"
 * "Cubre ~3m × 2m de canopeo → ~15-20 hojas de 3-4 plantas"
 
-**5. Recuadro informativo** (esquina superior izquierda, fondo semi-transparente blanco):
+**5. Arco de trayectoria solar** (en el cielo de la escena):
+
+Un **arco punteado amarillo-dorado** que cruza el cielo de la imagen de **ESTE (derecha) a OESTE (izquierda)**, pasando por el **NORTE** (fondo de la imagen, detrás del nodo). El arco representa la trayectoria del sol vista desde latitud ~31°S (hemisferio sur — el sol pasa por el norte, no por el sur). El punto más alto del arco (mediodía solar) está al norte, a ~50° de elevación en verano / ~35° en invierno. Un **ícono de sol amarillo con rayos** marca la posición del mediodía. Desde el sol, **rayos amarillos semi-transparentes** descienden hacia el panel solar, incidiendo casi perpendicularmente sobre su superficie. Anotar: **"Sol → Norte (hemisferio sur). Panel inclinado 30° ≈ latitud 31°S → captación máxima."**
+
+Este arco complementa la flecha de viento dominante NNE: ambos indicadores (sol y viento) convergen aproximadamente desde el norte, justificando que el panel solar y el shelter SHT31 están del lado norte de la estaca, mientras la cámara y el colimador apuntan al SSW (sotavento).
+
+**6. Recuadro informativo** (esquina superior izquierda, fondo semi-transparente blanco):
 
 ```
 HydroVision AG — Nodo IoT LWIR v1
@@ -408,6 +426,8 @@ Energía: Panel 6W + LiFePO4 6Ah → autonomía ~120h sin sol
 Ciclo: 96 capturas/día (cada 15 min) + gimbal 6+1 posiciones (7 ángulos)
 Peso: ~1,6 kg | COGS: USD 149/nodo (lote 50)
 Montaje: en línea de hilera, entre plantas — protegido de maquinaria
+Orientación: cámara → SSW (sotavento viento dominante NNE, ERA5)
+Panel solar: → Norte, 30° inclinación (trayectoria solar hemisferio sur)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Índices calculados en nodo (edge computing):
   CWSI = (T_canopeo − T_LL) / (T_UL − T_LL)
@@ -415,17 +435,17 @@ Montaje: en línea de hilera, entre plantas — protegido de maquinaria
   Error CWSI sistema completo: ±0,008 (28 px promediados)
 ```
 
-**6. Fórmulas visibles** como anotaciones técnicas flotantes con tipografía monoespaciada:
+**7. Fórmulas visibles** como anotaciones técnicas flotantes con tipografía monoespaciada:
 
 * `CWSI = (T_canopeo − T_LL) / (T_UL − T_LL)` — Jackson, 1981
 * `HSI = 0,35 × CWSI + 0,65 × MDS` — HydroVision AG (fusión)
 * `T_corr = T_IR + 0,6 × (T_tc − T_IR)` — corrección termopar
 * `MDS = D_max − D_min (µm)` — contracción diaria del tronco
 
-**7. Texto del viñedo** (superpuesto sutil en la parte inferior de la imagen):
+**8. Texto del viñedo** (superpuesto sutil en la parte inferior de la imagen):
 "Viñedo experimental Malbec — Colonia Caroya, Córdoba, Argentina — 1/3 ha (~3.333 m²), 10 filas × 136 plantas (5 filas de calibración + 5 de producción), espaldera VSP, ~700 m s.n.m. — 10 nodos permanentes (5 calibración + 5 producción) — Calibración: F1=0% / F2=15% / F3=40% / F4=65% / F5=100% ETc — Producción: F6-F10 todas 100% ETc — Riego por goteo con controlador Rain Bird"
 
-**8. Pequeño diagrama inset** (esquina inferior izquierda, ~15% del área de la imagen):
+**9. Pequeño diagrama inset** (esquina inferior izquierda, ~15% del área de la imagen):
 Vista aérea esquemática del viñedo mostrando las 10 filas paralelas (este-oeste), divididas en dos zonas. **Zona de calibración (Filas 1-5):** gradiente de colores — Fila 1 = 0% ETc (rojo, secano), Fila 2 = 15% ETc (naranja), Fila 3 = 40% ETc (amarillo), Fila 4 = 65% ETc (celeste), Fila 5 = 100% ETc (azul, control). **Zona de producción (Filas 6-10):** color uniforme verde/azul — todas a 100% ETc. Línea divisoria punteada entre Fila 5 y Fila 6. 10 nodos marcados con ícono circular rojo, uno en el centro de cada fila (planta 68). Título del inset: "Diseño experimental — 5 filas calibración (gradiente hídrico) + 5 filas producción (100% ETc) — 10 nodos permanentes".
 
 ---
