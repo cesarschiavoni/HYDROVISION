@@ -24,7 +24,7 @@
 **Lucas Martín Bergon**
 Automatista / Diseñador de Máquinas / Integrador
 Córdoba, Argentina
-lucasb_221@hotmail.com
+Lucasmartinbergon@gmail.com · lucasb_221@hotmail.com
 www.linkedin.com/in/lucasmartinbergon
 www.mbg-controls.com.ar
 
@@ -124,9 +124,9 @@ Declaro conocer y aceptar las condiciones establecidas en las Bases y Condicione
 Firma: ___________________________
 
 **Lucas Martín Bergon**
-DNI N° [______]
+DNI N° 32.426.266
 Co-fundador y COO — HydroVision AG S.A.S.
-lucasb_221@hotmail.com
+Lucasmartinbergon@gmail.com
 MBG Controls — www.mbg-controls.com.ar
 
 ---
@@ -172,9 +172,9 @@ Yo, **Lucas Martín Bergon**, DNI N° 32.426.266, CUIL N° 20-32426266-1, con do
 Firma: ___________________________
 
 **Lucas Martín Bergon**
-DNI N° [______]
+DNI N° 32.426.266
 Co-inventor — Co-fundador HydroVision AG S.A.S.
-lucasb_221@hotmail.com
+Lucasmartinbergon@gmail.com
 
 ---
 

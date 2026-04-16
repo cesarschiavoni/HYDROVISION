@@ -65,9 +65,11 @@ Verifica que todos los documentos sean mutuamente consistentes:
 
 ## Proceso de auditoría
 
+Usar `mcp__sequential-thinking__sequentialthinking` para razonar paso a paso durante las fases de detección y corrección. Registrar cada discrepancia como un pensamiento, evaluar cuál es el valor correcto según la jerarquía de autoridad, y decidir la acción antes de editar. Esto evita correcciones apresuradas y deja un registro del razonamiento.
+
 1. **Relevamiento**: Leer los archivos clave del proyecto usando Grep para encontrar todos los valores de cada parámetro auditado.
 
-2. **Detección**: Identificar discrepancias entre archivos. Para cada discrepancia, determinar cuál es el valor correcto usando esta jerarquía de autoridad:
+2. **Detección**: Identificar discrepancias entre archivos. Usar sequential thinking para razonar sobre cada discrepancia encontrada antes de corregir. Para cada discrepancia, determinar cuál es el valor correcto usando esta jerarquía de autoridad:
    - Fuente primaria / más específica > fuente general
    - `anpcyt/instrucciones/` > cualquier otro documento
    - `ciencia/01-protocolo-scholander-formal.md` > otros para parámetros agronómicos

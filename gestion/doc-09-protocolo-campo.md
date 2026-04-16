@@ -319,9 +319,9 @@ Fila 1 (sin riego): señal no confiable. Solo Scholander directo en cada sesión
 
 Los dendrómetros no reemplazan el Scholander en las filas de estrés fuerte (filas 1 y 2), que son las más valiosas para el entrenamiento del modelo. Reemplazan las visitas de Scholander en las filas 3, 4 y 5 durante los meses entre sesiones programadas.
 
-Materiales necesarios — kit completo para 6 dendrómetros
+Materiales necesarios — kit completo para 10 dendrómetros
 
-Los dendrómetros se construyen con componentes de electrónica accesibles. el investigador Art. 32 arma los 6 kits en taller antes de enviarlos a Colonia Caroya.
+Los dendrómetros se construyen con componentes de electrónica accesibles. el investigador Art. 32 arma los 10 kits en taller antes de enviarlos a Colonia Caroya.
 
 Sensor de desplazamiento: potenciómetro lineal 10 kΩ, rango 0-50 mm (modelo SL1 o equivalente). Precio: USD 8-12/unidad. Alternativa de mayor precisión: sensor LVDT de inducción USD 25-40/unidad — recomendado si el presupuesto lo permite por su linealidad superior.
 
@@ -329,7 +329,7 @@ Estructura de montaje: placa de aluminio 80×30 mm, espesor 3 mm, doblada en U. 
 
 Datalogger: Arduino Nano + módulo lector de tarjeta SD + reloj de tiempo real RTC DS3231. El Arduino toma una lectura cada 10 minutos, la graba en la SD con fecha y hora exactas, y entra en modo de bajo consumo hasta la próxima lectura. Batería de litio 18650: autonomía de 45-60 días sin recarga. Precio completo: USD 12-15/unidad.
 
-Costo total del kit de 5 dendrómetros: USD 120-160 según el tipo de sensor elegido.
+Costo total del kit de 10 dendrómetros: USD 240-320 según el tipo de sensor elegido.
 
 Instalación paso a paso
 
@@ -391,7 +391,7 @@ Protocolo: los pares de calibración se obtienen únicamente entre las 10:00 y l
 
 Consideración 4 — Cada sensor tiene su propia calibración.
 Dos vides de la misma zona pueden tener densidades de madera distintas y responder cuantitativamente diferente al mismo Ψstem. La función Ψstem = a × ADC + b es específica de la vid en la que está instalado ese sensor y no puede transferirse a otra vid.
-Protocolo: cada uno de los 5 dendrómetros tiene su propia función de calibración, obtenida individualmente en la Sesión 1. La calibración de Fila 2 no puede aplicarse al sensor de Fila 4.
+Protocolo: cada uno de los 10 dendrómetros tiene su propia función de calibración, obtenida individualmente en la Sesión 1. La calibración de Fila 2 no puede aplicarse al sensor de Fila 4.
 
 Consideración 5 — Deriva de largo plazo por crecimiento del tronco.
 El tronco crece lentamente durante la temporada. La abrazadera permanece fija y el crecimiento empuja el sensor hacia el extremo de su rango. Pasados 2-3 meses, el sensor puede quedar fuera del rango útil sin que el técnico lo note.

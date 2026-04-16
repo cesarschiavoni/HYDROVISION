@@ -925,7 +925,7 @@ Capacitacion del equipo (Art. 21f)
 (4) Material bibliografico tecnico (USD 200): libros en termografia infrarroja aplicada a estres hidrico en vid, papers de acceso pago sobre CWSI y PINN, documentacion tecnica ESP32-S3/MLX90640, manuales de calibracion de instrumentos.
 USD 1.900
 Bienes de consumo y materiales de campo (Art. 21d)
-Nitrogeno comprimido para bomba Scholander x8 recargas (USD 200 — incluido en Instrumentos) · Cinta drip de reposicion (USD 200) · Cables, conectores y consumibles electronicos para montaje y reparacion de nodos (USD 300) · Materiales de laboratorio para calibracion de sensores (USD 200) · Elementos de proteccion personal para trabajo en campo (USD 150) · Papeleria y materiales de oficina para documentacion (USD 150) · Consumibles electronicos adicionales: resistencias, capacitores, soldadura, flux, PCBs de prueba (USD 400) · Materiales de empaque y proteccion para transporte de nodos (USD 200) · Agua destilada para Wet Ref x12 meses (USD 100)
+Nitrogeno comprimido para bomba Scholander x8 recargas (USD 200 — incluido en Instrumentos) · Cinta drip de reposicion (USD 200) · Cables, conectores y consumibles electronicos para montaje y reparacion de nodos (USD 300) · Materiales de laboratorio para calibracion de sensores (USD 200) · Elementos de proteccion personal para trabajo en campo (USD 150) · Papeleria y materiales de oficina para documentacion (USD 150) · Consumibles electronicos adicionales: resistencias, capacitores, soldadura, flux, PCBs de prueba (USD 100) · Kit 10 dendrómetros standalone datalogger — Arduino Nano + SD + RTC DS3231 + potenciómetro lineal 10kΩ + abrazadera aluminio (USD 300) · Materiales de empaque y proteccion para transporte de nodos (USD 200) · Agua destilada para Wet Ref x12 meses (USD 100)
 USD 2.500
 Imprevistos y contingencias (~13,8%)
 Reserva para reposicion de componentes danados en campo (10 nodos expuestos 12 meses), variaciones en costos de importacion y tipo de cambio, sesiones Scholander adicionales ante perdida de datos por lluvia imprevista, reposicion de cinta drip o solenoides en el vinedo experimental, y contingencias operativas. Buffer justificado: hardware importado expuesto 12 meses en campo (lluvia, fumigaciones, granizo), protocolo Scholander sujeto a reprogramacion por condiciones climaticas, tipo de cambio volatil en Argentina.
@@ -1847,9 +1847,9 @@ Fila 1 (sin riego): señal no confiable. Solo Scholander directo en cada sesión
 
 Los dendrómetros no reemplazan el Scholander en las filas de estrés fuerte (filas 1 y 2), que son las más valiosas para el entrenamiento del modelo. Reemplazan las visitas de Scholander en las filas 3, 4 y 5 durante los meses entre sesiones programadas.
 
-Materiales necesarios — kit completo para 6 dendrómetros
+Materiales necesarios — kit completo para 10 dendrómetros
 
-Los dendrómetros se construyen con componentes de electrónica accesibles. El investigador Art. 32 arma los 6 kits en taller antes de enviarlos a Colonia Caroya.
+Los dendrómetros se construyen con componentes de electrónica accesibles. El investigador Art. 32 arma los 10 kits en taller antes de enviarlos a Colonia Caroya.
 
 Sensor de desplazamiento: potenciómetro lineal 10 kΩ, rango 0-50 mm (modelo SL1 o equivalente). Precio: USD 8-12/unidad. Alternativa de mayor precisión: sensor LVDT de inducción USD 25-40/unidad — recomendado si el presupuesto lo permite por su linealidad superior.
 
@@ -1857,11 +1857,11 @@ Estructura de montaje: placa de aluminio 80×30 mm, espesor 3 mm, doblada en U. 
 
 Datalogger: Arduino Nano + módulo lector de tarjeta SD + reloj de tiempo real RTC DS3231. El Arduino toma una lectura cada 10 minutos, la graba en la SD con fecha y hora exactas, y entra en modo de bajo consumo hasta la próxima lectura. Batería de litio 18650: autonomía de 45-60 días sin recarga. Precio completo: USD 12-15/unidad.
 
-Costo total del kit de 5 dendrómetros: USD 120-160 según el tipo de sensor elegido.
+Costo total del kit de 10 dendrómetros: USD 240-320 según el tipo de sensor elegido.
 
 Instalación paso a paso
 
-El técnico de campo instala los 5 dendrómetros en una sola mañana de trabajo (~2.5 horas). Monteoliva o César Schiavoni verifican la instalación el día de la Sesión 1.
+El técnico de campo instala los 10 dendrómetros en una sola jornada de trabajo (~5 horas). Monteoliva o César Schiavoni verifican la instalación el día de la Sesión 1.
 
 Vides a instrumentar: 1 por fila (10 filas total: 5 de calibración + 5 de producción) = 10 unidades. Cada dendrómetro se instala en la vid central de la fila (planta ~68), la misma vid donde se posiciona el nodo sensor HydroVision.
 
@@ -1919,7 +1919,7 @@ Protocolo: los pares de calibración se obtienen únicamente entre las 10:00 y l
 
 Consideración 4 — Cada sensor tiene su propia calibración.
 Dos vides de la misma zona pueden tener densidades de madera distintas y responder cuantitativamente diferente al mismo Ψstem. La función Ψstem = a × ADC + b es específica de la vid en la que está instalado ese sensor y no puede transferirse a otra vid.
-Protocolo: cada uno de los 5 dendrómetros tiene su propia función de calibración, obtenida individualmente en la Sesión 1. La calibración de Fila 2 no puede aplicarse al sensor de Fila 4.
+Protocolo: cada uno de los 10 dendrómetros tiene su propia función de calibración, obtenida individualmente en la Sesión 1. La calibración de Fila 2 no puede aplicarse al sensor de Fila 4.
 
 Consideración 5 — Deriva de largo plazo por crecimiento del tronco.
 El tronco crece lentamente durante la temporada. La abrazadera permanece fija y el crecimiento empuja el sensor hacia el extremo de su rango. Pasados 2-3 meses, el sensor puede quedar fuera del rango útil sin que el técnico lo note.
@@ -1971,7 +1971,7 @@ Monteoliva: en las Sesiones 1-4 realiza las mediciones Scholander de inicializac
 
 Resultado del sistema combinado
 
-Con los 5 dendrómetros operativos y las 4 sesiones Scholander optimizadas por OED, el proyecto obtiene:
+Con los 10 dendrómetros operativos y las 4 sesiones Scholander optimizadas por OED, el proyecto obtiene:
 
 Cobertura continua de Ψstem estimado en las 10 filas (5 de calibración + 5 de producción) durante los 9 meses de temporada, con resolución de 10 minutos.
 Medición directa Scholander de alta precisión en las 4 sesiones clave, cubriendo los 5 regímenes hídricos (100% ETc a sin riego).

@@ -141,7 +141,7 @@ incluir el alojamiento del MLX90640 y el domo óptico como parte del molde únic
 Costo adicional del molde: +USD 200-300 one-time → amortizado en 50 unidades = USD 4-6/u.
 A partir de la unidad 51: costo de la pieza separada = USD 0.
 Pendiente: diseñar el alojamiento óptico en el CAD de la carcasa antes de mandar a
-moldear. Dimensiones MLX90640: 4,9×3,9 mm footprint, TO39 package, lente 78°×55° FOV.
+moldear. Dimensiones MLX90640: 4,9×3,9 mm footprint, TO39 package, lente BAB 110°×75° FOV (variante del proyecto).
 
 **c) Precio MLX90640 a volumen — contactar Melexis directamente**
 Precio Mouser/DigiKey lote 1-10u: USD 28-32.
