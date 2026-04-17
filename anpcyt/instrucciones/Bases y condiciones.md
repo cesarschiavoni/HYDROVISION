@@ -73,6 +73,13 @@ Se buscará apoyar emprendimientos con alto potencial de generar valor real en s
 
 Modalidad de **ventanilla abierta**. Las postulaciones podrán ser presentadas de manera continua a través de la Plataforma TAD, desde la fecha de apertura hasta el cierre definitivo. Las propuestas serán agrupadas y evaluadas en función de los cierres periódicos. Las no seleccionadas podrán ser reconsideradas en cierres posteriores con mejoras.
 
+> **Fechas oficiales — Argentina.gob.ar (verificado 17/04/2026):**
+> - Apertura: **02/01/2026**
+> - Cierre original: **03/03/2026**
+> - **Cierre definitivo (prorrogado): 21/05/2026**
+>
+> Aunque las bases describen "ventanilla abierta con cierres periódicos", en la práctica la convocatoria publicada tiene **una única fecha de cierre prorrogada al 21/05/2026**. Fuente: https://www.argentina.gob.ar/servicio/startup-2025-trl-3-4
+
 ### Artículo 3° — Definición de Startup
 
 Empresa de reciente creación o emergente que desarrolla productos, procesos o servicios innovadores, generalmente en sus primeras etapas de desarrollo, con alto potencial de crecimiento.

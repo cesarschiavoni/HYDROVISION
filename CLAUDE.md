@@ -2,7 +2,17 @@
 
 Nodo IoT LWIR para monitoreo continuo de estrés hídrico en vid (Vitis vinifera cv. Malbec).
 Convocatoria FONARSEC — Préstamo BID N° 5293/OC-AR. ANR USD 120.000 + contrapartida USD 30.000.
-Inicio estimado: Octubre 2026. Duración: 12 meses. TRL 3 → 4.
+
+**🔴 Deadline presentación ANPCyT: 21/05/2026** (prórroga del cierre original 03/03/2026).
+Inicio proyecto estimado: Octubre 2026 (~30 días hábiles desde firma del Convenio). Duración: 12 meses (dentro del límite de 18 meses del Art. 23 Bases). TRL 3 → 4.
+
+SAS firmada 16/04/2026 (IPJ Córdoba, sede Colonia Caroya). Inscripción registral + CUIT AFIP en trámite.
+
+**🔴 Requisitos críticos FAQ oficial (17/04/2026):**
+- SAS debe estar **totalmente inscripta con CUIT activo** al postular (FAQ #12 — no se admite documentación provisoria).
+- Todos los honorarios deben ser **facturados como monotributo/autónomo**, NO salarios (FAQ #9 — salarios no son elegibles ni contrapartida).
+- **Garantía de cumplimiento = 10% del ANR = USD 12.000** (FAQ #13 — pagaré a la vista, aval bancario o seguro de caución).
+- Contacto oficial consultas: **convocatoria.startup@agencia.gob.ar**
 
 ---
 

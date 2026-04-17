@@ -44,7 +44,7 @@
 
 | Item | Detalle | USD |
 |------|---------|----:|
-| Constitucion SAS + legal | Abogado estatuto + pacto socios con vesting (USD 400) + IGJ + sellados (USD 200) + AFIP + asesoramiento tributario (USD 200) | 800 |
+| Constitucion SAS + legal | Abogado estatuto + pacto socios con vesting (USD 400) + IPJ Cordoba + sellados (USD 200) + AFIP + asesoramiento tributario (USD 200) | 800 |
 | Contaduria y rendicion ANPCyT | Contador externo — 2 contratos semestrales de 6 meses cada uno (Art. 21c, max. 6 meses por contrato individual). Contrato 1 (Mes 1-6): informes trimestrales 1° y 2° + rendicion parcial. Contrato 2 (Mes 7-12): informe trimestral 3° + rendicion final. USD 200/mes x 6 x 2 contratos | 2.400 |
 | Seguros del proyecto | (1) Poliza RC Civil para actividades de investigacion en campo agricola — cobertura USD 50.000 — asegurador: Sancor / Federacion Patronal / Zurich (USD 500/ano). (2) Poliza todo riesgo equipos electronicos portatiles — valor asegurado USD 9.500 (10 nodos ESP32-S3 + gateway RAK7268 + bomba Scholander + Davis Vantage Pro2) — uso en campo exterior — asegurador: Sancor / Federacion Patronal / Zurich (USD 500/ano). Colaboradores monotributistas gestionan su propio ART. | 1.000 |
 | Viajes y movilidad | Movilidad local Cordoba ciudad <-> Colonia Caroya para sesiones Scholander, instalacion y mantenimiento (~20 viajes x USD 15 combustible = USD 300) + 1-2 viajes Buenos Aires para Gate Reviews presenciales ANPCyT si son requeridos (aereo + alojamiento 1 noche = USD 500). Validacion TRL 3-4 concentrada en sitio experimental Colonia Caroya. | 800 |

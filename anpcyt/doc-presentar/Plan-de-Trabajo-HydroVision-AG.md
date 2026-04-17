@@ -10,7 +10,7 @@
 |---|---|
 | **Denominación del proyecto** | Plataforma Autónoma de Inteligencia Agronómica para Cultivos de Alto Valor mediante Termografía LWIR, Motor Fenológico Automático y Fusión Satelital con IA Edge |
 | **Empresa beneficiaria** | HydroVision AG SAS (en constitución — Mes 1 del proyecto) |
-| **CUIT / Personería** | En trámite ante IGJ — estatuto societario redactado |
+| **CUIT / Personería** | En trámite ante IPJ Córdoba — instrumento constitutivo firmado (16/04/2026) |
 | **Representante legal** | César Schiavoni (55%) — Lucas Bergon (45%) |
 | **Convocatoria** | STARTUP 2025 TRL 3-4 — ANPCyT / FONARSEC |
 | **Eje temático** | Agroindustria — AgTech — Inteligencia Artificial |
@@ -49,7 +49,7 @@ USD 120.000 ANR (80%) — ANPCyT · USD 30.000 contrapartida equipo (20%) · Tot
 Fecha de presentación
 Abril 2026 — Presentación: 3 de abril de 2026 (cierre: 21 de mayo de 2026)
 Empresa beneficiaria
-HydroVision AG SAS se constituirá en el Mes 1 del proyecto financiado (estatuto societario redactado, trámite iniciado ante IGJ). La cesión de titularidad a HydroVision AG SAS se formalizará conforme al procedimiento establecido por ANPCyT para cambios de titularidad.
+HydroVision AG SAS se constituyó el 16/04/2026 con instrumento firmado ante IPJ Córdoba (jurisdicción provincial — sede social en Colonia Caroya). Inscripción registral y CUIT AFIP en trámite previo a la presentación del 21/05/2026.
 Distribución accionaria
 César Schiavoni: 55% · Lucas Bergon: 45%. Sin inversores externos a la fecha de presentación. Pacto de socios con vesting de 4 años, cliff de 12 meses — en redacción.
 
@@ -901,7 +901,7 @@ Licencias Claude Code — herramienta principal de desarrollo (Art. 21g)
 Claude Code Max plan x 2 desarrolladores (Cesar + Lucas) x 12 meses. USD 100/mes por usuario (monto neto sin impuestos — IVA e Impuesto PAIS no son elegibles per Art. 22j/22k). Herramienta de IA generativa utilizada como acelerador de desarrollo en backend, firmware, documentacion y analisis. Reduce ciclos de implementacion en ~40-50%.
 USD 2.400
 Constitucion SAS + estructura legal y societaria
-Honorarios abogado para estatuto societario + pacto de socios con clausulas de vesting (USD 400) · Tramites IGJ + sellados fiscales (USD 200) · Inscripcion AFIP + asesoramiento tributario inicial (USD 200)
+Honorarios abogado para estatuto societario + pacto de socios con clausulas de vesting (USD 400) · Tramites IPJ Cordoba + sellados fiscales (USD 200) · Inscripcion AFIP + asesoramiento tributario inicial (USD 200)
 USD 800
 Administracion, contaduria y rendicion de cuentas ANPCyT
 Contador externo para soporte en informes trimestrales de avance y rendicion final ANPCyT (complementa al CFO interno). USD 200/mes x 12.

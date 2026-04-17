@@ -1,0 +1,56 @@
+Para: convocatoria.startup@agencia.gob.ar
+CC: schiavonicesar@gmail.com
+Asunto: Consulta sobre aportes en especie y cómputo de antigüedad — Convocatoria Startup 2025 TRL 3-4
+
+────────────────────────────────────────────────────────────
+
+Estimados,
+
+Me dirijo a ustedes en el marco de la Convocatoria Startup 2025 TRL 3-4 (FONARSEC — Préstamo BID N° 5293/OC-AR), cuyo cierre está previsto para el 21 de mayo de 2026.
+
+Represento a HydroVision AG S.A.S., empresa de base tecnológica en constitución con sede en Colonia Caroya (Córdoba), que desarrolla un nodo IoT LWIR de bajo costo para el monitoreo continuo del estrés hídrico en vid (Vitis vinifera cv. Malbec), en el marco del eje Agroindustria con aplicación de Inteligencia Artificial y Tecnología Satelital.
+
+El instrumento constitutivo de la SAS fue firmado el 16 de abril de 2026 ante la Inspección de Personas Jurídicas de la Provincia de Córdoba, y se encuentra en trámite de inscripción registral y de alta de CUIT ante AFIP, procesos que estimamos concluir antes de la fecha de cierre de la convocatoria.
+
+Habiendo consultado las Bases y Condiciones y la Guía de Preguntas Frecuentes (versión disponible en argentina.gob.ar), quedan pendientes tres puntos no cubiertos en esa documentación, sobre los que agradeceremos su orientación:
+
+
+1) APORTE EN ESPECIE DE SOCIOS FUNDADORES — HORAS DEDICADAS
+
+El artículo 24 de las Bases y la Pregunta 9 de la Guía establecen que los salarios no son considerados gastos elegibles ni computables como contrapartida. La Pregunta 10 define los recursos en especie como "bienes, servicios o activos no monetarios".
+
+Nuestro equipo fundador —César Schiavoni (Project Leader) y Lucas Bergon (COO Hardware)— tiene previsto facturar al proyecto una dedicación de 20 hs semanales cada uno como honorarios profesionales (cargados al ANR), y aportar 20 hs semanales adicionales sin facturación, en concepto de dedicación de los socios a la ejecución del proyecto.
+
+Consulta: ¿esas horas adicionales no facturadas pueden computarse como aporte en especie de la empresa beneficiaria al cofinanciamiento del 20%, o son asimiladas a "salarios" en el sentido del artículo 24 y por lo tanto no computables como contrapartida?
+
+
+2) CÓMPUTO DE ANTIGÜEDAD DE LA EMPRESA — ARTÍCULO 30 BASES
+
+El artículo 30 establece un máximo de 7 años de existencia con personalidad jurídica.
+
+Consulta: para el cómputo de la antigüedad, ¿se toma la fecha del instrumento constitutivo firmado ante el registro provincial, o la fecha de inscripción registral definitiva?
+
+
+3) DOCUMENTACIÓN ESPECÍFICA EXIGIDA PARA ACREDITAR PERSONERÍA JURÍDICA
+
+Considerando que la Pregunta 12 de la Guía establece que no se admite documentación provisoria, agradeceremos precisar qué documentos específicos deben cargarse en la Plataforma TAD al momento de la presentación, a fin de acreditar la personería jurídica conforme al artículo 29 de las Bases y al Anexo I. En particular:
+
+- Constancia de inscripción registral (IPJ Córdoba)
+- Constancia de CUIT activo (AFIP)
+- Acta de designación de autoridades
+- Copia del instrumento constitutivo inscripto
+- ¿Alguna documentación adicional, como poderes de representación, declaraciones juradas específicas u otros?
+
+
+Agradeceremos su respuesta a la brevedad dada la proximidad del cierre de la convocatoria. Quedamos a disposición para ampliar cualquier aspecto que consideren necesario.
+
+Cordialmente,
+
+
+César Fernando Schiavoni
+DNI 32.080.077 — CUIL 20-32080077-4
+Administrador Titular
+HydroVision AG S.A.S. (en inscripción ante IPJ Córdoba)
+
+Email: schiavonicesar@gmail.com
+Domicilio: Av. De Los Fundadores 5451, Colonia Caroya (5223), Provincia de Córdoba, Argentina

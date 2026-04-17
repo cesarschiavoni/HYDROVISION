@@ -22,7 +22,7 @@ USD 120.000 ANR (80%) — ANPCyT · USD 30.000 contrapartida equipo (20%) · Tot
 Fecha de presentación
 Abril 2026 — Convocatoria cierra 21 de mayo de 2026
 Empresa beneficiaria
-HydroVision AG SAS se constituirá en el Mes 1 del proyecto financiado (estatuto societario redactado, trámite iniciado ante IGJ). La cesión de titularidad a HydroVision AG SAS se formalizará conforme al procedimiento establecido por ANPCyT para cambios de titularidad.
+HydroVision AG SAS se constituyó el 16/04/2026 con instrumento firmado ante IPJ Córdoba (jurisdicción provincial — sede en Colonia Caroya). Inscripción registral y CUIT AFIP en trámite previo a la presentación del 21/05/2026.
 Distribución accionaria
 César Schiavoni: 55% · Lucas Bergon: 45%. Sin inversores externos a la fecha de presentación. Pacto de socios con vesting de 4 años, cliff de 12 meses — en redacción.
 

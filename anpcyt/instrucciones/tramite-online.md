@@ -281,7 +281,7 @@ El proyecto tiene una duración de 12 meses (Octubre 2026 – Septiembre 2027). 
 | Dormancia invernal | | | | | | XX | XX | XX | XX | XX | XX | |
 | Nueva brotación temporada 2027–28 | | | | | | | | | | | | XX |
 | **LEGAL / ADMINISTRATIVO** | | | | | | | | | | | | |
-| Constitución HydroVision AG SAS (IGJ) + AFIP | XX | XX | | | | | | | | | | |
+| Constitución HydroVision AG SAS (IPJ Córdoba) + AFIP | XX | XX | | | | | | | | | | |
 | Pacto de socios + cláusulas vesting 4 años | XX | XX | | | | | | | | | | |
 | Seguros (RC + equipos + ART campo) | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX |
 | Contaduría / rendiciones ANPCyT (trimestral) | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX |

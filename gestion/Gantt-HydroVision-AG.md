@@ -16,7 +16,7 @@
 |   Nueva brotacion temporada 2027-28                     |    |    |    |    |    |    |    |    |    |    |    | XX |
 |---------------------------------------------------------|----|----|----|----|----|----|----|----|----|----|----|----|
 | **LEGAL / ADMINISTRATIVO                               ** |     |     |     |     |     |     |     |     |     |     |     |     |
-|   Constitucion HydroVision AG SAS (IGJ) + AFIP          | XX | XX |    |    |    |    |    |    |    |    |    |    |
+|   Constitucion HydroVision AG SAS (IPJ Cordoba) + AFIP  | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |   Pacto de socios + clausulas vesting 4 anos            | XX | XX |    |    |    |    |    |    |    |    |    |    |
 |   Seguros (RC + equipos importados + ART campo)         | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX |
 |   Contaduria / rendiciones ANPCyT (trimestral)          | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX | XX |
