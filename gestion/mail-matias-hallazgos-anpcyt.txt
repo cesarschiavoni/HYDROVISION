@@ -1,0 +1,87 @@
+Para: Cr.tregnaghi@gmail.com
+CC: schiavonicesar@gmail.com
+Asunto: Consulta enviada a ANPCyT + hallazgos FAQ oficial para revisar
+
+────────────────────────────────────────────────────────────
+
+Mati,
+
+Te paso el detalle de la consulta que mandé hoy a mesa de ayuda de ANPCyT (convocatoria.startup@agencia.gob.ar) por dudas que me surgieron revisando la Guía de Preguntas Frecuentes oficial que no vimos antes.
+
+Te copio abajo lo que pregunté y, más importante, los 3 puntos del FAQ que impactan directo en lo financiero/legal para que lo tengamos en el radar antes de presentar el 21/05.
+
+
+======================================================
+LO QUE CONSULTÉ A ANPCyT (respuesta pendiente)
+======================================================
+
+1) Aporte en especie de socios: si las horas que aportamos Lucas y yo sin facturar (las 20 hs/sem extra además de las facturadas) computan como contrapartida del 20%, o si ANPCyT las considera "salario" y no sirven.
+
+2) Antigüedad de la SAS: si los 7 años máximos se cuentan desde la firma del instrumento (16/04/2026) o desde la inscripción registral definitiva.
+
+3) Documentación para acreditar personería en TAD: qué exige ANPCyT exactamente (inscripción IPJ, CUIT, acta de designación, instrumento inscripto, etc.).
+
+El mail completo lo tengo archivado en gestion/mail-mesa-ayuda-anpcyt.txt — avisame si querés que te lo reenvíe.
+
+
+======================================================
+PUNTOS DEL FAQ OFICIAL QUE AFECTAN EL PRESUPUESTO Y QUE NECESITAMOS RESOLVER
+======================================================
+
+🔴 1) GARANTÍA DE CUMPLIMIENTO 10% DEL ANR = USD 12.000
+
+Esto NO estaba en nuestro análisis previo. Al adjudicarnos (no al postular) tenemos que constituir una garantía a favor de ANPCyT por USD 12.000 (10% de los USD 120.000 ANR). Las formas admitidas son:
+
+  a) Aval bancario (banco como deudor solidario)
+  b) Seguro de caución (compañía reconocida por Superintendencia de Seguros)
+  c) Pagaré a la vista (firmado por administrador titular con uso de firma social)
+
+Yo iría directo por el PAGARÉ A LA VISTA porque es el más barato y flexible (cero costo bancario, cero prima de seguro). Pero me gustaría tu opinión sobre si conviene seguro de caución desde el punto de vista contable o de exposición de riesgo personal del administrador.
+
+Referencia: FAQ oficial #13 y Art. 45 Bases.
+
+
+🔴 2) SALARIOS NO SON ELEGIBLES NI CONTRAPARTIDA
+
+La Guía FAQ #9 es clarísima: "no serán considerados como gastos elegibles ni como gastos de la contraparte el pago de salarios".
+
+En el presupuesto que armamos figuran:
+- Honorarios profesionales de todo el equipo → OK, facturados por monotributo/autónomo. Esto está bien.
+- "Horas en especie co-fundadores" (Cesar 434 hs × USD 25 = USD 10.850 + Lucas 116 hs × USD 40 = USD 4.650 = USD 15.500) como contrapartida → AMBIGUO.
+
+Justamente esto es lo que pregunté en el punto 1 a ANPCyT. Si me dicen que NO computa, tenemos que rebalancear los USD 30.000 de contrapartida reemplazándolos por:
+  - Uso de equipamiento propio (PCs, instrumental, etc.)
+  - Uso de infraestructura del predio de Colonia Caroya
+  - Licencias ya pagas (Claude Code, software de desarrollo)
+  - Bienes pre-existentes afectados al proyecto
+
+Cuando tengamos la respuesta te paso, y si hace falta armamos juntos el listado de contrapartida alternativa.
+
+
+🔴 3) DOCUMENTACIÓN PROVISORIA NO ADMITIDA (FAQ #12)
+
+Esto es lo más crítico para el timing: la SAS tiene que estar TOTALMENTE INSCRIPTA en IPJ Córdoba + CUIT AFIP ACTIVO antes del 21/05/2026. No se admite "en trámite".
+
+Secuencia crítica:
+  16/04 ✓ Firma del instrumento (hecha)
+  ~30/04 → Inscripción IPJ Córdoba (SAS digital)
+  ~07/05 → Alta CUIT AFIP
+  ~12/05 → Cuenta bancaria
+  21/05 → Deadline presentación TAD
+
+¿Cómo viene el trámite de IPJ de tu lado? ¿Hay algo que pueda acelerar?
+
+
+======================================================
+LO QUE TE PIDO
+======================================================
+
+1. Que leas el mail que mandé a ANPCyT (texto completo en el archivo gestion/mail-mesa-ayuda-anpcyt.txt o te lo reenvío si preferís).
+2. Que me confirmes cómo vamos con el trámite IPJ y alta CUIT (para no comprometer el deadline).
+3. Que me digas tu opinión sobre la garantía: ¿pagaré a la vista o seguro de caución?
+4. Si ves algo más que tengamos que consultar a ANPCyT antes de presentar, avisame y le mando un segundo mail.
+
+Cualquier cosa me escribís.
+
+Abrazo,
+Cesar

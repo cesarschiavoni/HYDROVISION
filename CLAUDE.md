@@ -27,6 +27,7 @@ Cuando hay conflicto entre documentos, prevalece la fuente más específica:
 | Hardware / BOM | `lucas/hardware/BOM-nodo-v1.md` |
 | Protocolo agronómico | `ciencia/01-protocolo-scholander-formal.md` |
 | Equipo y roles | `gestion/doc-03-equipo.md` |
+| Contactos del equipo (emails, DNI, CUIT) | `gestion/contactos-equipo.md` |
 | Sesiones Scholander | `ciencia/07-cronograma-preciso-sesiones.md` |
 | Webapp (arquitectura, rutas, modelos) | `hydrovision-app/SPEC.md` |
 
